@@ -6,5 +6,7 @@ export default defineConfig({
   dts: true,
   exports: true,
   clean: true,
-  external: ['zod', '@vite-env/core'],
+  deps: {
+    neverBundle: ['zod', '@vite-env/core'],
+  },
 })

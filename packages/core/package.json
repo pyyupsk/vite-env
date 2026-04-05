@@ -5,15 +5,13 @@
   "description": "The env.ts layer for Vite — define once, validate everywhere, import with types",
   "license": "MIT",
   "exports": {
-    ".": "./dist/index.js",
-    "./dts": "./dist/dts.js",
-    "./format": "./dist/format.js",
-    "./plugin": "./dist/plugin.js",
-    "./schema": "./dist/schema.js",
+    ".": "./dist/index.mjs",
+    "./dts": "./dist/dts.mjs",
+    "./format": "./dist/format.mjs",
+    "./plugin": "./dist/plugin.mjs",
+    "./schema": "./dist/schema.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "files": [
     "dist"
   ],

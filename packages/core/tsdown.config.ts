@@ -12,5 +12,7 @@ export default defineConfig({
   dts: true,
   exports: true,
   clean: true,
-  external: ['vite', 'zod'],
+  deps: {
+    neverBundle: ['vite', 'zod'],
+  },
 })

@@ -5,11 +5,9 @@
   "description": "CLI for @vite-env/core — check, generate, types",
   "license": "MIT",
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "types": "./dist/index-JtcdNmdz.d.ts",
   "bin": {
     "vite-env": "./dist/index.mjs"
