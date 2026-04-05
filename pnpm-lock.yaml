@@ -5,6 +5,10 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
+  default:
+    jiti:
+      specifier: ^2.6.1
+      version: 2.6.1
   dev:
     '@antfu/eslint-config':
       specifier: ^8.0.0
@@ -86,6 +90,9 @@ importers:
       consola:
         specifier: catalog:dev
         version: 3.4.2
+      jiti:
+        specifier: 'catalog:'
+        version: 2.6.1
       vite:
         specifier: catalog:dev
         version: 8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)
@@ -104,6 +111,10 @@ importers:
         version: 6.0.2
 
   packages/core:
+    dependencies:
+      jiti:
+        specifier: 'catalog:'
+        version: 2.6.1
     devDependencies:
       '@types/node':
         specifier: catalog:dev
@@ -3499,8 +3510,7 @@ snapshots:
       html-escaper: 2.0.2
       istanbul-lib-report: 3.0.1
 
-  jiti@2.6.1:
-    optional: true
+  jiti@2.6.1: {}
 
   js-tokens@10.0.0: {}
 

@@ -33,8 +33,8 @@ export const checkCommand = defineCommand({
     const root = process.cwd()
     const configPath = path.resolve(root, args.config)
 
-    const mod = await import(configPath)
-    const def: EnvDefinition = mod.default ?? mod
+    const { loadEnvConfig } = await import('@vite-env/core/config')
+    const def: EnvDefinition = await loadEnvConfig(configPath)
 
     const rawEnv = loadCliEnv(args.mode, root)
     const result = validateEnv(def, rawEnv)

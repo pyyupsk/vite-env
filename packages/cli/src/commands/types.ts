@@ -12,8 +12,9 @@ export const typesCommand = defineCommand({
   },
   async run({ args }) {
     const root = process.cwd()
-    const mod = await import(path.resolve(root, args.config))
-    const def: EnvDefinition = mod.default ?? mod
+    const configPath = path.resolve(root, args.config)
+    const { loadEnvConfig } = await import('@vite-env/core/config')
+    const def: EnvDefinition = await loadEnvConfig(configPath)
 
     await generateDts(def, root)
     consola.success('Generated vite-env.d.ts')

@@ -2,6 +2,7 @@
 import type { Plugin, ResolvedConfig } from 'vite'
 import type { EnvDefinition } from './types'
 import path from 'node:path'
+import { loadEnvConfig } from './config'
 import { generateDts } from './dts'
 import { formatZodError } from './format'
 import { detectServerLeak } from './leak'
@@ -35,8 +36,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       )
 
       try {
-        const mod = await import(configPath)
-        envDefinition = mod.default ?? mod
+        envDefinition = await loadEnvConfig(configPath)
       }
       catch {
         throw new Error(

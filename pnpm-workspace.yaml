@@ -1,11 +1,13 @@
-allowBuilds:
-  esbuild: true
-  simple-git-hooks: true
 shellEmulator: true
 trustPolicy: no-downgrade
 packages:
   - 'packages/*'
   - playground
+allowBuilds:
+  esbuild: true
+  simple-git-hooks: true
+catalog:
+  jiti: ^2.6.1
 catalogs:
   dev:
     '@antfu/eslint-config': ^8.0.0

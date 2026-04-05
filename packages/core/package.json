@@ -9,6 +9,10 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./config": {
+      "import": "./dist/config.mjs",
+      "require": "./dist/config.cjs"
+    },
     "./dts": {
       "import": "./dist/dts.mjs",
       "require": "./dist/dts.cjs"
@@ -50,6 +54,9 @@
   "peerDependencies": {
     "vite": ">=8.0.0",
     "zod": "^4.0.0"
+  },
+  "dependencies": {
+    "jiti": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:dev",

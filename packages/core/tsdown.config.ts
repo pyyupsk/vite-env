@@ -3,6 +3,7 @@ import { defineConfig } from 'tsdown'
 export default defineConfig({
   entry: [
     'src/index.ts',
+    'src/config.ts',
     'src/plugin.ts',
     'src/schema.ts',
     'src/format.ts',
@@ -15,6 +16,6 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   deps: {
-    neverBundle: ['vite', 'zod'],
+    neverBundle: ['jiti', 'vite', 'zod'],
   },
 })

@@ -33,6 +33,7 @@
     "@vite-env/core": "workspace:*",
     "citty": "catalog:dev",
     "consola": "catalog:dev",
+    "jiti": "catalog:",
     "vite": "catalog:dev",
     "zod": "catalog:dev"
   },

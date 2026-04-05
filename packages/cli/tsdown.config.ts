@@ -8,6 +8,6 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   deps: {
-    neverBundle: ['vite', 'zod', '@vite-env/core'],
+    neverBundle: ['jiti', 'vite', 'zod', '@vite-env/core'],
   },
 })
