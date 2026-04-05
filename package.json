@@ -1,0 +1,26 @@
+{
+  "name": "@vite-env/monorepo",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "pnpm run -r build",
+    "test": "vitest",
+    "lint": "eslint . --cache --concurrency=auto",
+    "lint:fix": "eslint . --cache --concurrency=auto --fix",
+    "prepare": "npx simple-git-hooks"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:dev",
+    "eslint": "catalog:dev",
+    "lint-staged": "catalog:dev",
+    "simple-git-hooks": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}

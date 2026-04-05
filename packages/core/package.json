@@ -1,0 +1,24 @@
+{
+  "name": "@vite-env/core",
+  "type": "module",
+  "version": "0.0.0",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "pnpm build"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:dev",
+    "typescript": "catalog:dev"
+  }
+}
