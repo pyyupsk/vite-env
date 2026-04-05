@@ -109,7 +109,7 @@ describe('viteEnv plugin', () => {
     await plugin.configResolved(createMockConfig(tmpDir))
 
     const bundle = { 'client.js': { type: 'chunk', code: 'safe code' } }
-    await expect(plugin.generateBundle({}, bundle)).resolves.toBeUndefined()
+    expect(() => plugin.generateBundle({}, bundle)).not.toThrow()
   })
 
   describe('configureServer', () => {

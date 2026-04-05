@@ -82,23 +82,13 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
         return buildServerModule(envDefinition, lastValidated)
     },
 
-    async generateBundle(_options, bundle) {
+    generateBundle(_options, bundle) {
       if (resolvedConfig.build.ssr)
         return
 
-      const rawEnv = await loadEnvSources(resolvedConfig)
-      const result = validateEnv(envDefinition, rawEnv)
-
-      if (!result.success) {
-        const formatted = formatZodError(result.errors)
-        throw new Error(
-          `[vite-env] Env validation failed at bundle emit:\n\n${formatted}`,
-        )
-      }
-
       const leaks = detectServerLeak(
         envDefinition,
-        result.data,
+        lastValidated,
         bundle as Record<string, { type: string, code?: string }>,
         (keys) => {
           resolvedConfig.logger.warn(
@@ -142,8 +132,12 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
             lastValidated = result.data
 
             const clientMod = server.moduleGraph.getModuleById('\0virtual:env/client')
-            if (clientMod) {
+            const serverMod = server.moduleGraph.getModuleById('\0virtual:env/server')
+            if (clientMod)
               server.moduleGraph.invalidateModule(clientMod)
+            if (serverMod)
+              server.moduleGraph.invalidateModule(serverMod)
+            if (clientMod || serverMod) {
               server.hot.send({ type: 'full-reload' })
               resolvedConfig.logger.info(
                 `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidated`,
