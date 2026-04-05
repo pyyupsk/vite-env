@@ -17,8 +17,20 @@ export function detectServerLeak(
   def: EnvDefinition,
   data: Record<string, unknown>,
   bundle: Record<string, { type: string, code?: string }>,
+  onSkipped?: (keys: string[]) => void,
 ): LeakReport[] {
   const serverKeys = new Set(Object.keys(def.server ?? {}))
+
+  const shortSecrets = Object.entries(data).filter(
+    (entry): entry is [string, string] =>
+      serverKeys.has(entry[0])
+      && typeof entry[1] === 'string'
+      && entry[1].length < 8,
+  )
+
+  if (shortSecrets.length > 0 && onSkipped) {
+    onSkipped(shortSecrets.map(([k]) => k))
+  }
 
   const serverSecrets = Object.entries(data).filter(
     (entry): entry is [string, string] =>

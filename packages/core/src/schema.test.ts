@@ -23,9 +23,15 @@ describe('defineEnv', () => {
     })).not.toThrow()
   })
 
-  it('should allow shared keys without VITE_ prefix', () => {
+  it('should throw when shared key lacks VITE_ prefix', () => {
     expect(() => defineEnv({
       shared: { NODE_ENV: z.string() },
+    })).toThrow('[vite-env] Shared env var "NODE_ENV" must be prefixed with VITE_')
+  })
+
+  it('should allow shared keys with VITE_ prefix', () => {
+    expect(() => defineEnv({
+      shared: { VITE_NODE_ENV: z.string() },
     })).not.toThrow()
   })
 
@@ -75,27 +81,27 @@ describe('validateEnv', () => {
 
   it('should handle defaults', () => {
     const def = {
-      shared: { NODE_ENV: z.enum(['development', 'production']).default('development') },
+      shared: { VITE_NODE_ENV: z.enum(['development', 'production']).default('development') },
     }
     const result = validateEnv(def, {})
 
     expect(result.success).toBe(true)
-    expect(result.data).toEqual({ NODE_ENV: 'development' })
+    expect(result.data).toEqual({ VITE_NODE_ENV: 'development' })
   })
 
   it('should merge server, client, and shared schemas', () => {
     const def = {
       server: { SECRET: z.string() },
       client: { VITE_PUB: z.string() },
-      shared: { MODE: z.string() },
+      shared: { VITE_MODE: z.string() },
     }
     const result = validateEnv(def, {
       SECRET: 'sec',
       VITE_PUB: 'pub',
-      MODE: 'dev',
+      VITE_MODE: 'dev',
     })
 
     expect(result.success).toBe(true)
-    expect(result.data).toEqual({ SECRET: 'sec', VITE_PUB: 'pub', MODE: 'dev' })
+    expect(result.data).toEqual({ SECRET: 'sec', VITE_PUB: 'pub', VITE_MODE: 'dev' })
   })
 })

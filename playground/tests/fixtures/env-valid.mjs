@@ -13,6 +13,6 @@ export default defineEnv({
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   },
   shared: {
-    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    VITE_NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   },
 })

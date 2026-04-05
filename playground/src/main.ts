@@ -9,7 +9,7 @@ const entries = [
   ['API URL', env.VITE_API_URL],
   ['Debug', `${env.VITE_DEBUG} (${typeof env.VITE_DEBUG})`],
   ['Log Level', env.VITE_LOG_LEVEL],
-  ['Node Env', env.NODE_ENV],
+  ['Node Env', env.VITE_NODE_ENV],
 ] as const
 
 app.appendChild(title)

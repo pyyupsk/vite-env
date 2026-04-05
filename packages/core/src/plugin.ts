@@ -100,6 +100,11 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
         envDefinition,
         result.data,
         bundle as Record<string, { type: string, code?: string }>,
+        (keys) => {
+          resolvedConfig.logger.warn(
+            `  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Leak detection skipped ${keys.length} server variable(s) with values shorter than 8 chars: ${keys.join(', ')}`,
+          )
+        },
       )
 
       if (leaks.length > 0) {

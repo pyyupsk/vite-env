@@ -5,9 +5,9 @@ declare module 'virtual:env/client' {
   const env: {
     readonly VITE_API_URL: string
     readonly VITE_APP_NAME: string
-    readonly VITE_DEBUG?: boolean
-    readonly VITE_LOG_LEVEL?: 'debug' | 'info' | 'warn' | 'error'
-    readonly NODE_ENV?: 'development' | 'test' | 'production'
+    readonly VITE_DEBUG: boolean
+    readonly VITE_LOG_LEVEL: 'debug' | 'info' | 'warn' | 'error'
+    readonly VITE_NODE_ENV: 'development' | 'test' | 'production'
   }
   export { env }
   export default env
@@ -17,13 +17,13 @@ declare module 'virtual:env/server' {
   const env: {
     readonly DATABASE_URL: string
     readonly JWT_SECRET: string
-    readonly DB_POOL_SIZE?: number
+    readonly DB_POOL_SIZE: number
     readonly REDIS_URL?: string
     readonly VITE_API_URL: string
     readonly VITE_APP_NAME: string
-    readonly VITE_DEBUG?: boolean
-    readonly VITE_LOG_LEVEL?: 'debug' | 'info' | 'warn' | 'error'
-    readonly NODE_ENV?: 'development' | 'test' | 'production'
+    readonly VITE_DEBUG: boolean
+    readonly VITE_LOG_LEVEL: 'debug' | 'info' | 'warn' | 'error'
+    readonly VITE_NODE_ENV: 'development' | 'test' | 'production'
   }
   export { env }
   export default env

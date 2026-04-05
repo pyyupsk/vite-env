@@ -68,7 +68,7 @@ const validEnv = {
   VITE_APP_NAME: 'test-app',
   VITE_DEBUG: 'true',
   VITE_LOG_LEVEL: 'debug',
-  NODE_ENV: 'production',
+  VITE_NODE_ENV: 'production',
 }
 
 // ─── Client env ─────────────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ describe('client env', () => {
         JWT_SECRET: 'a-very-long-secret-key-at-least-32-characters-long',
         VITE_API_URL: 'https://api.example.com',
         VITE_APP_NAME: 'defaults-test',
-        NODE_ENV: 'development', // explicit — vitest sets NODE_ENV=test otherwise
+        VITE_NODE_ENV: 'development', // explicit — vitest sets NODE_ENV=test otherwise
       },
     })
 
@@ -124,7 +124,7 @@ describe('client env', () => {
 
     expect(code).toContain('defaults-test')
     expect(code).toContain('info') // default VITE_LOG_LEVEL
-    expect(code).toContain('development') // explicitly set NODE_ENV
+    expect(code).toContain('development') // explicitly set VITE_NODE_ENV
   })
 })
 
@@ -177,7 +177,7 @@ describe('missing required env', () => {
       buildWithEnv({
         configFile: fixture('env-missing-required.mjs'),
         entry: fixture('entry-client.ts'),
-        envVars: { NODE_ENV: 'test' },
+        envVars: { VITE_NODE_ENV: 'test' },
       }),
     ).rejects.toThrow('[vite-env] Environment validation failed')
   })
@@ -314,7 +314,7 @@ describe('.d.ts generation', () => {
     expect(content).toContain('declare module \'virtual:env/client\'')
     expect(content).toContain('VITE_API_URL')
     expect(content).toContain('VITE_APP_NAME')
-    expect(content).toContain('NODE_ENV')
+    expect(content).toContain('VITE_NODE_ENV')
 
     // Server module: all keys
     expect(content).toContain('declare module \'virtual:env/server\'')
@@ -324,7 +324,7 @@ describe('.d.ts generation', () => {
 
     // Correct TypeScript types
     expect(content).toContain('readonly VITE_API_URL: string')
-    expect(content).toContain('readonly DB_POOL_SIZE?: number')
+    expect(content).toContain('readonly DB_POOL_SIZE: number')
     expect(content).toContain('\'debug\' | \'info\' | \'warn\' | \'error\'')
     expect(content).toContain('\'development\' | \'test\' | \'production\'')
   })
@@ -342,7 +342,7 @@ describe('cLI: validate env', () => {
       JWT_SECRET: 'a-very-long-secret-key-at-least-32-characters-long',
       VITE_API_URL: 'https://api.example.com',
       VITE_APP_NAME: 'cli-test',
-      NODE_ENV: 'production',
+      VITE_NODE_ENV: 'production',
     })
 
     expect(result.success).toBe(true)
