@@ -45,13 +45,15 @@
     "prepack": "pnpm build",
     "typecheck": "tsc --noEmit"
   },
+  "peerDependencies": {
+    "vite": ">=8.0.0",
+    "zod": "^4.0.0"
+  },
   "dependencies": {
     "@vite-env/core": "workspace:*",
     "citty": "catalog:dev",
     "consola": "catalog:dev",
-    "jiti": "catalog:",
-    "vite": "catalog:dev",
-    "zod": "catalog:dev"
+    "jiti": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:dev",
