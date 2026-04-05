@@ -33,8 +33,20 @@ export const checkCommand = defineCommand({
     const root = process.cwd()
     const configPath = path.resolve(root, args.config)
 
-    const { loadEnvConfig } = await import('@vite-env/core/config')
-    const def: EnvDefinition = await loadEnvConfig(configPath)
+    let def: EnvDefinition
+    try {
+      const { loadEnvConfig } = await import('@vite-env/core/config')
+      def = await loadEnvConfig(configPath)
+    }
+    catch (e) {
+      consola.error(
+        `Could not load env definition file at: ${configPath}\n`
+        + `  Create an env.ts file and export default defineEnv({ ... })`,
+      )
+      if (e instanceof Error)
+        consola.error(e.message)
+      process.exit(1)
+    }
 
     const rawEnv = loadCliEnv(args.mode, root)
     const result = validateEnv(def, rawEnv)

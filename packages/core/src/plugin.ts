@@ -127,25 +127,32 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
 
         clearTimeout(debounceTimer)
         debounceTimer = setTimeout(async () => {
-          const rawEnv = await loadEnvSources(resolvedConfig)
-          const result = validateEnv(envDefinition, rawEnv)
+          try {
+            const rawEnv = await loadEnvSources(resolvedConfig)
+            const result = validateEnv(envDefinition, rawEnv)
 
-          if (!result.success) {
-            const formatted = formatZodError(result.errors)
-            resolvedConfig.logger.warn(
-              `\n  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidation failed:\n${formatted}`,
-            )
-            return
+            if (!result.success) {
+              const formatted = formatZodError(result.errors)
+              resolvedConfig.logger.warn(
+                `\n  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidation failed:\n${formatted}`,
+              )
+              return
+            }
+
+            lastValidated = result.data
+
+            const clientMod = server.moduleGraph.getModuleById('\0virtual:env/client')
+            if (clientMod) {
+              server.moduleGraph.invalidateModule(clientMod)
+              server.hot.send({ type: 'full-reload' })
+              resolvedConfig.logger.info(
+                `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidated`,
+              )
+            }
           }
-
-          lastValidated = result.data
-
-          const clientMod = server.moduleGraph.getModuleById('\0virtual:env/client')
-          if (clientMod) {
-            server.moduleGraph.invalidateModule(clientMod)
-            server.hot.send({ type: 'full-reload' })
-            resolvedConfig.logger.info(
-              `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidated`,
+          catch (e) {
+            resolvedConfig.logger.error(
+              `\n  \x1B[31m✗\x1B[0m \x1B[36m[vite-env]\x1B[0m Failed to reload env files: ${e instanceof Error ? e.message : String(e)}`,
             )
           }
         }, 150) // 150ms debounce

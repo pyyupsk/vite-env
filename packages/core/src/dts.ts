@@ -46,7 +46,16 @@ ${serverFields}
 }
 `
 
-  await fs.writeFile(path.join(root, 'vite-env.d.ts'), dts, 'utf-8')
+  const filePath = path.join(root, 'vite-env.d.ts')
+  try {
+    await fs.writeFile(filePath, dts, 'utf-8')
+  }
+  catch (e) {
+    throw new Error(
+      `[vite-env] Failed to write vite-env.d.ts to ${root}. Check file permissions.`,
+      { cause: e },
+    )
+  }
 }
 
 function zodShapeToTsFields(shape: z.ZodRawShape): string {
