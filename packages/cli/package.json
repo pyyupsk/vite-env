@@ -5,22 +5,25 @@
   "description": "CLI for @vite-env/core — check, generate, types",
   "license": "MIT",
   "exports": {
-    ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
-    }
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index-JtcdNmdz.d.ts",
   "bin": {
-    "vite-env": "./dist/index.js"
+    "vite-env": "./dist/index.mjs"
   },
-  "files": ["dist"],
-  "engines": { "node": ">=20.19.0" },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
+    "prepack": "pnpm build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

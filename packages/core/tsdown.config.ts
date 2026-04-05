@@ -1,16 +1,16 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: {
-    index: 'src/index.ts',
-    plugin: 'src/plugin.ts',
-    schema: 'src/schema.ts',
-    format: 'src/format.ts',
-    dts: 'src/dts.ts',
-  },
-  format: ['esm', 'cjs'],
+  entry: [
+    'src/index.ts',
+    'src/plugin.ts',
+    'src/schema.ts',
+    'src/format.ts',
+    'src/dts.ts',
+  ],
+  format: ['esm'],
   dts: true,
+  exports: true,
   clean: true,
-  sourcemap: true,
   external: ['vite', 'zod'],
 })
