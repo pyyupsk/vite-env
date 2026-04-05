@@ -15,6 +15,9 @@ catalogs:
     citty:
       specifier: ^0.1.6
       version: 0.1.6
+    consola:
+      specifier: ^3.4.2
+      version: 3.4.2
     eslint:
       specifier: ^10.2.0
       version: 10.2.0
@@ -68,6 +71,9 @@ importers:
       citty:
         specifier: catalog:dev
         version: 0.1.6
+      consola:
+        specifier: catalog:dev
+        version: 3.4.2
       zod:
         specifier: catalog:dev
         version: 4.3.6

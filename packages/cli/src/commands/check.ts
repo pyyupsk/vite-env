@@ -4,6 +4,7 @@ import process from 'node:process'
 import { formatZodError } from '@vite-env/core/format'
 import { validateEnv } from '@vite-env/core/schema'
 import { defineCommand } from 'citty'
+import consola from 'consola'
 
 export const checkCommand = defineCommand({
   meta: {
@@ -29,13 +30,12 @@ export const checkCommand = defineCommand({
 
     if (result.success) {
       const count = Object.keys(result.data ?? {}).length
-      console.log(`\n  ✓ ${count} environment variables valid\n`)
+      consola.success(`${count} environment variables valid`)
       process.exit(0)
     }
     else {
-      console.error(`\n  ✗ Environment validation failed:\n`)
-      console.error(formatZodError(result.errors))
-      console.error()
+      consola.error('Environment validation failed:')
+      consola.log(formatZodError(result.errors))
       process.exit(1)
     }
   },

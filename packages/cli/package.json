@@ -29,6 +29,7 @@
   "dependencies": {
     "@vite-env/core": "workspace:*",
     "citty": "catalog:dev",
+    "consola": "catalog:dev",
     "zod": "catalog:dev"
   },
   "devDependencies": {

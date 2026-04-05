@@ -3,6 +3,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { generateDts } from '@vite-env/core/dts'
 import { defineCommand } from 'citty'
+import consola from 'consola'
 
 export const typesCommand = defineCommand({
   meta: { description: 'Regenerate vite-env.d.ts from your env.ts schema' },
@@ -15,6 +16,6 @@ export const typesCommand = defineCommand({
     const def: EnvDefinition = mod.default ?? mod
 
     await generateDts(def, root)
-    console.log(`\n  ✓ Generated vite-env.d.ts\n`)
+    consola.success('Generated vite-env.d.ts')
   },
 })

@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 import { defineCommand } from 'citty'
+import consola from 'consola'
 import { z } from 'zod'
 
 export const generateCommand = defineCommand({
@@ -45,7 +46,7 @@ export const generateCommand = defineCommand({
 
     const output = path.resolve(root, args.output)
     await fs.writeFile(output, lines.join('\n'), 'utf-8')
-    console.log(`\n  ✓ Generated ${args.output}\n`)
+    consola.success(`Generated ${args.output}`)
   },
 })
 

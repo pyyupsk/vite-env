@@ -15,6 +15,7 @@ catalogs:
     '@antfu/eslint-config': ^8.0.0
     '@types/node': ^22.15.29
     citty: ^0.1.6
+    consola: ^3.4.2
     eslint: ^10.2.0
     lint-staged: ^16.4.0
     simple-git-hooks: ^2.13.1
