@@ -6,9 +6,8 @@ import ViteEnv from '@vite-env/core/plugin'
 import { build } from 'vite'
 import { afterEach, describe, expect, it } from 'vitest'
 
-type BuildOutput = Awaited<ReturnType<typeof build>> extends infer R
-  ? R extends Array<infer T> ? T : R
-  : never
+type BuildResult = Awaited<ReturnType<typeof build>>
+type BuildOutput = Extract<BuildResult extends Array<infer T> ? T : BuildResult, { output: unknown }>
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -43,7 +42,7 @@ async function buildWithEnv(options: {
       envDir: options.envDir ?? fixturesDir,
     })
 
-    return (Array.isArray(result) ? result[0] : result)
+    return (Array.isArray(result) ? result[0] : result) as BuildOutput // NOSONAR -- build() with write:false never returns RolldownWatcher
   }
   finally {
     for (const key of Object.keys(process.env)) {

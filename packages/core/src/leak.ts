@@ -19,22 +19,22 @@ export function detectServerLeak(
   bundle: Record<string, { type: string, code?: string }>,
 ): LeakReport[] {
   const serverKeys = new Set(Object.keys(def.server ?? {}))
+
+  const serverSecrets = Object.entries(data).filter(
+    (entry): entry is [string, string] =>
+      serverKeys.has(entry[0])
+      && typeof entry[1] === 'string'
+      && entry[1].length >= 8,
+  )
+
+  const chunks = Object.entries(bundle).filter(
+    ([, chunk]) => chunk.type === 'chunk' && !!chunk.code,
+  )
+
   const leaks: LeakReport[] = []
-
-  for (const [key, value] of Object.entries(data)) {
-    if (!serverKeys.has(key))
-      continue
-    if (typeof value !== 'string')
-      continue
-    if (value.length < 8)
-      continue // too short to reliably detect
-
-    for (const [chunkName, chunk] of Object.entries(bundle)) {
-      if (chunk.type !== 'chunk')
-        continue
-      if (!chunk.code)
-        continue
-      if (chunk.code.includes(value)) {
+  for (const [key, value] of serverSecrets) {
+    for (const [chunkName, chunk] of chunks) {
+      if (chunk.code!.includes(value)) {
         leaks.push({ key, chunk: chunkName })
       }
     }

@@ -1,7 +1,7 @@
+// @env node
 import type { EnvDefinition } from './types'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-// @env node
 import { z } from 'zod'
 
 /**
