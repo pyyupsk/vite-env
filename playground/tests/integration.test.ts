@@ -74,7 +74,7 @@ const validEnv = {
 // ─── Client env ─────────────────────────────────────────────────────────────
 
 describe('client env', () => {
-  it('should include client + shared vars in client bundle', async () => {
+  it('should include client vars in client bundle', async () => {
     const result = await buildWithEnv({
       configFile: fixture('env-valid.mjs'),
       entry: fixture('entry-client.ts'),
@@ -131,7 +131,7 @@ describe('client env', () => {
 // ─── Server env (SSR build) ─────────────────────────────────────────────────
 
 describe('server env', () => {
-  it('should include ALL vars (server + client + shared) in SSR bundle', async () => {
+  it('should include ALL vars (server + client) in SSR bundle', async () => {
     const result = await buildWithEnv({
       configFile: fixture('env-valid.mjs'),
       entry: fixture('entry-server.ts'),
@@ -149,7 +149,7 @@ describe('server env', () => {
     expect(code).toContain('https://api.example.com')
     expect(code).toContain('test-app')
 
-    // Shared vars
+    // Client vars also in SSR
     expect(code).toContain('production')
   })
 
@@ -310,7 +310,7 @@ describe('.d.ts generation', () => {
 
     const content = fs.readFileSync(dtsPath, 'utf-8')
 
-    // Client module: client + shared keys
+    // Client module: client keys only
     expect(content).toContain('declare module \'virtual:env/client\'')
     expect(content).toContain('VITE_API_URL')
     expect(content).toContain('VITE_APP_NAME')

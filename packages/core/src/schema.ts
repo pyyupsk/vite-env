@@ -13,17 +13,6 @@ export function defineEnv<T extends EnvDefinition>(definition: T): T {
     }
   }
 
-  if (definition.shared) {
-    for (const key of Object.keys(definition.shared)) {
-      if (!key.startsWith('VITE_')) {
-        throw new Error(
-          `[vite-env] Shared env var "${key}" must be prefixed with VITE_ because shared variables are exposed to the client bundle.\n`
-          + `  Rename it to "VITE_${key}" or move it to "server" if it's secret.`,
-        )
-      }
-    }
-  }
-
   return definition
 }
 
@@ -34,7 +23,6 @@ export function validateEnv(
   const combinedShape = {
     ...def.server,
     ...def.client,
-    ...def.shared,
   }
 
   const schema = z.object(combinedShape)

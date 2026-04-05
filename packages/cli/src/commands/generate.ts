@@ -38,8 +38,7 @@ export const generateCommand = defineCommand({
     ]
 
     const sections: Array<[string, z.ZodRawShape | undefined]> = [
-      ['Public variables (VITE_ prefix — safe for browser)', def.client],
-      ['Shared variables (available server + client)', def.shared],
+      ['Client variables (VITE_ prefix — available everywhere)', def.client],
       ['Server-only variables (never sent to browser)', def.server],
     ]
 

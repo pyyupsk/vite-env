@@ -15,12 +15,10 @@ export async function generateDts(
 ): Promise<void> {
   const clientKeys = {
     ...def.client,
-    ...def.shared,
   }
   const serverKeys = {
     ...def.server,
     ...def.client,
-    ...def.shared,
   }
 
   const clientFields = zodShapeToTsFields(clientKeys)

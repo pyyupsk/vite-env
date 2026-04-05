@@ -29,11 +29,7 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.url(),
     VITE_DARK_MODE: z.stringbool().default(false),
-  },
-  shared: {
-    NODE_ENV: z
-      .enum(['development', 'test', 'production'])
-      .default('development'),
+    VITE_NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   },
 })
 ```
@@ -56,7 +52,7 @@ import { env } from 'virtual:env/client'
 
 env.VITE_API_URL // string
 env.VITE_DARK_MODE // boolean
-env.NODE_ENV // 'development' | 'test' | 'production'
+env.VITE_NODE_ENV // 'development' | 'test' | 'production'
 ```
 
 See the [full documentation](https://github.com/pyyupsk/vite-env) for server/client split details, CLI tools, and more.

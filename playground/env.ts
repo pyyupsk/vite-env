@@ -12,8 +12,6 @@ export default defineEnv({
     VITE_APP_NAME: z.string().min(1),
     VITE_DEBUG: z.stringbool().default(false),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  },
-  shared: {
     VITE_NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   },
 })

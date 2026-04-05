@@ -4,10 +4,7 @@ export function buildClientModule(
   def: EnvDefinition,
   data: Record<string, unknown>,
 ): { code: string, moduleType: 'js' } {
-  const clientKeys = new Set([
-    ...Object.keys(def.client ?? {}),
-    ...Object.keys(def.shared ?? {}),
-  ])
+  const clientKeys = new Set(Object.keys(def.client ?? {}))
 
   const clientData = Object.fromEntries(
     Object.entries(data).filter(([k]) => clientKeys.has(k)),

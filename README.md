@@ -41,11 +41,7 @@ export default defineEnv({
     VITE_APP_NAME: z.string().min(1),
     VITE_DARK_MODE: z.stringbool().default(false),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  },
-  shared: {
-    NODE_ENV: z
-      .enum(['development', 'test', 'production'])
-      .default('development'),
+    VITE_NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   },
 })
 ```
@@ -64,20 +60,19 @@ export default defineConfig({
 ### 3. Use typed env in your app
 
 ```ts
-// Client code — only client + shared vars available
-import { env } from 'virtual:env/client' // TypeScript error — server var not accessible
+// Client code — only client vars available
+import { env } from 'virtual:env/client' // 'development' | 'test' | 'production'
 
 // Server/SSR code — all vars available
 import { env } from 'virtual:env/server'
 
 env.VITE_API_URL // string
 env.VITE_DARK_MODE // boolean (not "true")
-env.NODE_ENV // 'development' | 'test' | 'production'
-env.DATABASE_URL
+env.VITE_NODE_ENV
 
 env.DATABASE_URL // string
 env.JWT_SECRET // string
-env.VITE_API_URL // string (public vars also available server-side)
+env.VITE_API_URL // string (client vars also available server-side)
 ```
 
 ## How it works
@@ -85,7 +80,6 @@ env.VITE_API_URL // string (public vars also available server-side)
 | Section  | Available in `virtual:env/client` | Available in `virtual:env/server` |
 | -------- | :-------------------------------: | :-------------------------------: |
 | `client` |                Yes                |                Yes                |
-| `shared` |                Yes                |                Yes                |
 | `server` |                No                 |                Yes                |
 
 - **Validation** runs on `buildStart` (fatal) and on `.env` file changes during dev (non-fatal warning)

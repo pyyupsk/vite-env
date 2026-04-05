@@ -3,7 +3,6 @@ import type { z } from 'zod'
 export interface EnvDefinition {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
-  shared?: z.ZodRawShape
 }
 
 export type ValidationResult
@@ -13,11 +12,11 @@ export type ValidationResult
 type OrEmptyShape<T> = T extends z.ZodRawShape ? T : Record<string, never>
 
 export type InferClientEnv<T extends EnvDefinition> = z.infer<
-  z.ZodObject<OrEmptyShape<T['client']> & OrEmptyShape<T['shared']>>
+  z.ZodObject<OrEmptyShape<T['client']>>
 >
 
 export type InferServerEnv<T extends EnvDefinition> = z.infer<
   z.ZodObject<
-    OrEmptyShape<T['server']> & OrEmptyShape<T['client']> & OrEmptyShape<T['shared']>
+    OrEmptyShape<T['server']> & OrEmptyShape<T['client']>
   >
 >

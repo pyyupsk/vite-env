@@ -19,14 +19,13 @@ describe('generateDts', () => {
     vi.clearAllMocks()
   })
 
-  it('should generate correct .d.ts content for client + server + shared', async () => {
+  it('should generate correct .d.ts content for client + server', async () => {
     const writeFile = await getWriteFile()
     writeFile.mockResolvedValue(undefined)
 
     const def = {
       server: { DATABASE_URL: z.url() },
-      client: { VITE_API_URL: z.string() },
-      shared: { NODE_ENV: z.enum(['development', 'production']) },
+      client: { VITE_API_URL: z.string(), VITE_NODE_ENV: z.enum(['development', 'production']) },
     }
 
     await generateDts(def, '/tmp/test')
@@ -38,17 +37,17 @@ describe('generateDts', () => {
     expect(content).toContain('declare module \'virtual:env/client\'')
     expect(content).toContain('declare module \'virtual:env/server\'')
 
-    // Client module should have client + shared but NOT server
+    // Client module should have client keys but NOT server
     const clientSection = (content as string).split('declare module \'virtual:env/server\'')[0]
     expect(clientSection).toContain('VITE_API_URL')
-    expect(clientSection).toContain('NODE_ENV')
+    expect(clientSection).toContain('VITE_NODE_ENV')
     expect(clientSection).not.toContain('DATABASE_URL')
 
     // Server module should have all
     const serverSection = (content as string).split('declare module \'virtual:env/server\'')[1]
     expect(serverSection).toContain('DATABASE_URL')
     expect(serverSection).toContain('VITE_API_URL')
-    expect(serverSection).toContain('NODE_ENV')
+    expect(serverSection).toContain('VITE_NODE_ENV')
   })
 
   it('should map string schema to string type', async () => {
@@ -86,7 +85,7 @@ describe('generateDts', () => {
     writeFile.mockResolvedValue(undefined)
 
     await generateDts({
-      shared: { LEVEL: z.enum(['debug', 'info', 'error']) },
+      client: { VITE_LEVEL: z.enum(['debug', 'info', 'error']) },
     }, '/tmp')
     const content = writeFile.mock.calls[0][1] as string
 

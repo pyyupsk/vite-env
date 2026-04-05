@@ -2,23 +2,22 @@ import { describe, expect, it } from 'vitest'
 import { buildClientModule, buildServerModule } from './virtual'
 
 describe('buildClientModule', () => {
-  it('should include only client and shared keys', () => {
+  it('should include only client keys', () => {
     const def = {
       server: { SECRET: {} as any },
-      client: { VITE_API: {} as any },
-      shared: { NODE_ENV: {} as any },
+      client: { VITE_API: {} as any, VITE_NODE_ENV: {} as any },
     }
     const data = {
       SECRET: 'hidden',
       VITE_API: 'https://api.example.com',
-      NODE_ENV: 'production',
+      VITE_NODE_ENV: 'production',
     }
 
     const result = buildClientModule(def, data)
 
     expect(result.moduleType).toBe('js')
     expect(result.code).toContain('VITE_API')
-    expect(result.code).toContain('NODE_ENV')
+    expect(result.code).toContain('VITE_NODE_ENV')
     expect(result.code).not.toContain('SECRET')
     expect(result.code).not.toContain('hidden')
   })

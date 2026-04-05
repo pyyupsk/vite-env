@@ -26,7 +26,7 @@ function createMockConfig(root: string) {
 // Write a simple env definition file (no zod import needed — empty shapes)
 function writeEnvFile(dir: string): string {
   const filePath = path.join(dir, 'env.mjs')
-  fs.writeFileSync(filePath, 'export default { client: {}, server: {}, shared: {} }\n')
+  fs.writeFileSync(filePath, 'export default { client: {}, server: {} }\n')
   return filePath
 }
 
