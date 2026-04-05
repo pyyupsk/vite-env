@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import { generateDts } from './dts'
@@ -33,7 +34,7 @@ describe('generateDts', () => {
     expect(writeFile).toHaveBeenCalledOnce()
     const [filePath, content] = writeFile.mock.calls[0]
 
-    expect(filePath).toBe('/tmp/test/vite-env.d.ts')
+    expect(filePath).toBe(path.join('/tmp/test', 'vite-env.d.ts'))
     expect(content).toContain('declare module \'virtual:env/client\'')
     expect(content).toContain('declare module \'virtual:env/server\'')
 
