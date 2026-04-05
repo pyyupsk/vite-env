@@ -6,32 +6,32 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": { "types": "./dist/index.d.mts", "default": "./dist/index.mjs" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
     },
     "./config": {
-      "import": "./dist/config.mjs",
-      "require": "./dist/config.cjs"
+      "import": { "types": "./dist/config.d.mts", "default": "./dist/config.mjs" },
+      "require": { "types": "./dist/config.d.cts", "default": "./dist/config.cjs" }
     },
     "./dts": {
-      "import": "./dist/dts.mjs",
-      "require": "./dist/dts.cjs"
+      "import": { "types": "./dist/dts.d.mts", "default": "./dist/dts.mjs" },
+      "require": { "types": "./dist/dts.d.cts", "default": "./dist/dts.cjs" }
     },
     "./format": {
-      "import": "./dist/format.mjs",
-      "require": "./dist/format.cjs"
+      "import": { "types": "./dist/format.d.mts", "default": "./dist/format.mjs" },
+      "require": { "types": "./dist/format.d.cts", "default": "./dist/format.cjs" }
     },
     "./leak": {
-      "import": "./dist/leak.mjs",
-      "require": "./dist/leak.cjs"
+      "import": { "types": "./dist/leak.d.mts", "default": "./dist/leak.mjs" },
+      "require": { "types": "./dist/leak.d.cts", "default": "./dist/leak.cjs" }
     },
     "./plugin": {
-      "import": "./dist/plugin.mjs",
-      "require": "./dist/plugin.cjs"
+      "import": { "types": "./dist/plugin.d.mts", "default": "./dist/plugin.mjs" },
+      "require": { "types": "./dist/plugin.d.cts", "default": "./dist/plugin.cjs" }
     },
     "./schema": {
-      "import": "./dist/schema.mjs",
-      "require": "./dist/schema.cjs"
+      "import": { "types": "./dist/schema.d.mts", "default": "./dist/schema.mjs" },
+      "require": { "types": "./dist/schema.d.cts", "default": "./dist/schema.cjs" }
     },
     "./package.json": "./package.json"
   },

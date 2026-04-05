@@ -12,7 +12,6 @@ export default defineConfig({
   ],
   format: ['esm', 'cjs'],
   dts: true,
-  exports: true,
   clean: true,
   sourcemap: true,
   deps: {
