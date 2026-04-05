@@ -38,10 +38,11 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       try {
         envDefinition = await loadEnvConfig(configPath)
       }
-      catch {
+      catch (e) {
         throw new Error(
           `[vite-env] Could not load env definition file at: ${configPath}\n`
           + `  Create an env.ts file and export default defineEnv({ ... })`,
+          { cause: e },
         )
       }
     },
