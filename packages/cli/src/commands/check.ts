@@ -40,7 +40,7 @@ export const checkCommand = defineCommand({
     const result = validateEnv(def, rawEnv)
 
     if (result.success) {
-      const count = Object.keys(result.data ?? {}).length
+      const count = Object.keys(result.data).length
       consola.success(`${count} environment variables valid`)
       process.exit(0)
     }

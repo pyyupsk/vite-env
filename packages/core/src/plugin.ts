@@ -58,11 +58,11 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
         )
       }
 
-      lastValidated = result.data!
+      lastValidated = result.data
 
       await generateDts(envDefinition, resolvedConfig.root)
 
-      const count = Object.keys(result.data ?? {}).length
+      const count = Object.keys(result.data).length
       resolvedConfig.logger.info(
         `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m ${count} variables validated`,
       )
@@ -98,7 +98,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
 
       const leaks = detectServerLeak(
         envDefinition,
-        result.data || {},
+        result.data,
         bundle as Record<string, { type: string, code?: string }>,
       )
 
@@ -133,7 +133,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
             return
           }
 
-          lastValidated = result.data!
+          lastValidated = result.data
 
           const clientMod = server.moduleGraph.getModuleById('\0virtual:env/client')
           if (clientMod) {

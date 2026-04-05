@@ -1,7 +1,7 @@
 import type { EnvDefinition, ValidationResult } from './types'
 import { z } from 'zod'
 
-export function defineEnv(definition: EnvDefinition): EnvDefinition {
+export function defineEnv<T extends EnvDefinition>(definition: T): T {
   if (definition.client) {
     for (const key of Object.keys(definition.client)) {
       if (!key.startsWith('VITE_')) {
@@ -29,7 +29,7 @@ export function validateEnv(
   const result = schema.safeParse(rawEnv)
 
   if (result.success) {
-    return { success: true, data: result.data, errors: [] }
+    return { success: true, data: result.data, errors: [] as const }
   }
 
   return {

@@ -80,5 +80,5 @@ function zodToTs(schema: z.ZodTypeAny): string {
 }
 
 function isOptional(schema: z.ZodTypeAny): boolean {
-  return schema instanceof z.ZodOptional || schema instanceof z.ZodDefault
+  return schema instanceof z.ZodOptional
 }

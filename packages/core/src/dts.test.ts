@@ -105,7 +105,7 @@ describe('generateDts', () => {
     expect(content).toContain('readonly REDIS_URL?: string')
   })
 
-  it('should mark defaulted fields with ?', async () => {
+  it('should not mark defaulted fields as optional', async () => {
     const writeFile = await getWriteFile()
     writeFile.mockResolvedValue(undefined)
 
@@ -114,7 +114,8 @@ describe('generateDts', () => {
     }, '/tmp')
     const content = writeFile.mock.calls[0][1] as string
 
-    expect(content).toContain('readonly POOL_SIZE?: number')
+    expect(content).toContain('readonly POOL_SIZE: number')
+    expect(content).not.toContain('POOL_SIZE?')
   })
 
   it('should map z.stringbool() to boolean type', async () => {
@@ -126,7 +127,7 @@ describe('generateDts', () => {
     }, '/tmp')
     const content = writeFile.mock.calls[0][1] as string
 
-    expect(content).toContain('readonly VITE_DARK_MODE?: boolean')
+    expect(content).toContain('readonly VITE_DARK_MODE: boolean')
   })
 
   it('should handle empty definition', async () => {

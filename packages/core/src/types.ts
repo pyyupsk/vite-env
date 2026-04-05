@@ -6,18 +6,18 @@ export interface EnvDefinition {
   shared?: z.ZodRawShape
 }
 
-export interface ValidationResult {
-  success: boolean
-  data: Record<string, unknown> | null
-  errors: z.core.$ZodIssue[]
-}
+export type ValidationResult
+  = | { success: true, data: Record<string, unknown>, errors: [] }
+    | { success: false, data: null, errors: z.core.$ZodIssue[] }
+
+type OrEmptyShape<T> = T extends z.ZodRawShape ? T : Record<string, never>
 
 export type InferClientEnv<T extends EnvDefinition> = z.infer<
-  z.ZodObject<NonNullable<T['client']> & NonNullable<T['shared']>>
+  z.ZodObject<OrEmptyShape<T['client']> & OrEmptyShape<T['shared']>>
 >
 
 export type InferServerEnv<T extends EnvDefinition> = z.infer<
   z.ZodObject<
-    NonNullable<T['server']> & NonNullable<T['client']> & NonNullable<T['shared']>
+    OrEmptyShape<T['server']> & OrEmptyShape<T['client']> & OrEmptyShape<T['shared']>
   >
 >
