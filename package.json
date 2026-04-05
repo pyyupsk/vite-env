@@ -2,6 +2,7 @@
   "name": "@vite-env/monorepo",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "build": "pnpm run -r build",
     "dev": "pnpm run -r dev",
