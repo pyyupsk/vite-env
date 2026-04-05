@@ -74,6 +74,8 @@ function zodToTs(schema: z.ZodTypeAny): string {
     return 'boolean'
   if (schema instanceof z.ZodEnum)
     return (schema.options as string[]).map(o => `'${o}'`).join(' | ')
+  if (schema instanceof z.ZodPipe)
+    return zodToTs(schema.def.out as unknown as z.ZodTypeAny)
   return 'string'
 }
 

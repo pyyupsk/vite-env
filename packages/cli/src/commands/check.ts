@@ -5,6 +5,17 @@ import { formatZodError } from '@vite-env/core/format'
 import { validateEnv } from '@vite-env/core/schema'
 import { defineCommand } from 'citty'
 import consola from 'consola'
+import { loadEnv } from 'vite'
+
+export function loadCliEnv(mode: string, root: string): Record<string, string> {
+  const fileEnv = loadEnv(mode, root, '')
+  const procEnv = Object.fromEntries(
+    Object.entries(process.env).filter(
+      (entry): entry is [string, string] => typeof entry[1] === 'string',
+    ),
+  )
+  return { ...fileEnv, ...procEnv }
+}
 
 export const checkCommand = defineCommand({
   meta: {
@@ -25,7 +36,7 @@ export const checkCommand = defineCommand({
     const mod = await import(configPath)
     const def: EnvDefinition = mod.default ?? mod
 
-    const rawEnv = { ...process.env } as Record<string, string>
+    const rawEnv = loadCliEnv(args.mode, root)
     const result = validateEnv(def, rawEnv)
 
     if (result.success) {

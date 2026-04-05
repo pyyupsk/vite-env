@@ -5,7 +5,7 @@ declare module 'virtual:env/client' {
   const env: {
     readonly VITE_API_URL: string
     readonly VITE_APP_NAME: string
-    readonly VITE_DEBUG?: string
+    readonly VITE_DEBUG?: boolean
     readonly VITE_LOG_LEVEL?: 'debug' | 'info' | 'warn' | 'error'
     readonly NODE_ENV?: 'development' | 'test' | 'production'
   }
@@ -21,7 +21,7 @@ declare module 'virtual:env/server' {
     readonly REDIS_URL?: string
     readonly VITE_API_URL: string
     readonly VITE_APP_NAME: string
-    readonly VITE_DEBUG?: string
+    readonly VITE_DEBUG?: boolean
     readonly VITE_LOG_LEVEL?: 'debug' | 'info' | 'warn' | 'error'
     readonly NODE_ENV?: 'development' | 'test' | 'production'
   }

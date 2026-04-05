@@ -2,11 +2,12 @@ import { defineConfig } from 'tsdown'
 
 export default defineConfig({
   entry: ['src/index.ts'],
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   dts: true,
   exports: true,
   clean: true,
+  sourcemap: true,
   deps: {
-    neverBundle: ['zod', '@vite-env/core'],
+    neverBundle: ['vite', 'zod', '@vite-env/core'],
   },
 })

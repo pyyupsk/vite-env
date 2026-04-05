@@ -116,6 +116,18 @@ describe('generateDts', () => {
     expect(content).toContain('readonly POOL_SIZE?: number')
   })
 
+  it('should map z.stringbool() to boolean type', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateDts({
+      client: { VITE_DARK_MODE: z.stringbool().default(false) },
+    }, '/tmp')
+    const content = writeFile.mock.calls[0][1] as string
+
+    expect(content).toContain('readonly VITE_DARK_MODE?: boolean')
+  })
+
   it('should handle empty definition', async () => {
     const writeFile = await getWriteFile()
     writeFile.mockResolvedValue(undefined)

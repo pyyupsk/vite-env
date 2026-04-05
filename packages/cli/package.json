@@ -5,10 +5,15 @@
   "description": "CLI for @vite-env/core — check, generate, types",
   "license": "MIT",
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index-JtcdNmdz.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
   "bin": {
     "vite-env": "./dist/index.mjs"
   },
@@ -28,6 +33,7 @@
     "@vite-env/core": "workspace:*",
     "citty": "catalog:dev",
     "consola": "catalog:dev",
+    "vite": "catalog:dev",
     "zod": "catalog:dev"
   },
   "devDependencies": {

@@ -9,10 +9,11 @@ export default defineConfig({
     'src/dts.ts',
     'src/leak.ts',
   ],
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   dts: true,
   exports: true,
   clean: true,
+  sourcemap: true,
   deps: {
     neverBundle: ['vite', 'zod'],
   },
