@@ -5,6 +5,7 @@
 .eslintcache
 .idea
 .env
+!playground/.env
 .nuxt
 .temp
 .output
