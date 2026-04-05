@@ -1,7 +1,7 @@
 {
   "name": "@vite-env/core",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The env.ts layer for Vite — define once, validate everywhere, import with types",
   "license": "MIT",
   "homepage": "https://github.com/pyyupsk/vite-env#readme",
