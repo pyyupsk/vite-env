@@ -10,6 +10,13 @@
     "url": "git+https://github.com/pyyupsk/vite-env.git",
     "directory": "packages/core"
   },
+  "compatiblePackages": {
+    "schemaVersion": 1,
+    "vite": {
+      "type": "compatible",
+      "versions": ">=8.0.0"
+    }
+  },
   "keywords": [
     "vite",
     "vite-plugin",
