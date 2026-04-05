@@ -6,6 +6,7 @@
     "build": "pnpm run -r build",
     "dev": "pnpm run -r dev",
     "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "pnpm run -r typecheck",
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
@@ -13,10 +14,12 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
+    "@vitest/coverage-v8": "catalog:dev",
     "eslint": "catalog:dev",
     "lint-staged": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
-    "typescript": "catalog:dev"
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
