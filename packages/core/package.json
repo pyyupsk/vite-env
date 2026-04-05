@@ -1,24 +1,52 @@
 {
   "name": "@vite-env/core",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "The env.ts layer for Vite — define once, validate everywhere, import with types",
+  "license": "MIT",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+    },
+    "./plugin": {
+      "import": { "types": "./dist/plugin.d.ts", "default": "./dist/plugin.js" },
+      "require": { "types": "./dist/plugin.d.cts", "default": "./dist/plugin.cjs" }
+    },
+    "./schema": {
+      "import": { "types": "./dist/schema.d.ts", "default": "./dist/schema.js" },
+      "require": { "types": "./dist/schema.d.cts", "default": "./dist/schema.cjs" }
+    },
+    "./format": {
+      "import": { "types": "./dist/format.d.ts", "default": "./dist/format.js" },
+      "require": { "types": "./dist/format.d.cts", "default": "./dist/format.cjs" }
+    },
+    "./dts": {
+      "import": { "types": "./dist/dts.d.ts", "default": "./dist/dts.js" },
+      "require": { "types": "./dist/dts.d.cts", "default": "./dist/dts.cjs" }
     }
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
+  "engines": { "node": ">=20.19.0" },
   "scripts": {
     "build": "tsdown",
-    "prepack": "pnpm build"
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vite": ">=8.0.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@types/node": "catalog:dev",
     "tsdown": "catalog:dev",
-    "typescript": "catalog:dev"
+    "typescript": "catalog:dev",
+    "vite": "catalog:dev",
+    "vitest": "catalog:dev",
+    "zod": "catalog:dev"
   }
 }

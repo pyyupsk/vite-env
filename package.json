@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "build": "pnpm run -r build",
+    "dev": "pnpm run -r dev",
     "test": "vitest",
+    "typecheck": "pnpm run -r typecheck",
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
     "prepare": "npx simple-git-hooks"
@@ -14,8 +16,7 @@
     "eslint": "catalog:dev",
     "lint-staged": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
-    "typescript": "catalog:dev",
-    "vitest": "catalog:dev"
+    "typescript": "catalog:dev"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"

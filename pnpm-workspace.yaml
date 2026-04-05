@@ -1,5 +1,10 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
 packages:
   - 'packages/*'
+  - playground
 
 allowBuilds:
   esbuild: true
@@ -7,10 +12,14 @@ allowBuilds:
 
 catalogs:
   dev:
-    '@antfu/eslint-config': ^4.13.2
-    eslint: ^9.23.0
-    lint-staged: ^15.5.0
-    simple-git-hooks: ^2.13.0
+    '@antfu/eslint-config': ^8.0.0
+    '@types/node': ^22.15.29
+    citty: ^0.1.6
+    eslint: ^10.2.0
+    lint-staged: ^16.4.0
+    simple-git-hooks: ^2.13.1
     tsdown: ^0.12.5
-    typescript: ^5.8.2
+    typescript: ^6.0.2
+    vite: ^8.0.3
     vitest: ^3.1.1
+    zod: ^4.0.0
