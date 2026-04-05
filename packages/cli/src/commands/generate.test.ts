@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { generateCommand } from './generate'
+import { buildHint, generateCommand, getDefault } from './generate'
 
 describe('generateCommand', () => {
   it('should be a valid command definition', () => {
@@ -52,5 +52,15 @@ describe('zod schema introspection (generate helpers)', () => {
     const schema = z.string().optional()
     const inner = schema.unwrap()
     expect(inner instanceof z.ZodString).toBe(true)
+  })
+
+  it('should recognize z.stringbool() as boolean hint via ZodPipe', () => {
+    const schema = z.stringbool() as unknown as z.ZodTypeAny
+    expect(buildHint(schema)).toBe('boolean (true | false | 1 | 0)')
+  })
+
+  it('should extract default from z.stringbool().default()', () => {
+    const schema = z.stringbool().default(false) as unknown as z.ZodTypeAny
+    expect(getDefault(schema)).toBe('false')
   })
 })

@@ -51,7 +51,7 @@ export const generateCommand = defineCommand({
   },
 })
 
-function buildHint(schema: z.ZodTypeAny): string {
+export function buildHint(schema: z.ZodTypeAny): string {
   const inner = unwrap(schema)
   if (inner instanceof z.ZodString)
     return 'string'
@@ -61,13 +61,15 @@ function buildHint(schema: z.ZodTypeAny): string {
     return 'boolean (true | false | 1 | 0)'
   if (inner instanceof z.ZodEnum)
     return `enum: ${(inner.options as string[]).join(' | ')}`
+  if (inner instanceof z.ZodPipe)
+    return buildHint(inner.def.out as unknown as z.ZodTypeAny)
   return 'string'
 }
 
-function getDefault(schema: z.ZodTypeAny): string {
+export function getDefault(schema: z.ZodTypeAny): string {
   if (schema instanceof z.ZodDefault) {
-    const d = (schema.def as { defaultValue: () => string | number | boolean }).defaultValue()
-    return String(d)
+    const val = (schema.def as { defaultValue: unknown }).defaultValue
+    return String(typeof val === 'function' ? val() : val)
   }
   return ''
 }
@@ -81,5 +83,7 @@ function unwrap(schema: z.ZodTypeAny): z.ZodTypeAny {
     return unwrap(schema.unwrap() as unknown as z.ZodTypeAny)
   if (schema instanceof z.ZodDefault)
     return unwrap((schema.def as { innerType: unknown }).innerType as z.ZodTypeAny)
+  if (schema instanceof z.ZodPipe)
+    return unwrap(schema.def.out as unknown as z.ZodTypeAny)
   return schema
 }
