@@ -7,6 +7,7 @@ export default defineConfig({
     'src/schema.ts',
     'src/format.ts',
     'src/dts.ts',
+    'src/leak.ts',
   ],
   format: ['esm'],
   dts: true,

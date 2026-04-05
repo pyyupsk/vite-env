@@ -8,6 +8,7 @@
     ".": "./dist/index.mjs",
     "./dts": "./dist/dts.mjs",
     "./format": "./dist/format.mjs",
+    "./leak": "./dist/leak.mjs",
     "./plugin": "./dist/plugin.mjs",
     "./schema": "./dist/schema.mjs",
     "./package.json": "./package.json"

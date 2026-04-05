@@ -18,6 +18,7 @@ function createMockConfig(root: string) {
     root,
     envDir: root,
     mode: 'development',
+    build: { ssr: false },
     logger: { info: vi.fn(), warn: vi.fn() },
   } as any
 }

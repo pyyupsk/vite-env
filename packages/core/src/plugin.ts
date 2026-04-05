@@ -82,6 +82,9 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     },
 
     async generateBundle(_options, bundle) {
+      if (resolvedConfig.build.ssr)
+        return
+
       const rawEnv = await loadEnvSources(resolvedConfig)
       const result = validateEnv(envDefinition, rawEnv)
 

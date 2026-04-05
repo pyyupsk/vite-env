@@ -53,6 +53,9 @@ importers:
       '@antfu/eslint-config':
         specifier: catalog:dev
         version: 8.0.0(@typescript-eslint/rule-tester@8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(@typescript-eslint/typescript-estree@8.58.0(typescript@6.0.2))(@typescript-eslint/utils@8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(@vue/compiler-sfc@3.5.32)(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)(vitest@4.1.2(@types/node@25.5.2)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)))
+      '@types/node':
+        specifier: catalog:dev
+        version: 25.5.2
       '@vitest/coverage-v8':
         specifier: catalog:dev
         version: 4.1.2(vitest@4.1.2(@types/node@25.5.2)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)))
@@ -121,7 +124,30 @@ importers:
         specifier: catalog:dev
         version: 4.3.6
 
-  playground: {}
+  playground:
+    dependencies:
+      '@vite-env/cli':
+        specifier: workspace:*
+        version: link:../packages/cli
+      '@vite-env/core':
+        specifier: workspace:*
+        version: link:../packages/core
+    devDependencies:
+      '@types/node':
+        specifier: catalog:dev
+        version: 25.5.2
+      typescript:
+        specifier: catalog:dev
+        version: 6.0.2
+      vite:
+        specifier: catalog:dev
+        version: 8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.2(@types/node@25.5.2)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3))
+      zod:
+        specifier: catalog:dev
+        version: 4.3.6
 
 packages:
 
