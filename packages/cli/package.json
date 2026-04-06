@@ -1,7 +1,7 @@
 {
   "name": "@vite-env/cli",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI for @vite-env/core — check, generate, types",
   "license": "MIT",
   "homepage": "https://github.com/pyyupsk/vite-env#cli",
