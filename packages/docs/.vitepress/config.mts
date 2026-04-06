@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import pkg from '../../core/package.json'
 
 export default defineConfig({
   title: 'vite-env',
@@ -7,7 +8,7 @@ export default defineConfig({
   lang: 'en-US',
   base: '/vite-env/',
 
-  head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  head: [['link', { rel: 'icon', href: '/vite-env/favicon.svg' }]],
 
   themeConfig: {
     logo: '/favicon.svg',
@@ -17,7 +18,7 @@ export default defineConfig({
       { text: 'Reference', link: '/reference/define-env' },
       { text: 'CLI', link: '/cli/overview' },
       {
-        text: 'v0.2.1',
+        text: `v${pkg.version}`,
         items: [
           {
             text: 'Changelog',

@@ -6,9 +6,18 @@ settings:
 
 catalogs:
   default:
+    '@fontsource-variable/geist':
+      specifier: ^5.2.8
+      version: 5.2.8
+    '@fontsource-variable/geist-mono':
+      specifier: ^5.2.7
+      version: 5.2.7
     jiti:
       specifier: ^2.6.1
       version: 2.6.1
+    vitepress:
+      specifier: ^1.6.3
+      version: 1.6.4
   dev:
     '@antfu/eslint-config':
       specifier: ^8.0.0
@@ -146,6 +155,12 @@ importers:
 
   packages/docs:
     devDependencies:
+      '@fontsource-variable/geist':
+        specifier: 'catalog:'
+        version: 5.2.8
+      '@fontsource-variable/geist-mono':
+        specifier: 'catalog:'
+        version: 5.2.7
       vitepress:
         specifier: 'catalog:'
         version: 1.6.4(@algolia/client-search@5.50.1)(@types/node@25.5.2)(change-case@5.4.4)(lightningcss@1.32.0)(postcss@8.5.8)(search-insights@2.17.3)(typescript@6.0.2)
@@ -766,6 +781,12 @@ packages:
   '@eslint/plugin-kit@0.7.0':
     resolution: {integrity: sha512-ejvBr8MQCbVsWNZnCwDXjUKq40MDmHalq7cJ6e9s/qzTUFIIo/afzt1Vui9T97FM/V/pN4YsFVoed5NIa96RDg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@fontsource-variable/geist-mono@5.2.7':
+    resolution: {integrity: sha512-ZKlZ5sjtalb2TwXKs400mAGDlt/+2ENLNySPx0wTz3bP3mWARCsUW+rpxzZc7e05d2qGch70pItt3K4qttbIYA==}
+
+  '@fontsource-variable/geist@5.2.8':
+    resolution: {integrity: sha512-cJ6m9e+8MQ5dCYJsLylfZrgBh6KkG4bOLckB35Tr9J/EqdkEM6QllH5PxqP1dhTvFup+HtMRPuz9xOjxXJggxw==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3453,6 +3474,10 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.0
       levn: 0.4.1
+
+  '@fontsource-variable/geist-mono@5.2.7': {}
+
+  '@fontsource-variable/geist@5.2.8': {}
 
   '@humanfs/core@0.19.1': {}
 
