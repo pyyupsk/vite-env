@@ -60,7 +60,7 @@ function zodShapeToTsFields(shape: z.ZodRawShape): string {
   return Object.entries(shape)
     .map(([key, schema]) => {
       // Zod v4: ZodRawShape values are $ZodType, cast to ZodTypeAny for instanceof checks
-      const s = schema as unknown as z.ZodTypeAny
+      const s = schema as z.ZodTypeAny
       const tsType = zodToTs(s)
       const optional = isOptional(s)
       return `    readonly ${key}${optional ? '?' : ''}: ${tsType}`

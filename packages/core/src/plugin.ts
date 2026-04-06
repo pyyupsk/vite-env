@@ -98,9 +98,9 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       )
 
       if (leaks.length > 0) {
+        const details = leaks.map(l => `  ✗ ${l.key} found in ${l.chunk}`).join('\n')
         throw new Error(
-          `[vite-env] Server environment variables detected in client bundle!\n\n${leaks.map(l => `  ✗ ${l.key} found in ${l.chunk}`).join('\n')
-          }\n\n  These variables are marked as server-only and must never reach the browser.`,
+          `[vite-env] Server environment variables detected in client bundle!\n\n${details}\n\n  These variables are marked as server-only and must never reach the browser.`,
         )
       }
     },
