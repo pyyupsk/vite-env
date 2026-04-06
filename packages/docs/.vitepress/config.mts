@@ -9,9 +9,7 @@ export default defineConfig({
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
 
   themeConfig: {
-    logo: {
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1a1a2e"/><text x="16" y="22" font-family="monospace" font-size="16" font-weight="bold" fill="#c8f135" text-anchor="middle">ve</text></svg>',
-    },
+    logo: '/favicon.svg',
 
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
