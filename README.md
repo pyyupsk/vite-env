@@ -1,5 +1,12 @@
 # vite-env
 
+[![Unit Test](https://github.com/pyyupsk/vite-env/actions/workflows/unit-test.yml/badge.svg)](https://github.com/pyyupsk/vite-env/actions/workflows/unit-test.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=pyyupsk_vite-env&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=pyyupsk_vite-env)
+[![Vite compatibility](https://registry.vite.dev/api/badges?package=@vite-env/core&tool=vite)](https://registry.vite.dev/)
+[![npm version](https://img.shields.io/npm/v/@vite-env/core)](https://www.npmjs.com/package/@vite-env/core)
+[![npm downloads](https://img.shields.io/npm/dm/@vite-env/core)](https://www.npmjs.com/package/@vite-env/core)
+[![License](https://img.shields.io/github/license/pyyupsk/vite-env)](./LICENSE)
+
 The `env.ts` layer for Vite — define once, validate everywhere, import with types.
 
 What [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is for Next.js, but built natively on Vite 8 / Rolldown with zero boilerplate.
@@ -41,7 +48,9 @@ export default defineEnv({
     VITE_APP_NAME: z.string().min(1),
     VITE_DARK_MODE: z.stringbool().default(false),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-    VITE_NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    VITE_NODE_ENV: z
+      .enum(['development', 'test', 'production'])
+      .default('development'),
   },
 })
 ```

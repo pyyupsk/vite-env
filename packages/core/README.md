@@ -1,5 +1,7 @@
 # @vite-env/core
 
+![Vite compatibility](https://registry.vite.dev/api/badges?package=@vite-env/core&tool=vite)
+
 The `env.ts` layer for Vite — define once, validate everywhere, import with types.
 
 - Typed virtual modules (`virtual:env/client`, `virtual:env/server`)
@@ -29,7 +31,9 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.url(),
     VITE_DARK_MODE: z.stringbool().default(false),
-    VITE_NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    VITE_NODE_ENV: z
+      .enum(['development', 'test', 'production'])
+      .default('development'),
   },
 })
 ```
