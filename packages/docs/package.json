@@ -1,0 +1,16 @@
+{
+  "name": "@vite-env/docs",
+  "version": "0.2.1",
+  "private": true,
+  "scripts": {
+    "build": "vitepress build",
+    "dev": "vitepress dev",
+    "preview": "vitepress preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@fontsource-variable/geist": "catalog:",
+    "@fontsource-variable/geist-mono": "catalog:",
+    "vitepress": "catalog:"
+  }
+}
