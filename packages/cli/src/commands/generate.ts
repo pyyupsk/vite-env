@@ -49,7 +49,7 @@ export const generateCommand = defineCommand({
 
       for (const [key, schema] of Object.entries(shape)) {
         // Zod v4: ZodRawShape values are $ZodType, cast for instanceof checks
-        const s = schema as unknown as z.ZodTypeAny
+        const s = schema as z.ZodTypeAny
         const hint = buildHint(s)
         const defaultVal = getDefault(s)
         const reqFlag = isRequired(s) ? ' — required' : ''
