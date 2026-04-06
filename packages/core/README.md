@@ -59,7 +59,7 @@ env.VITE_DARK_MODE // boolean
 env.VITE_NODE_ENV // 'development' | 'test' | 'production'
 ```
 
-See the [full documentation](https://github.com/pyyupsk/vite-env) for server/client split details, CLI tools, and more.
+See the [full documentation](https://pyyupsk.github.io/vite-env/) for server/client split details, CLI tools, and more.
 
 ## License
 
