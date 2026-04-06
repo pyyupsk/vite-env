@@ -5,6 +5,7 @@ export default defineConfig({
   description:
     'The env.ts layer for Vite — define once, validate everywhere, import with types',
   lang: 'en-US',
+  base: '/vite-env/',
 
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
 
