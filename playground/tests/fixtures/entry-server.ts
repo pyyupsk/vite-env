@@ -1,3 +1,1 @@
-import { env } from 'virtual:env/server'
-
-export const serverEnv = env
+export { env as serverEnv } from 'virtual:env/server'
