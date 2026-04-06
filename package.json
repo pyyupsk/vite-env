@@ -12,7 +12,10 @@
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
     "prepare": "npx simple-git-hooks",
-    "release": "bumpp -r"
+    "release": "bumpp -r",
+    "docs:dev": "pnpm --filter @vite-env/docs run dev",
+    "docs:build": "pnpm --filter @vite-env/docs run build",
+    "docs:preview": "pnpm --filter @vite-env/docs run preview"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",

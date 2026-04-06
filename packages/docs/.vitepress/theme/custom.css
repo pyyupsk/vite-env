@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap");
+
+:root {
+  --vp-font-family-base:
+    "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --vp-font-family-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --vp-c-brand-1: #c8f135;
+  --vp-c-brand-2: #b5dc2f;
+  --vp-c-brand-3: #a2c729;
+  --vp-c-brand-soft: rgba(200, 241, 53, 0.14);
+  --vp-button-brand-text: #1a1a2e;
+  --vp-button-brand-hover-text: #1a1a2e;
+  --vp-button-brand-active-text: #1a1a2e;
+  --vp-button-brand-bg: #c8f135;
+  --vp-button-brand-hover-bg: #b5dc2f;
+  --vp-button-brand-active-bg: #a2c729;
+  --vp-home-hero-name-color: #c8f135;
+}
+
+.dark {
+  --vp-c-brand-1: #c8f135;
+  --vp-c-brand-2: #d4f75e;
+  --vp-c-brand-3: #e0fd87;
+  --vp-c-brand-soft: rgba(200, 241, 53, 0.16);
+  --vp-button-brand-text: #1a1a2e;
+  --vp-button-brand-hover-text: #1a1a2e;
+  --vp-home-hero-name-color: #c8f135;
+}

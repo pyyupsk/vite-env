@@ -8,6 +8,7 @@ allowBuilds:
   simple-git-hooks: true
 catalog:
   jiti: ^2.6.1
+  vitepress: ^1.6.3
 catalogs:
   dev:
     '@antfu/eslint-config': ^8.0.0
