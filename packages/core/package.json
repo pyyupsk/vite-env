@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
   "name": "@vite-env/core",
   "type": "module",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "The env.ts layer for Vite — define once, validate everywhere, import with types",
   "license": "MIT",
   "homepage": "https://github.com/pyyupsk/vite-env#readme",
