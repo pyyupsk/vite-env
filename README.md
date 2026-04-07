@@ -19,7 +19,8 @@ What [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is for Next.js, but built
 - **Auto-coercion** — `z.stringbool()`, `z.coerce.number()` just work
 - **Auto `.d.ts` generation** — no more manual `vite-env.d.ts` maintenance
 - **Auto `.env.example`** — `npx vite-env generate` from your schema
-- **Zod v4 native** — first-class support for the latest Zod
+- **Zod v4 native** — first-class support for the latest Zod with rich type inference
+- **Standard Schema support** — use Valibot, ArkType, or any Standard Schema-compliant validator
 - **Vite 8 / Rolldown native** — `moduleType: 'js'` on virtual modules, sequential hooks
 
 ## Install
@@ -34,7 +35,8 @@ pnpm add -D @vite-env/cli # optional — for check/generate/types commands
 ### 1. Define your schema — `env.ts`
 
 ```ts
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   server: {
@@ -119,16 +121,16 @@ ViteEnv({
 
 ## Packages
 
-| Package                             | Description                                 |
-| ----------------------------------- | ------------------------------------------- |
-| [`@vite-env/core`](./packages/core) | Vite plugin + `defineEnv()` + Zod re-export |
-| [`@vite-env/cli`](./packages/cli)   | CLI commands: `check`, `generate`, `types`  |
+| Package                             | Description                                         |
+| ----------------------------------- | --------------------------------------------------- |
+| [`@vite-env/core`](./packages/core) | Vite plugin + `defineEnv()` + `defineStandardEnv()` |
+| [`@vite-env/cli`](./packages/cli)   | CLI commands: `check`, `generate`, `types`          |
 
 ## Requirements
 
 - Node.js >= 20.19.0
 - Vite >= 8.0.0
-- Zod >= 4.0.0
+- Zod >= 4.0.0 (optional — required only when using `defineEnv()`)
 
 ## License
 

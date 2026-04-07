@@ -7,7 +7,8 @@ Get up and running with `vite-env` in three steps.
 Create an `env.ts` file at your project root. This file declares which environment variables your app needs, whether they belong to the server or client, and what type each one should be:
 
 ```ts [env.ts]
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   server: {

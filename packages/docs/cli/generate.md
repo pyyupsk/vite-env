@@ -22,7 +22,8 @@ The generated file includes a comment header, then one section per group in your
 Given the example schema:
 
 ```ts [env.ts]
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   client: {

@@ -23,7 +23,8 @@ Every key defined under `client` must start with `VITE_`. This is enforced at `d
 This mirrors Vite's own convention and makes the exposure boundary explicit — anything prefixed with `VITE_` is expected to be public.
 
 ```ts
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   server: {

@@ -1,6 +1,6 @@
 # Introduction
 
-`vite-env` is a Vite plugin that replaces ad-hoc `import.meta.env` access with a validated, type-safe environment layer. You define your variables once in an `env.ts` file using a Zod schema, and the plugin handles validation, virtual module generation, and type declaration output on every build.
+`vite-env` is a Vite plugin that replaces ad-hoc `import.meta.env` access with a validated, type-safe environment layer. You define your variables once in an `env.ts` file using Zod or any [Standard Schema](https://github.com/standard-schema/standard-schema)-compliant validator (Valibot, ArkType, etc.), and the plugin handles validation, virtual module generation, and type declaration output on every build.
 
 ## The problem
 
@@ -17,7 +17,8 @@ Vite exposes environment variables as untyped strings on `import.meta.env`. Ther
 Everything starts from a single `env.ts` file at the root of your project:
 
 ```ts
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   server: {
@@ -56,8 +57,8 @@ When Vite starts (dev server or production build), the plugin runs through this 
 
 1. Loads your `env.ts` definition
 2. Reads all `.env` files using Vite's standard env loading rules
-3. Validates every variable against your Zod schema — if anything is missing or invalid, the build fails immediately with a formatted error listing every problem
-4. Generates `vite-env.d.ts` in your project root with accurate TypeScript types derived from the schema
+3. Validates every variable against your schema — if anything is missing or invalid, the build fails immediately with a formatted error listing every problem
+4. Generates `vite-env.d.ts` in your project root with TypeScript types (rich inference with Zod, `string` fallback with Standard Schema)
 5. Makes `virtual:env/client` and `virtual:env/server` available as importable modules with fully typed, validated values
 
 You never access a variable that failed validation. You never drift out of sync with your types.

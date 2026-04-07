@@ -20,7 +20,7 @@ Several tools address the gap in Vite's environment variable handling. Here is h
 | Auto type generation        | No                               | No                           | Yes                            |
 | Auto `.env.example`         | No                               | No                           | Yes                            |
 | CLI tools                   | No                               | No                           | Yes                            |
-| Schema libraries            | Standard Schema + built-in       | Standard Schema              | Zod v4                         |
+| Schema libraries            | Standard Schema + built-in       | Standard Schema              | Zod v4 + Standard Schema       |
 | Platform presets            | No                               | Yes (Vercel, Railway, etc.)  | No                             |
 | Vite 8 native               | Yes                              | N/A (framework-agnostic)     | Yes                            |
 | Zod v4 native               | No (Zod v3)                      | Yes (v3 + v4)                | Yes                            |
@@ -34,4 +34,4 @@ Each tool makes different trade-offs:
 
 - **`@t3-oss/env-core`** offers the strongest runtime protection with its Proxy-based access control — accessing a server variable on the client throws immediately. The `runtimeEnv` mapping is extra work, but it gives you explicit control over what gets exposed. Platform presets reduce boilerplate for common deployment targets. It works with any framework, not just Vite.
 
-- **`@vite-env/core`** automates the most — type generation, `.env.example`, virtual modules, and build-time leak scanning all happen from a single schema file. The trade-off is that it is Vite-specific and uses Zod v4 exclusively.
+- **`@vite-env/core`** automates the most — type generation, `.env.example`, virtual modules, and build-time leak scanning all happen from a single schema file. It supports Zod v4 (with rich `.d.ts` type inference) and any Standard Schema-compliant validator (Valibot, ArkType) via `defineStandardEnv()`. The trade-off is that it is Vite-specific.

@@ -1,6 +1,10 @@
-# defineEnv()
+# defineEnv() / defineStandardEnv()
 
-`defineEnv` is the entry point for declaring your environment schema. It validates your definition at call time and returns it unchanged, preserving the exact type for downstream inference.
+Two entry points are available for declaring your environment schema, depending on your validator choice.
+
+## defineEnv() — Zod
+
+`defineEnv` is the primary entry point for Zod users. It validates your definition at call time and returns it unchanged, preserving the exact type for downstream inference. The generated `.d.ts` file includes rich types (`number`, `boolean`, enum unions, optionals).
 
 ## Signature
 
@@ -20,7 +24,8 @@ interface EnvDefinition {
 Both properties are optional. Each is a Zod raw shape — a plain object where every value is a Zod schema.
 
 ```ts
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   server: {
@@ -106,7 +111,9 @@ type ValidationResult
 On success, `data` contains the validated and coerced values. On failure, `errors` contains the Zod issue list and `data` is `null`.
 
 ```ts
-import { defineEnv, validateEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { validateEnv } from '@vite-env/core/schema'
+import { z } from 'zod'
 
 const def = defineEnv({
   server: { PORT: z.coerce.number().default(3000) },
@@ -120,4 +127,93 @@ if (result.success) {
 else {
   console.error(result.errors)
 }
+```
+
+## defineStandardEnv() — Standard Schema
+
+`defineStandardEnv` accepts any [Standard Schema](https://github.com/standard-schema/standard-schema)-compliant validator (Valibot, ArkType, Zod, etc.). It does not require Zod to be installed.
+
+### Signature
+
+```ts
+function defineStandardEnv<T extends Omit<StandardEnvDefinition, '_standard'>>(
+  definition: T,
+): T & { readonly _standard: true }
+```
+
+### StandardEnvDefinition
+
+```ts
+interface StandardEnvDefinition {
+  server?: Record<string, StandardSchemaV1>
+  client?: Record<string, StandardSchemaV1>
+}
+```
+
+### Example with Valibot
+
+```ts
+import { defineStandardEnv } from '@vite-env/core'
+import * as v from 'valibot'
+
+export default defineStandardEnv({
+  server: {
+    DATABASE_URL: v.pipe(v.string(), v.url()),
+    JWT_SECRET: v.pipe(v.string(), v.minLength(32)),
+  },
+  client: {
+    VITE_API_URL: v.pipe(v.string(), v.url()),
+    VITE_APP_NAME: v.pipe(v.string(), v.minLength(1)),
+  },
+})
+```
+
+### Example with ArkType
+
+```ts
+import { defineStandardEnv } from '@vite-env/core'
+import { type } from 'arktype'
+
+export default defineStandardEnv({
+  server: {
+    DATABASE_URL: type('string'),
+    JWT_SECRET: type('string >= 32'),
+  },
+  client: {
+    VITE_API_URL: type('string'),
+    VITE_APP_NAME: type('string >= 1'),
+  },
+})
+```
+
+### Type generation differences
+
+Standard Schema has no runtime type introspection, so the generated `vite-env.d.ts` types all fields as `string`. For richer types, use `defineEnv()` with Zod or manually augment the module declarations.
+
+| Feature                | `defineEnv()` (Zod)                | `defineStandardEnv()`       |
+| ---------------------- | ---------------------------------- | --------------------------- |
+| `.d.ts` types          | Rich (number, boolean, enums)      | All `string`                |
+| Type inference helpers | `InferClientEnv`, `InferServerEnv` | Not available               |
+| Zod required           | Yes                                | No                          |
+| Validation             | Zod `safeParse`                    | Standard Schema `~validate` |
+
+The same `VITE_` prefix enforcement, server/client split, virtual modules, and leak detection work identically with both functions.
+
+### validateStandardEnv()
+
+`validateStandardEnv` is the Standard Schema counterpart of `validateEnv`. It is **async** because Standard Schema's `~validate` may return a Promise.
+
+```ts
+async function validateStandardEnv(
+  def: StandardEnvDefinition,
+  rawEnv: Record<string, string>,
+): Promise<StandardValidationResult>
+```
+
+It iterates each key in the combined `server` + `client` shapes and calls `schema['~standard'].validate()` per key, collecting errors with the key name prepended to the path.
+
+```ts
+type StandardValidationResult
+  = | { success: true, data: Record<string, unknown>, errors: [] }
+    | { success: false, data: null, errors: StandardValidationIssue[] }
 ```

@@ -3,7 +3,8 @@
 Practical Zod v4 patterns for environment variable schemas. All examples assume the following import:
 
 ```ts
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 ```
 
 ::: tip Zod v4 error parameter
