@@ -136,7 +136,9 @@ else {
 ### Signature
 
 ```ts
-function defineStandardEnv<T>(definition: T): T & { readonly _standard: true }
+function defineStandardEnv<T extends Omit<StandardEnvDefinition, '_standard'>>(
+  definition: T,
+): T & { readonly _standard: true }
 ```
 
 ### StandardEnvDefinition
@@ -196,3 +198,22 @@ Standard Schema has no runtime type introspection, so the generated `vite-env.d.
 | Validation             | Zod `safeParse`                    | Standard Schema `~validate` |
 
 The same `VITE_` prefix enforcement, server/client split, virtual modules, and leak detection work identically with both functions.
+
+### validateStandardEnv()
+
+`validateStandardEnv` is the Standard Schema counterpart of `validateEnv`. It is **async** because Standard Schema's `~validate` may return a Promise.
+
+```ts
+async function validateStandardEnv(
+  def: StandardEnvDefinition,
+  rawEnv: Record<string, string>,
+): Promise<StandardValidationResult>
+```
+
+It iterates each key in the combined `server` + `client` shapes and calls `schema['~standard'].validate()` per key, collecting errors with the key name prepended to the path.
+
+```ts
+type StandardValidationResult
+  = | { success: true, data: Record<string, unknown>, errors: [] }
+    | { success: false, data: null, errors: StandardValidationIssue[] }
+```

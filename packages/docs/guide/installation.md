@@ -76,9 +76,10 @@ bun add -D @vite-env/cli
 
 ## Requirements
 
-| Requirement     | Version                                         |
-| --------------- | ----------------------------------------------- |
-| Node.js         | >= 20.19.0                                      |
-| Vite            | >= 8.0.0                                        |
-| Zod             | >= 4.0.0 (optional — for `defineEnv()`)         |
-| Standard Schema | >= 1.1.0 (optional — for `defineStandardEnv()`) |
+| Requirement | Version    |
+| ----------- | ---------- |
+| Node.js     | >= 20.19.0 |
+| Vite        | >= 8.0.0   |
+| Zod         | >= 4.0.0 (optional — only for `defineEnv()`) |
+
+When using `defineStandardEnv()`, install your preferred Standard Schema-compliant validator (Valibot, ArkType, etc.) instead of Zod. Any version that implements the [Standard Schema](https://github.com/standard-schema/standard-schema) spec works.
