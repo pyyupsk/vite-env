@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- vite-env favicon — shield + lightning bolt -->
+  <!-- #0d0d0d background, #c8f135 accent, flat/geometric -->
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="96" fill="#0d0d0d"/>
+
+  <!-- Shield outline — geometric pentagon, sharp miter joins -->
+  <path
+    d="M256 76 L404 138 L404 294
+       Q404 398 256 448
+       Q108 398 108 294
+       L108 138 Z"
+    fill="none"
+    stroke="#c8f135"
+    stroke-width="22"
+    stroke-linejoin="miter"
+    stroke-linecap="square"
+  />
+
+  <!-- Lightning bolt — geometric, flat fill -->
+  <path
+    d="M280 160
+       L212 272
+       L260 272
+       L232 372
+       L324 244
+       L274 244
+       L316 160
+       Z"
+    fill="#c8f135"
+  />
+</svg>

@@ -1,5 +1,9 @@
+// packages/docs/.vitepress/config.mts
 import { defineConfig } from 'vitepress'
 import pkg from '../../core/package.json'
+import { rootSidebar } from './sidebar.mjs'
+import { versionedSidebars } from './versioned-sidebars.mjs'
+import { versions } from './versions.mjs'
 
 export default defineConfig({
   title: 'vite-env',
@@ -18,8 +22,9 @@ export default defineConfig({
       { text: 'Reference', link: '/reference/define-env' },
       { text: 'CLI', link: '/cli/overview' },
       {
-        text: `v${pkg.version}`,
+        text: `v${pkg.version} (next)`,
         items: [
+          ...versions,
           {
             text: 'Changelog',
             link: 'https://github.com/pyyupsk/vite-env/releases',
@@ -30,57 +35,8 @@ export default defineConfig({
     ],
 
     sidebar: {
-      '/guide/': [
-        {
-          text: 'Introduction',
-          items: [
-            { text: 'What is vite-env?', link: '/guide/introduction' },
-            { text: 'Why vite-env?', link: '/guide/why' },
-            { text: 'Comparison', link: '/guide/comparison' },
-          ],
-        },
-        {
-          text: 'Getting Started',
-          items: [
-            { text: 'Installation', link: '/guide/installation' },
-            { text: 'Quick Start', link: '/guide/quick-start' },
-            { text: 'How It Works', link: '/guide/how-it-works' },
-          ],
-        },
-        {
-          text: 'Core Concepts',
-          items: [
-            { text: 'Server vs Client', link: '/guide/server-client' },
-            { text: 'Virtual Modules', link: '/guide/virtual-modules' },
-            { text: 'Type Coercion', link: '/guide/coercion' },
-            { text: 'Leak Detection', link: '/guide/leak-detection' },
-            { text: 'Type Generation', link: '/guide/type-generation' },
-          ],
-        },
-      ],
-      '/reference/': [
-        {
-          text: 'API Reference',
-          items: [
-            { text: 'defineEnv()', link: '/reference/define-env' },
-            { text: 'Plugin Options', link: '/reference/plugin-options' },
-            { text: 'Zod v4 Patterns', link: '/reference/zod-patterns' },
-            { text: 'Env Priority', link: '/reference/env-priority' },
-            { text: 'Vite 8 / Rolldown', link: '/reference/vite8' },
-          ],
-        },
-      ],
-      '/cli/': [
-        {
-          text: 'CLI',
-          items: [
-            { text: 'Overview', link: '/cli/overview' },
-            { text: 'vite-env check', link: '/cli/check' },
-            { text: 'vite-env generate', link: '/cli/generate' },
-            { text: 'vite-env types', link: '/cli/types' },
-          ],
-        },
-      ],
+      ...rootSidebar,
+      ...versionedSidebars,
     },
 
     socialLinks: [
@@ -89,8 +45,11 @@ export default defineConfig({
     ],
 
     editLink: {
-      pattern:
-        'https://github.com/pyyupsk/vite-env/edit/main/packages/docs/:path',
+      pattern: ({ filePath }) =>
+        // eslint-disable-next-line e18e/prefer-static-regex
+        /^v\d/.test(filePath)
+          ? (undefined as unknown as string)
+          : `https://github.com/pyyupsk/vite-env/edit/main/packages/docs/${filePath}`,
       text: 'Edit this page on GitHub',
     },
 

@@ -1,0 +1,2 @@
+# Mark versioned doc snapshots as generated — collapses them in PR diffs
+packages/docs/v*/ linguist-generated=true
