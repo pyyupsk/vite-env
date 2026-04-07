@@ -16,7 +16,7 @@ A forgotten variable produces a silent wrong value or a confusing runtime crash 
 
 `vite-env` validates every variable at build start. If `VITE_PORT` is missing or not a valid number, the build stops immediately:
 
-```
+```ansi
 [vite-env] Environment validation failed:
 
   VITE_PORT   Required
@@ -40,12 +40,13 @@ const apiUrl = import.meta.env.VITE_API_URL // validated by nothing
 // Client code — only client variables available
 import env from 'virtual:env/client'
 
+// env.DATABASE_URL — does not exist on this type
+
 // Server code — has access to both server and client variables
 import env from 'virtual:env/server'
-// fully typed, validated
-console.log(env.DATABASE_URL)
+
+console.log(env.DATABASE_URL) // fully typed, validated
 console.log(env.VITE_API_URL) // fully typed, validated
-// env.DATABASE_URL — does not exist on this type
 ```
 
 Server secrets are never included in the client module. The split is enforced by the schema, not by convention.
@@ -63,7 +64,7 @@ export const config = {
 
 `vite-env` scans every chunk in the client bundle during `generateBundle` and searches for the literal string values of server-only variables. If a secret value appears in any chunk, the build fails:
 
-```
+```ansi
 [vite-env] Server environment variables detected in client bundle!
 
   ✗ DATABASE_URL found in assets/index-Bx92kA1.js

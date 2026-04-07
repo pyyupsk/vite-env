@@ -63,6 +63,20 @@ function copyDir(src, dest) {
   }
 }
 
+function rewriteContentLinks(content, prefix) {
+  // Split on fenced code blocks so links inside code examples are not rewritten
+  const parts = content.split(/(^```[^\n]*\n[\s\S]*?^```[ \t]*$)/gm)
+  return parts.map((part, i) => {
+    if (i % 2 === 1)
+      return part // inside a code fence — leave untouched
+    return part
+      // YAML frontmatter link fields: "link: /foo" → "link: /v0.3.0/foo"
+      .replaceAll(/^([ \t]*link:[ \t]+)\//gm, `$1${prefix}/`)
+      // Markdown inline links: "](/foo" → "](/v0.3.0/foo"
+      .replaceAll('](/', `](${prefix}/`)
+  }).join('')
+}
+
 function rewriteLinks(dir, prefix) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const filePath = path.join(dir, entry.name)
@@ -71,27 +85,27 @@ function rewriteLinks(dir, prefix) {
     }
     else if (entry.name.endsWith('.md')) {
       const content = fs.readFileSync(filePath, 'utf-8')
-      const updated = content
-        // YAML frontmatter link fields: "link: /foo" → "link: /v0.3.0/foo"
-        .replaceAll(/^([ \t]*link:[ \t]+)\//gm, `$1${prefix}/`)
-        // Markdown inline links: "](/foo" → "](/v0.3.0/foo"
-        .replaceAll('](/', `](${prefix}/`)
+      const updated = rewriteContentLinks(content, prefix)
       if (updated !== content) {
-        fs.writeFileSync(filePath, updated, 'utf-8')
-        log('rewrite', filePath)
+        if (!dryRun)
+          fs.writeFileSync(filePath, updated, 'utf-8')
+        log(dryRun ? 'would ' : 'rewrite', filePath)
       }
     }
   }
 }
 
-// Step 1: Copy content files (exclude .vitepress, node_modules, v*/)
+// Step 1: Copy content files (exclude .vitepress, node_modules, v*/, package.json)
 console.log('Copying content:')
 const skipDirs = new Set(['.vitepress', 'node_modules'])
+const skipFiles = new Set(['package.json'])
 for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
   if (skipDirs.has(entry.name))
     continue
   if (/^v\d+/.test(entry.name))
     continue // skip existing snapshots
+  if (!entry.isDirectory() && skipFiles.has(entry.name))
+    continue
   const src = path.join(docsDir, entry.name)
   const dest = path.join(versionDir, entry.name)
   if (entry.isDirectory())
@@ -101,12 +115,7 @@ for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
 
 // Rewrite absolute internal links in copied markdown files
 console.log('\nRewriting internal links:')
-if (dryRun) {
-  console.log('  [dry-run] would rewrite absolute links in all .md files')
-}
-else {
-  rewriteLinks(versionDir, `/v${version}`)
-}
+rewriteLinks(versionDir, `/v${version}`)
 
 // Step 2: Update versions.mjs — append new stable entry after 'next'
 console.log('\nUpdating versions.mjs:')
@@ -134,19 +143,16 @@ catch (e) {
   process.exit(1)
 }
 
-// Prefix all item links with /v{version}
-function prefixSidebarItems(groups, prefix) {
-  return groups.map(group => ({
-    ...group,
-    ...(group.items
-      ? {
-          items: group.items.map(item => ({
-            ...item,
-            link: item.link ? `${prefix}${item.link}` : item.link,
-          })),
-        }
-      : {}),
-  }))
+// Prefix all item links with /v{version} — recurses into nested items at any depth
+function prefixSidebarItems(items, prefix) {
+  return items.map((item) => {
+    const result = { ...item }
+    if (item.link)
+      result.link = `${prefix}${item.link}`
+    if (item.items)
+      result.items = prefixSidebarItems(item.items, prefix)
+    return result
+  })
 }
 
 const newSidebars = {}

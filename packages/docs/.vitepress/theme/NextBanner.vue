@@ -6,7 +6,7 @@ import { versions } from '../versions.mjs'
 const { page } = useData()
 
 // Show banner only on root (next) pages — not on v*/ versioned pages
-const isNextDocs = computed(() => !/^v\d+\./.test(page.value.relativePath))
+const isNextDocs = computed(() => !/^v\d/.test(page.value.relativePath))
 
 // First entry whose text does not include 'next' is the latest stable version
 const latestStable = versions.find(v => !v.text.includes('next'))
