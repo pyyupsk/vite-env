@@ -150,17 +150,20 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       }
     },
 
-    load(id) {
+    load(this: Rollup.PluginContext, id) {
       if (id === '\0virtual:env/client')
         return buildClientModule(envDefinition, lastValidated)
       if (id === '\0virtual:env/server') {
-        if (serverModuleGuardFails.length > 0) {
-          // warn once per load cycle using the last recorded fail; all importers are written to the log file
-          const latest = serverModuleGuardFails.at(-1)!
+        const envName = this.environment?.name ?? 'client'
+        // Filter to fails from this environment only — other envs may have recorded fails for their own loads
+        const envFails = serverModuleGuardFails.filter(f => f.envName === envName)
+        if (envFails.length > 0) {
+          // warn once per load cycle using the last recorded fail; unique importers are written to the log file
+          const latest = envFails.at(-1)!
           if (latest.mode === 'error')
             throw new Error(formatHardError(latest))
           if (latest.mode === 'stub')
-            return buildServerStubModule(latest.envName)
+            return buildServerStubModule(envName)
           resolvedConfig.logger.warn(`\n${formatGuardWarning(latest)}`)
         }
         return buildServerModule(envDefinition, lastValidated)

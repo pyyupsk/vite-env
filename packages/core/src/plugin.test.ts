@@ -437,4 +437,13 @@ describe('guard integration', () => {
     await plugin.buildEnd(undefined) // no fails → does not set exitCode again
     expect(process.exitCode).toBe(0)
   })
+
+  it('client resolveId fail does not affect ssr load — cross-environment isolation', () => {
+    // client records a fail
+    resolveWithEnv('client', 'src/app.ts')
+    // ssr load should serve the real module without warning
+    const ssrMod = plugin.load.call({ environment: { name: 'ssr' } }, '\0virtual:env/server')
+    expect(ssrMod.code).toContain('Object.freeze')
+    expect(mockConfig.logger.warn).not.toHaveBeenCalled()
+  })
 })
