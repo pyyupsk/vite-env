@@ -1,11 +1,15 @@
 // @env node
-import type { Plugin, ResolvedConfig } from 'vite'
+import type { Plugin, ResolvedConfig, Rollup } from 'vite'
+import type { GuardFail } from './guard'
 import type { AnyEnvDefinition } from './types'
 import path from 'node:path'
+import process from 'node:process'
 import { loadEnvConfig } from './config'
 import { generateStandardDts } from './dts'
-import { formatStandardSchemaError } from './format'
+import { formatGuardWarning, formatHardError, formatStandardSchemaError } from './format'
+import { buildServerStubModule, checkServerModuleAccess } from './guard'
 import { detectServerLeak } from './leak'
+import { writeWarningsLog } from './log'
 import { loadEnvSources } from './sources'
 import { isStandardEnvDefinition, validateStandardEnv } from './standard'
 import { buildClientModule, buildServerModule } from './virtual'
@@ -16,6 +20,30 @@ export interface ViteEnvOptions {
    * @default './env.ts' (resolved from project root)
    */
   configFile?: string
+
+  /**
+   * Vite 8 environment names that are allowed to import virtual:env/server.
+   * Use this to allow edge runtimes (Cloudflare Workers → 'workerd', Deno Deploy → 'ssr').
+   * @default ['ssr']
+   */
+  serverEnvironments?: string[]
+
+  /**
+   * Behavior when virtual:env/server is imported from a disallowed environment.
+   *
+   * - 'warn'  — Deprecation warning printed to terminal + vite-env-warnings.log written.
+   *             Build succeeds but exits with code 1. Default in 0.x releases.
+   *             The default will change to 'error' in 1.0.0.
+   *
+   * - 'error' — Hard build error. No artifacts emitted.
+   *
+   * - 'stub'  — Returns a module that throws at runtime if the import executes.
+   *             Use for testing environments (Vitest jsdom) or framework isomorphic files
+   *             where the import exists but the code path is never reached in a server context.
+   *
+   * @default 'warn'
+   */
+  onClientAccessOfServerModule?: 'error' | 'stub' | 'warn'
 }
 
 /**
@@ -48,6 +76,11 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let resolvedConfig: ResolvedConfig
   let envDefinition: AnyEnvDefinition
   let lastValidated: Record<string, unknown> = {}
+  let serverModuleGuardFails: GuardFail[] = []
+  let didSetExitCode = false
+
+  const serverEnvs = options.serverEnvironments ?? ['ssr']
+  const guardMode = options.onClientAccessOfServerModule ?? 'warn'
 
   return {
     name: 'vite-env',
@@ -74,6 +107,12 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     },
 
     async buildStart() {
+      serverModuleGuardFails = []
+      if (didSetExitCode) {
+        process.exitCode = 0
+        didSetExitCode = false
+      }
+
       const rawEnv = await loadEnvSources(resolvedConfig)
       const result = await validateAndFormat(envDefinition, rawEnv)
 
@@ -99,18 +138,48 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       )
     },
 
-    resolveId(id) {
-      if (id === 'virtual:env/client')
+    resolveId(this: Rollup.PluginContext, source, importer) {
+      if (source === 'virtual:env/client')
         return '\0virtual:env/client'
-      if (id === 'virtual:env/server')
+      if (source === 'virtual:env/server') {
+        const envName = this.environment?.name ?? 'client'
+        const result = checkServerModuleAccess(envName, serverEnvs, guardMode, importer)
+        if (!result.allowed)
+          serverModuleGuardFails.push(result)
         return '\0virtual:env/server'
+      }
     },
 
-    load(id) {
+    load(this: Rollup.PluginContext, id) {
       if (id === '\0virtual:env/client')
         return buildClientModule(envDefinition, lastValidated)
-      if (id === '\0virtual:env/server')
+      if (id === '\0virtual:env/server') {
+        const envName = this.environment?.name ?? 'client'
+        // Filter to fails from this environment only — other envs may have recorded fails for their own loads
+        const envFails = serverModuleGuardFails.filter(f => f.envName === envName)
+        if (envFails.length > 0) {
+          // warn once per load cycle using the last recorded fail; unique importers are written to the log file
+          const latest = envFails.at(-1)!
+          if (latest.mode === 'error')
+            throw new Error(formatHardError(latest))
+          if (latest.mode === 'stub')
+            return buildServerStubModule(envName)
+          resolvedConfig.logger.warn(`\n${formatGuardWarning(latest)}`)
+        }
         return buildServerModule(envDefinition, lastValidated)
+      }
+    },
+
+    async buildEnd(error) {
+      if (error)
+        return
+      if (serverModuleGuardFails.length === 0)
+        return
+      if (guardMode !== 'warn')
+        return
+      await writeWarningsLog(serverModuleGuardFails, resolvedConfig.root)
+      process.exitCode = 1
+      didSetExitCode = true
     },
 
     generateBundle(_options, bundle) {
@@ -168,6 +237,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
             if (serverMod)
               server.moduleGraph.invalidateModule(serverMod)
             if (clientMod || serverMod) {
+              serverModuleGuardFails = []
               server.hot.send({ type: 'full-reload' })
               resolvedConfig.logger.info(
                 `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidated`,
@@ -179,7 +249,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
               `\n  \x1B[31m✗\x1B[0m \x1B[36m[vite-env]\x1B[0m Failed to reload env files: ${e instanceof Error ? e.message : String(e)}`,
             )
           }
-        }, 150) // 150ms debounce
+        }, 150)
       })
     },
   }

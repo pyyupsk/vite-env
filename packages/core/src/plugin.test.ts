@@ -21,6 +21,10 @@ vi.mock('./standard', () => ({
   validateStandardEnv: vi.fn().mockResolvedValue({ success: true, data: { VITE_X: 'val' }, errors: [] }),
 }))
 
+vi.mock('./log', () => ({
+  writeWarningsLog: vi.fn().mockResolvedValue(undefined),
+}))
+
 function createMockConfig(root: string) {
   return {
     root,
@@ -248,6 +252,11 @@ describe('viteEnv plugin', () => {
       writeEnvFile(tmpDir)
     })
 
+    afterEach(() => {
+      vi.mocked(isStandardEnvDefinition).mockReturnValue(false)
+      vi.mocked(validateStandardEnv).mockResolvedValue({ success: true, data: { VITE_X: 'val' }, errors: [] })
+    })
+
     it('should use standard validation when definition is standard', async () => {
       vi.mocked(isStandardEnvDefinition).mockReturnValue(true)
 
@@ -275,5 +284,166 @@ describe('viteEnv plugin', () => {
       await hooks.configResolved(mockConfig)
       await expect(hooks.buildStart()).rejects.toThrow('Environment validation failed')
     })
+  })
+})
+
+describe('guard integration', () => {
+  let tmpDir: string
+  let plugin: any
+  let mockConfig: any
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vite-env-guard-'))
+    writeEnvFile(tmpDir)
+    plugin = ViteEnv({ configFile: 'env.mjs' })
+    mockConfig = createMockConfig(tmpDir)
+    await plugin.configResolved(mockConfig)
+    await plugin.buildStart()
+  })
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true })
+    process.exitCode = 0
+  })
+
+  function resolveWithEnv(envName: string, importer?: string) {
+    return plugin.resolveId.call(
+      { environment: { name: envName } },
+      'virtual:env/server',
+      importer,
+      {},
+    )
+  }
+
+  function loadServer() {
+    return plugin.load('\0virtual:env/server')
+  }
+
+  it('resolveId from ssr environment — no guard fail recorded', () => {
+    resolveWithEnv('ssr', 'src/server.ts')
+    const clientMod = plugin.load('\0virtual:env/client')
+    expect(clientMod.code).toContain('Object.freeze') // sanity check load works
+    // server module loads normally (no guard fails)
+    const serverMod = loadServer()
+    expect(serverMod.code).toContain('Object.freeze')
+  })
+
+  it('resolveId from client environment records GuardFail (default warn mode)', () => {
+    resolveWithEnv('client', 'src/app.ts')
+    // warn mode: load returns real module + calls logger.warn
+    const serverMod = loadServer()
+    expect(serverMod.code).toContain('Object.freeze')
+    expect(mockConfig.logger.warn).toHaveBeenCalled()
+  })
+
+  it('resolveId with custom serverEnvironments allows client', async () => {
+    const p = ViteEnv({
+      configFile: 'env.mjs',
+      serverEnvironments: ['client', 'ssr'],
+    }) as any
+    const cfg = createMockConfig(tmpDir)
+    await p.configResolved(cfg)
+    await p.buildStart()
+    p.resolveId.call({ environment: { name: 'client' } }, 'virtual:env/server', undefined, {})
+    const mod = p.load('\0virtual:env/server')
+    expect(mod.code).toContain('Object.freeze') // allowed — no guard fail
+    expect(cfg.logger.warn).not.toHaveBeenCalled()
+  })
+
+  it('resolveId with undefined this.environment defaults to client (fail closed)', () => {
+    plugin.resolveId.call({}, 'virtual:env/server', undefined, {})
+    const _mod = loadServer() // warn mode: returns real module + warns
+    expect(mockConfig.logger.warn).toHaveBeenCalled()
+  })
+
+  it('load with error mode throws', async () => {
+    const p = ViteEnv({
+      configFile: 'env.mjs',
+      onClientAccessOfServerModule: 'error',
+    }) as any
+    await p.configResolved(createMockConfig(tmpDir))
+    await p.buildStart()
+    p.resolveId.call({ environment: { name: 'client' } }, 'virtual:env/server', 'src/app.ts', {})
+    expect(() => p.load('\0virtual:env/server')).toThrow('[vite-env]')
+  })
+
+  it('load with stub mode returns stub module', async () => {
+    const p = ViteEnv({
+      configFile: 'env.mjs',
+      onClientAccessOfServerModule: 'stub',
+    }) as any
+    await p.configResolved(createMockConfig(tmpDir))
+    await p.buildStart()
+    p.resolveId.call({ environment: { name: 'client' } }, 'virtual:env/server', undefined, {})
+    const mod = p.load('\0virtual:env/server')
+    expect(mod.code).toContain('throw new Error')
+    expect(mod.code).not.toContain('Object.freeze')
+  })
+
+  it('buildStart resets guard fails so each build starts clean', async () => {
+    resolveWithEnv('client', 'src/app.ts') // records fail
+    await plugin.buildStart() // reset
+    const mod = loadServer() // no fail → returns real module without warning
+    expect(mockConfig.logger.warn).not.toHaveBeenCalled()
+    expect(mod.code).toContain('Object.freeze')
+  })
+
+  it('buildEnd with error arg skips writeWarningsLog and process.exitCode', async () => {
+    const { writeWarningsLog } = await import('./log')
+    resolveWithEnv('client', 'src/app.ts')
+    const originalExitCode = process.exitCode
+    await plugin.buildEnd(new Error('build failed'))
+    expect(writeWarningsLog).not.toHaveBeenCalled()
+    expect(process.exitCode).toBe(originalExitCode)
+  })
+
+  it('buildEnd without error in warn mode writes log and sets exitCode 1', async () => {
+    const { writeWarningsLog } = await import('./log')
+    resolveWithEnv('client', 'src/app.ts')
+    await plugin.buildEnd(undefined)
+    expect(writeWarningsLog).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ allowed: false })]),
+      tmpDir,
+    )
+    expect(process.exitCode).toBe(1)
+  })
+
+  it('buildEnd with no guard fails does nothing', async () => {
+    const { writeWarningsLog } = await import('./log')
+    await plugin.buildEnd(undefined)
+    expect(writeWarningsLog).not.toHaveBeenCalled()
+  })
+
+  it('multi-importer scenario: three resolveId calls, one load, warn fires once', async () => {
+    resolveWithEnv('client', 'src/a.ts')
+    resolveWithEnv('client', 'src/b.ts')
+    resolveWithEnv('client', 'src/c.ts')
+    loadServer() // load fires once
+    expect(mockConfig.logger.warn).toHaveBeenCalledTimes(1)
+    // buildEnd receives all three
+    const { writeWarningsLog } = await import('./log')
+    await plugin.buildEnd(undefined)
+    const [fails] = vi.mocked(writeWarningsLog).mock.calls[0] as any
+    expect(fails).toHaveLength(3)
+  })
+
+  it('watch cycle: buildEnd sets exitCode, buildStart resets it on clean next build', async () => {
+    resolveWithEnv('client', 'src/app.ts')
+    await plugin.buildEnd(undefined) // sets exitCode = 1
+    expect(process.exitCode).toBe(1)
+    await plugin.buildStart() // resets exitCode = 0 because didSetExitCode was true
+    expect(process.exitCode).toBe(0)
+    await plugin.buildEnd(undefined) // no fails → does not set exitCode again
+    expect(process.exitCode).toBe(0)
+  })
+
+  it('client resolveId fail does not affect ssr load — cross-environment isolation', () => {
+    // client records a fail
+    resolveWithEnv('client', 'src/app.ts')
+    // ssr load should serve the real module without warning
+    const ssrMod = plugin.load.call({ environment: { name: 'ssr' } }, '\0virtual:env/server')
+    expect(ssrMod.code).toContain('Object.freeze')
+    expect(mockConfig.logger.warn).not.toHaveBeenCalled()
   })
 })
