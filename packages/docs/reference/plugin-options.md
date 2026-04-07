@@ -15,9 +15,11 @@ export default defineConfig({
 
 ## ViteEnvOptions
 
-| Option       | Type     | Default      | Description                                                |
-| ------------ | -------- | ------------ | ---------------------------------------------------------- |
-| `configFile` | `string` | `'./env.ts'` | Path to the env definition file, relative to the Vite root |
+| Option                          | Type                          | Default      | Description                                                                    |
+| ------------------------------- | ----------------------------- | ------------ | ------------------------------------------------------------------------------ |
+| `configFile`                    | `string`                      | `'./env.ts'` | Path to the env definition file, relative to the Vite root                    |
+| `serverEnvironments`            | `string[]`                    | `['ssr']`    | Vite 8 environment names allowed to import `virtual:env/server`                |
+| `onClientAccessOfServerModule`  | `'warn' \| 'error' \| 'stub'` | `'warn'`     | Behavior when `virtual:env/server` is imported from a disallowed environment   |
 
 ### configFile
 
@@ -26,6 +28,37 @@ ViteEnv({ configFile: './config/env.ts' })
 ```
 
 The path is resolved relative to `config.root` (your Vite project root, which defaults to `process.cwd()`). If the file cannot be found or loaded, the build fails immediately with a clear error pointing to the expected path.
+
+### serverEnvironments
+
+```ts
+ViteEnv({ serverEnvironments: ['ssr', 'workerd'] })
+```
+
+A list of Vite 8 environment names that are permitted to import `virtual:env/server`. Defaults to `['ssr']`, which covers standard SSR builds. Add other names for edge runtimes:
+
+- Cloudflare Workers: `'workerd'`
+- Deno Deploy: `'ssr'` (already included by default)
+
+Any environment not in this list is subject to the behavior set by `onClientAccessOfServerModule`.
+
+### onClientAccessOfServerModule
+
+```ts
+ViteEnv({ onClientAccessOfServerModule: 'error' })
+```
+
+Controls what happens when `virtual:env/server` is imported from an environment not in `serverEnvironments`.
+
+| Value    | Behavior                                                                                                   |
+| -------- | ---------------------------------------------------------------------------------------------------------- |
+| `'warn'` | Prints a deprecation warning to the terminal and writes `vite-env-warnings.log`. Build exits with code 1. |
+| `'error'` | Throws a hard build error. No artifacts are emitted.                                                      |
+| `'stub'` | Returns a module that throws at runtime if the import actually executes.                                   |
+
+The default is `'warn'` in the 0.x release series. **It will change to `'error'` in 1.0.0.**
+
+Use `'stub'` for testing environments (e.g. Vitest `jsdom`) or framework isomorphic files where the import exists but the code path is never reached on the client.
 
 ## Why So Few Options?
 

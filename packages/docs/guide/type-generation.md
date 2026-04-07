@@ -69,7 +69,7 @@ declare module 'virtual:env/server' {
 
 `vite-env.d.ts` is generated output, not source. Add it to your `.gitignore`:
 
-```
+```ansi
 vite-env.d.ts
 ```
 

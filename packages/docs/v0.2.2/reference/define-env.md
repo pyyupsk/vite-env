@@ -40,7 +40,7 @@ All keys in `client` must start with `VITE_`. This matches Vite's own convention
 
 If a key is missing the prefix, `defineEnv` throws:
 
-```
+```ansi
 [vite-env] Client env var "API_URL" must be prefixed with VITE_.
   Rename it to "VITE_API_URL" or move it to "server" if it's secret.
 ```

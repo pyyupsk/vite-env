@@ -15,7 +15,7 @@ The server module includes **all** validated variables — both server-only and 
 
 Every key defined under `client` must start with `VITE_`. This is enforced at `defineEnv()` call time, before any build starts. If you define a client key without the prefix, you get an immediate startup error:
 
-```
+```ansi
 [vite-env] Client env var "API_URL" must be prefixed with VITE_.
   Rename it to "VITE_API_URL" or move it to "server" if it's secret.
 ```
@@ -75,3 +75,36 @@ import { env } from 'virtual:env/server'
 const dbUrl = env.DATABASE_URL
 const apiUrl = env.VITE_API_URL // also available here
 ```
+
+## Runtime access protection
+
+Starting in `v0.4.0`, vite-env uses the Vite 8 Environment API to detect which environment is importing `virtual:env/server` at build time. If a disallowed environment (e.g. `client`) imports the server module, the plugin responds based on the `onClientAccessOfServerModule` option.
+
+The default behavior (`'warn'`) prints a deprecation warning and writes a `vite-env-warnings.log` file in your project root listing every violating importer. The build exits with code 1 to signal that action is required, but artifacts are still emitted.
+
+```ansi
+[vite-env] DEPRECATION WARNING
+─────────────────────────────────────────────────────────────────
+virtual:env/server was imported from the "client" environment.
+This will be a hard build error in 1.0.0.
+
+To enforce now:  onClientAccessOfServerModule: 'error'
+To silence:      onClientAccessOfServerModule: 'stub'
+
+Found in: src/lib/config.ts
+─────────────────────────────────────────────────────────────────
+```
+
+To opt into the strict behavior now:
+
+```ts
+ViteEnv({ onClientAccessOfServerModule: 'error' })
+```
+
+For edge runtimes that are not `ssr`, add them to `serverEnvironments`:
+
+```ts
+ViteEnv({ serverEnvironments: ['ssr', 'workerd'] })
+```
+
+See [Plugin Options](/reference/plugin-options#onclientaccessofservermodule) for the full reference.

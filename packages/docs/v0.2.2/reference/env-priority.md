@@ -24,7 +24,7 @@ System environment variables and CI pipeline secrets are always applied last, so
 
 `.env.local` and `.env.[mode].local` are intended for machine-specific overrides that should never be committed to source control. Add them to your `.gitignore`:
 
-```
+```ansi
 .env.local
 .env.*.local
 ```

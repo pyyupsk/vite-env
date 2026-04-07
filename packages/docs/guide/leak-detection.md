@@ -18,7 +18,7 @@ Values shorter than 8 characters are skipped to avoid false positives. A short v
 
 When a server variable is skipped for this reason, the plugin logs a warning:
 
-```
+```ansi
 ⚠ [vite-env] Leak detection skipped 1 server variable(s) with values shorter than 8 chars: PORT
 ```
 
@@ -28,7 +28,7 @@ The skipped variable is **not** guaranteed to be absent from the bundle — it s
 
 If a server value is found in the client bundle, the build fails with:
 
-```
+```ansi
 [vite-env] Server environment variables detected in client bundle!
 
   ✗ JWT_SECRET found in index-abc123.js

@@ -15,7 +15,7 @@ The server module includes **all** validated variables — both server-only and 
 
 Every key defined under `client` must start with `VITE_`. This is enforced at `defineEnv()` call time, before any build starts. If you define a client key without the prefix, you get an immediate startup error:
 
-```
+```ansi
 [vite-env] Client env var "API_URL" must be prefixed with VITE_.
   Rename it to "VITE_API_URL" or move it to "server" if it's secret.
 ```
