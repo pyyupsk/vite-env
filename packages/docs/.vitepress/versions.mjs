@@ -8,4 +8,5 @@
 /** @type {Array<{ text: string, link: string }>} */
 export const versions = [
   { text: 'next', link: '/vite-env/' },
+  { text: 'v0.3.0', link: '/vite-env/v0.3.0/' },
 ]
