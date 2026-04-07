@@ -9,12 +9,12 @@ describe('vercel preset', () => {
       expect(keys).toContain('VERCEL_ENV')
       expect(keys).toContain('VERCEL_URL')
       expect(keys).toContain('VERCEL_DEPLOYMENT_ID')
+      expect(keys).toContain('VERCEL_PROJECT_PRODUCTION_URL')
     })
 
     it('has all optional server keys', () => {
       const keys = Object.keys(vercel.server)
       expect(keys).toContain('VERCEL_BRANCH_URL')
-      expect(keys).toContain('VERCEL_PROJECT_PRODUCTION_URL')
       expect(keys).toContain('VERCEL_REGION')
       expect(keys).toContain('VERCEL_GIT_PROVIDER')
       expect(keys).toContain('VERCEL_GIT_REPO_SLUG')
@@ -54,6 +54,14 @@ describe('vercel preset', () => {
 
     it('VERCEL_URL rejects empty string', () => {
       expect(vercel.server.VERCEL_URL.safeParse('').success).toBe(false)
+    })
+
+    it('VERCEL_PROJECT_PRODUCTION_URL accepts a bare hostname', () => {
+      expect(vercel.server.VERCEL_PROJECT_PRODUCTION_URL.safeParse('myapp.vercel.app').success).toBe(true)
+    })
+
+    it('VERCEL_PROJECT_PRODUCTION_URL rejects undefined (always set by Vercel)', () => {
+      expect(vercel.server.VERCEL_PROJECT_PRODUCTION_URL.safeParse(undefined).success).toBe(false)
     })
 
     it('VERCEL_SKEW_PROTECTION_ENABLED is optional (accepts undefined)', () => {

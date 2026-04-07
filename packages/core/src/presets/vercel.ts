@@ -9,7 +9,7 @@ export const vercel = {
     // Bare hostname (e.g. myapp-abc123.vercel.app) — no scheme, z.url() would reject it
     VERCEL_URL: z.string().min(1),
     VERCEL_BRANCH_URL: z.string().min(1).optional(),
-    VERCEL_PROJECT_PRODUCTION_URL: z.string().min(1).optional(),
+    VERCEL_PROJECT_PRODUCTION_URL: z.string().min(1),
     VERCEL_DEPLOYMENT_ID: z.string().min(1),
     VERCEL_REGION: z.string().optional(),
     // z.string() not enum — Vercel may add providers (Azure DevOps, self-hosted GitLab) without notice

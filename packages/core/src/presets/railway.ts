@@ -15,9 +15,9 @@ export const railway = {
     RAILWAY_GIT_BRANCH: z.string().optional(),
     RAILWAY_GIT_REPO_NAME: z.string().optional(),
     RAILWAY_GIT_REPO_OWNER: z.string().optional(),
-    RAILWAY_PUBLIC_DOMAIN: z.string().optional(),
-    RAILWAY_PRIVATE_DOMAIN: z.string().optional(),
-    RAILWAY_TCP_PROXY_DOMAIN: z.string().optional(),
+    RAILWAY_PUBLIC_DOMAIN: z.string().min(1).optional(),
+    RAILWAY_PRIVATE_DOMAIN: z.string().min(1).optional(),
+    RAILWAY_TCP_PROXY_DOMAIN: z.string().min(1).optional(),
     RAILWAY_TCP_PROXY_PORT: z.coerce.number().int().min(1).max(65535).optional(),
     // PORT excluded: generic name set by many tools independently; handle it in your own server config
   },
