@@ -63,6 +63,27 @@ function copyDir(src, dest) {
   }
 }
 
+function rewriteLinks(dir, prefix) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const filePath = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      rewriteLinks(filePath, prefix)
+    }
+    else if (entry.name.endsWith('.md')) {
+      const content = fs.readFileSync(filePath, 'utf-8')
+      const updated = content
+        // YAML frontmatter link fields: "link: /foo" → "link: /v0.3.0/foo"
+        .replace(/(^\s*link:\s+)\//gm, `$1${prefix}/`)
+        // Markdown inline links: "](/foo" → "](/v0.3.0/foo"
+        .replace(/\]\(\//g, `](${prefix}/`)
+      if (updated !== content) {
+        fs.writeFileSync(filePath, updated, 'utf-8')
+        log('rewrite', filePath)
+      }
+    }
+  }
+}
+
 // Step 1: Copy content files (exclude .vitepress, node_modules, v*/)
 console.log('Copying content:')
 const skipDirs = new Set(['.vitepress', 'node_modules'])
@@ -76,6 +97,15 @@ for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
   if (entry.isDirectory())
     copyDir(src, dest)
   else copyFile(src, dest)
+}
+
+// Rewrite absolute internal links in copied markdown files
+console.log('\nRewriting internal links:')
+if (!dryRun) {
+  rewriteLinks(versionDir, `/v${version}`)
+}
+else {
+  console.log('  [dry-run] would rewrite absolute links in all .md files')
 }
 
 // Step 2: Update versions.mjs — append new stable entry after 'next'
@@ -133,7 +163,7 @@ if (match) {
     existing = JSON.parse(match[1])
   }
   catch {
-    console.error('❌ versioned-sidebars.mjs contains invalid JSON. Aborting.')
+    console.error('❌ versioned-sidebars.mjs contains invalid JSON — it may have been manually edited. Delete it and re-run to regenerate. Aborting.')
     process.exit(1)
   }
 }
@@ -147,5 +177,11 @@ if (dryRun) {
 else {
   console.log(`\n✅ Snapshot v${version} complete.`)
   console.log(`   Created: packages/docs/v${version}/`)
-  console.log('   Stage the snapshot before bumpp runs.')
+  console.log('\nStaging snapshot files...')
+  const { execSync } = await import('node:child_process')
+  execSync(
+    `git add packages/docs/v${version}/ packages/docs/.vitepress/versions.mjs packages/docs/.vitepress/versioned-sidebars.mjs`,
+    { cwd: root, stdio: 'inherit' },
+  )
+  console.log('✅ Staged. Run bumpp to complete the release.')
 }
