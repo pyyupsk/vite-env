@@ -10,6 +10,7 @@ export default defineConfig({
     'src/format.ts',
     'src/dts.ts',
     'src/leak.ts',
+    'src/presets/index.ts',
   ],
   format: ['esm', 'cjs'],
   dts: true,
