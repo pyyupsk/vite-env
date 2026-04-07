@@ -6,6 +6,7 @@ export default defineConfig({
     'src/config.ts',
     'src/plugin.ts',
     'src/schema.ts',
+    'src/standard.ts',
     'src/format.ts',
     'src/dts.ts',
     'src/leak.ts',
@@ -15,6 +16,6 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   deps: {
-    neverBundle: ['jiti', 'vite', 'zod'],
+    neverBundle: ['jiti', 'vite', 'zod', '@standard-schema/spec'],
   },
 })

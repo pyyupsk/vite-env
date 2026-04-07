@@ -20,7 +20,8 @@
     "zod",
     "validation",
     "rolldown",
-    "dotenv"
+    "dotenv",
+    "standard-schema"
   ],
   "exports": {
     ".": {
@@ -93,6 +94,16 @@
         "default": "./dist/schema.cjs"
       }
     },
+    "./standard": {
+      "import": {
+        "types": "./dist/standard.d.mts",
+        "default": "./dist/standard.mjs"
+      },
+      "require": {
+        "types": "./dist/standard.d.cts",
+        "default": "./dist/standard.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
@@ -116,7 +127,13 @@
     "vite": ">=8.0.0",
     "zod": "^4.0.0"
   },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  },
   "dependencies": {
+    "@standard-schema/spec": "catalog:",
     "jiti": "catalog:"
   },
   "devDependencies": {

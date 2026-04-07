@@ -1,7 +1,7 @@
-import type { EnvDefinition } from './types'
+import type { AnyEnvDefinition } from './types'
 
 export function buildClientModule(
-  def: EnvDefinition,
+  def: AnyEnvDefinition,
   data: Record<string, unknown>,
 ): { code: string, moduleType: 'js' } {
   const clientKeys = new Set(Object.keys(def.client ?? {}))
@@ -19,7 +19,7 @@ export default env;`,
 }
 
 export function buildServerModule(
-  _def: EnvDefinition,
+  _def: AnyEnvDefinition,
   data: Record<string, unknown>,
 ): { code: string, moduleType: 'js' } {
   return {

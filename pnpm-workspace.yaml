@@ -9,6 +9,7 @@ allowBuilds:
 catalog:
   '@fontsource-variable/geist': ^5.2.8
   '@fontsource-variable/geist-mono': ^5.2.7
+  '@standard-schema/spec': ^1.1.0
   jiti: ^2.6.1
   vitepress: ^1.6.3
 catalogs:

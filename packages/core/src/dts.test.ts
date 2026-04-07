@@ -1,7 +1,8 @@
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 import path from 'node:path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
-import { generateDts } from './dts'
+import { generateDts, generateStandardDts } from './dts'
 
 vi.mock('node:fs/promises', () => ({
   default: {
@@ -138,5 +139,105 @@ describe('generateDts', () => {
 
     expect(content).toContain('declare module \'virtual:env/client\'')
     expect(content).toContain('declare module \'virtual:env/server\'')
+  })
+})
+
+function mockSchema(): StandardSchemaV1 {
+  return {
+    '~standard': {
+      version: 1,
+      vendor: 'test',
+      validate: (input: unknown) => ({ value: input }),
+    },
+  } as StandardSchemaV1
+}
+
+describe('generateStandardDts', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('should generate .d.ts with client and server modules', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateStandardDts(
+      {
+        _standard: true,
+        server: { DATABASE_URL: mockSchema() },
+        client: { VITE_API_URL: mockSchema(), VITE_MODE: mockSchema() },
+      },
+      '/tmp',
+    )
+
+    expect(writeFile).toHaveBeenCalledOnce()
+
+    const content = writeFile.mock.calls[0][1] as string
+    expect(content).toContain('declare module \'virtual:env/client\'')
+    expect(content).toContain('declare module \'virtual:env/server\'')
+    expect(content).toContain('readonly VITE_API_URL: string')
+    expect(content).toContain('readonly VITE_MODE: string')
+    expect(content).toContain('readonly DATABASE_URL: string')
+  })
+
+  it('should type all fields as string', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateStandardDts(
+      {
+        _standard: true,
+        client: { VITE_PORT: mockSchema(), VITE_DEBUG: mockSchema() },
+      },
+      '/tmp',
+    )
+
+    const content = writeFile.mock.calls[0][1] as string
+    expect(content).toContain('readonly VITE_PORT: string')
+    expect(content).toContain('readonly VITE_DEBUG: string')
+  })
+
+  it('should include server keys in server module but not client module', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateStandardDts(
+      {
+        _standard: true,
+        server: { SECRET: mockSchema() },
+        client: { VITE_PUB: mockSchema() },
+      },
+      '/tmp',
+    )
+
+    const content = writeFile.mock.calls[0][1] as string
+
+    const clientModule = content.split('declare module \'virtual:env/server\'')[0]
+    expect(clientModule).not.toContain('SECRET')
+    expect(clientModule).toContain('VITE_PUB')
+
+    const serverModule = content.split('declare module \'virtual:env/server\'')[1]
+    expect(serverModule).toContain('SECRET')
+    expect(serverModule).toContain('VITE_PUB')
+  })
+
+  it('should handle empty definition', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateStandardDts({ _standard: true }, '/tmp')
+
+    const content = writeFile.mock.calls[0][1] as string
+    expect(content).toContain('declare module \'virtual:env/client\'')
+    expect(content).toContain('declare module \'virtual:env/server\'')
+  })
+
+  it('should write to vite-env.d.ts in project root', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateStandardDts({ _standard: true, client: { VITE_X: mockSchema() } }, '/my/project')
+
+    expect(writeFile.mock.calls[0][0]).toBe(path.join('/my/project', 'vite-env.d.ts'))
   })
 })
