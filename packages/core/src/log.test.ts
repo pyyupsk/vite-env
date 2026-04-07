@@ -1,6 +1,7 @@
 import type { GuardFail } from './guard'
 
 import fs from 'node:fs/promises'
+import path from 'node:path'
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { writeWarningsLog } from './log'
@@ -31,7 +32,7 @@ describe('writeWarningsLog', () => {
   it('writes to vite-env-warnings.log in the given root', async () => {
     await writeWarningsLog([fail1], '/project')
     expect(vi.mocked(fs.writeFile)).toHaveBeenCalledWith(
-      '/project/vite-env-warnings.log',
+      path.join('/project', 'vite-env-warnings.log'),
       expect.any(String),
       'utf-8',
     )
