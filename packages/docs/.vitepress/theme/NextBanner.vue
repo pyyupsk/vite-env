@@ -26,7 +26,7 @@ const latestStable = versions.find(v => !v.text.includes('next'))
 <style scoped>
 .next-banner {
   position: sticky;
-  top: 0;
+  bottom: 0;
   z-index: 30;
   display: flex;
   align-items: center;
@@ -34,7 +34,9 @@ const latestStable = versions.find(v => !v.text.includes('next'))
   gap: 12px;
   padding: 8px 16px;
   background-color: rgba(200, 241, 53, 0.12);
-  border-bottom: 1px solid rgba(200, 241, 53, 0.3);
+  border-top: 1px solid rgba(200, 241, 53, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   font-size: 13px;
   text-align: center;
   flex-wrap: wrap;

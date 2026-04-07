@@ -9,7 +9,7 @@ export default {
   extends: DefaultTheme,
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'layout-top': () => h(NextBanner),
+      'layout-bottom': () => h(NextBanner),
     })
   },
 }
