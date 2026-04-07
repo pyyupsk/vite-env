@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     root: '.',
+    exclude: ['**/node_modules/**', '**/.local/**', '**/.worktrees/**'],
     coverage: {
       provider: 'v8',
       include: ['packages/*/src/**/*.ts'],

@@ -5,8 +5,6 @@ import { rootSidebar } from './sidebar.mjs'
 import { versionedSidebars } from './versioned-sidebars.mjs'
 import { versions } from './versions.mjs'
 
-const VERSIONED_PATH = /^v\d/
-
 export default defineConfig({
   title: 'vite-env',
   description:
@@ -48,7 +46,8 @@ export default defineConfig({
 
     editLink: {
       pattern: ({ filePath }) =>
-        VERSIONED_PATH.test(filePath)
+        // eslint-disable-next-line e18e/prefer-static-regex
+        /^v\d/.test(filePath)
           ? (undefined as unknown as string)
           : `https://github.com/pyyupsk/vite-env/edit/main/packages/docs/${filePath}`,
       text: 'Edit this page on GitHub',
