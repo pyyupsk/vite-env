@@ -33,27 +33,32 @@ describe('railway preset', () => {
   })
 
   describe('schema validation', () => {
-    it('rAILWAY_ENVIRONMENT_ID accepts a string', () => {
+    it('RAILWAY_ENVIRONMENT_ID accepts a string', () => {
       expect(railway.server.RAILWAY_ENVIRONMENT_ID.safeParse('abc-123').success).toBe(true)
     })
 
-    it('rAILWAY_ENVIRONMENT_ID rejects empty string', () => {
+    it('RAILWAY_ENVIRONMENT_ID rejects empty string', () => {
       expect(railway.server.RAILWAY_ENVIRONMENT_ID.safeParse('').success).toBe(false)
     })
 
-    it('rAILWAY_TCP_PROXY_PORT coerces "3000" to 3000', () => {
+    it('RAILWAY_TCP_PROXY_PORT coerces "3000" to 3000', () => {
       const result = railway.server.RAILWAY_TCP_PROXY_PORT.safeParse('3000')
       expect(result.success).toBe(true)
       if (result.success)
         expect(result.data).toBe(3000)
     })
 
-    it('rAILWAY_TCP_PROXY_PORT is optional (accepts undefined)', () => {
+    it('RAILWAY_TCP_PROXY_PORT is optional (accepts undefined)', () => {
       expect(railway.server.RAILWAY_TCP_PROXY_PORT.safeParse(undefined).success).toBe(true)
     })
 
-    it('rAILWAY_TCP_PROXY_PORT rejects non-numeric strings', () => {
+    it('RAILWAY_TCP_PROXY_PORT rejects non-numeric strings', () => {
       expect(railway.server.RAILWAY_TCP_PROXY_PORT.safeParse('not-a-port').success).toBe(false)
+    })
+
+    it('RAILWAY_TCP_PROXY_PORT rejects out-of-range values', () => {
+      expect(railway.server.RAILWAY_TCP_PROXY_PORT.safeParse('0').success).toBe(false)
+      expect(railway.server.RAILWAY_TCP_PROXY_PORT.safeParse('99999').success).toBe(false)
     })
   })
 

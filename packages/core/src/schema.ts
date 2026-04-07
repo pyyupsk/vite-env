@@ -12,10 +12,11 @@ function warnSideConflicts(
   side: 'server' | 'client',
 ): void {
   for (const key of keys) {
-    if (seen.has(key))
+    const duplicate = seen.has(key)
+    if (duplicate)
       console.warn(`[vite-env] "${key}" is defined in multiple presets. The last preset wins.`)
     seen.add(key)
-    if (userKeys.has(key))
+    if (!duplicate && userKeys.has(key))
       console.warn(`[vite-env] "${key}" is defined in both a preset and your ${side} config. Your definition wins.`)
   }
 }
@@ -34,7 +35,7 @@ function warnConflicts(
   }
 }
 
-export function defineEnv<T extends DefineEnvInput>(definition: T): Omit<T, 'presets'> & EnvDefinition {
+export function defineEnv<T extends DefineEnvInput>(definition: T): Omit<T, 'presets'> & Pick<EnvDefinition, 'server' | 'client'> {
   const { presets = [], server, client, ...rest } = definition
   // ...rest intentionally forwarded — T may carry extra keys beyond EnvDefinition
 

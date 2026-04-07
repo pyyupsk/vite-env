@@ -105,7 +105,7 @@ describe('defineEnv with presets', () => {
     expect(result).not.toHaveProperty('presets')
   })
 
-  it('vITE_ prefix check catches non-prefixed key in a preset client field', () => {
+  it('VITE_ prefix check catches non-prefixed key in a preset client field', () => {
     expect(() => defineEnv({
       presets: [{ client: { NO_PREFIX: z.string() } }],
     })).toThrow('[vite-env] Client env var "NO_PREFIX" must be prefixed with VITE_')

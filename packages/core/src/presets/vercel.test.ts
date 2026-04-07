@@ -29,42 +29,42 @@ describe('vercel preset', () => {
   })
 
   describe('schema validation', () => {
-    it('vERCEL accepts "1"', () => {
+    it('VERCEL accepts "1"', () => {
       expect(vercel.server.VERCEL.safeParse('1').success).toBe(true)
     })
 
-    it('vERCEL rejects values other than "1"', () => {
+    it('VERCEL rejects values other than "1"', () => {
       expect(vercel.server.VERCEL.safeParse('0').success).toBe(false)
       expect(vercel.server.VERCEL.safeParse('true').success).toBe(false)
     })
 
-    it('vERCEL_ENV accepts production, preview, development', () => {
+    it('VERCEL_ENV accepts production, preview, development', () => {
       expect(vercel.server.VERCEL_ENV.safeParse('production').success).toBe(true)
       expect(vercel.server.VERCEL_ENV.safeParse('preview').success).toBe(true)
       expect(vercel.server.VERCEL_ENV.safeParse('development').success).toBe(true)
     })
 
-    it('vERCEL_ENV rejects unknown values', () => {
+    it('VERCEL_ENV rejects unknown values', () => {
       expect(vercel.server.VERCEL_ENV.safeParse('staging').success).toBe(false)
     })
 
-    it('vERCEL_URL accepts a bare hostname', () => {
+    it('VERCEL_URL accepts a bare hostname', () => {
       expect(vercel.server.VERCEL_URL.safeParse('myapp-abc123.vercel.app').success).toBe(true)
     })
 
-    it('vERCEL_URL rejects empty string', () => {
+    it('VERCEL_URL rejects empty string', () => {
       expect(vercel.server.VERCEL_URL.safeParse('').success).toBe(false)
     })
 
-    it('vERCEL_SKEW_PROTECTION_ENABLED is optional (accepts undefined)', () => {
+    it('VERCEL_SKEW_PROTECTION_ENABLED is optional (accepts undefined)', () => {
       expect(vercel.server.VERCEL_SKEW_PROTECTION_ENABLED.safeParse(undefined).success).toBe(true)
     })
 
-    it('vERCEL_SKEW_PROTECTION_ENABLED accepts "1"', () => {
+    it('VERCEL_SKEW_PROTECTION_ENABLED accepts "1"', () => {
       expect(vercel.server.VERCEL_SKEW_PROTECTION_ENABLED.safeParse('1').success).toBe(true)
     })
 
-    it('vERCEL_GIT_PROVIDER accepts any string (not an enum)', () => {
+    it('VERCEL_GIT_PROVIDER accepts any string (not an enum)', () => {
       expect(vercel.server.VERCEL_GIT_PROVIDER.safeParse('github').success).toBe(true)
       expect(vercel.server.VERCEL_GIT_PROVIDER.safeParse('azure-devops').success).toBe(true)
     })
