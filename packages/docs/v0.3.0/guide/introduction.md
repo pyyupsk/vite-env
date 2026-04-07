@@ -65,4 +65,4 @@ You never access a variable that failed validation. You never drift out of sync 
 
 ---
 
-Ready to add it to a project? See [Quick Start](/guide/quick-start).
+Ready to add it to a project? See [Quick Start](/v0.3.0/guide/quick-start).

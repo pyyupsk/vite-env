@@ -7,7 +7,7 @@ hero:
   tagline: "Define once. Validate everywhere. Import with types."
   actions:
     - text: "Get Started"
-      link: /guide/introduction
+      link: /v0.3.0/guide/introduction
       theme: brand
     - text: "View on GitHub"
       link: https://github.com/pyyupsk/vite-env
