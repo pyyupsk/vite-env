@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatZodError } from './format'
+import { formatStandardSchemaError, formatZodError } from './format'
 
 describe('formatZodError', () => {
   it('should format issues with paths', () => {
@@ -46,5 +46,34 @@ describe('formatZodError', () => {
 
   it('should return empty string for empty issues', () => {
     expect(formatZodError([])).toBe('')
+  })
+})
+
+describe('formatStandardSchemaError', () => {
+  it('should format issues with key paths', () => {
+    const result = formatStandardSchemaError([
+      { message: 'Invalid URL', path: ['DATABASE_URL'] },
+      { message: 'Required', path: ['VITE_KEY'] },
+    ])
+    expect(result).toContain('DATABASE_URL')
+    expect(result).toContain('Invalid URL')
+    expect(result).toContain('VITE_KEY')
+    expect(result).toContain('Required')
+  })
+
+  it('should handle empty path', () => {
+    const result = formatStandardSchemaError([
+      { message: 'Unknown error', path: [] },
+    ])
+    expect(result).toContain('(root)')
+    expect(result).toContain('Unknown error')
+  })
+
+  it('should handle PathSegment objects in path', () => {
+    const result = formatStandardSchemaError([
+      { message: 'Bad value', path: ['DB_URL', { key: 'host' }] },
+    ])
+    expect(result).toContain('DB_URL.host')
+    expect(result).toContain('Bad value')
   })
 })

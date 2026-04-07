@@ -1,4 +1,4 @@
-import type { EnvDefinition } from './types'
+import type { AnyEnvDefinition } from './types'
 
 interface LeakReport {
   key: string
@@ -14,7 +14,7 @@ interface LeakReport {
  * Short/common values (< 8 chars) are skipped to avoid false positives.
  */
 export function detectServerLeak(
-  def: EnvDefinition,
+  def: AnyEnvDefinition,
   data: Record<string, unknown>,
   bundle: Record<string, { type: string, code?: string }>,
   onSkipped?: (keys: string[]) => void,

@@ -12,6 +12,9 @@ catalogs:
     '@fontsource-variable/geist-mono':
       specifier: ^5.2.7
       version: 5.2.7
+    '@standard-schema/spec':
+      specifier: ^1.1.0
+      version: 1.1.0
     jiti:
       specifier: ^2.6.1
       version: 2.6.1
@@ -127,6 +130,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@standard-schema/spec':
+        specifier: 'catalog:'
+        version: 1.1.0
       jiti:
         specifier: 'catalog:'
         version: 2.6.1

@@ -1,13 +1,13 @@
 // @env node
 import type { Plugin, ResolvedConfig } from 'vite'
-import type { EnvDefinition } from './types'
+import type { AnyEnvDefinition } from './types'
 import path from 'node:path'
 import { loadEnvConfig } from './config'
-import { generateDts } from './dts'
-import { formatZodError } from './format'
+import { generateStandardDts } from './dts'
+import { formatStandardSchemaError } from './format'
 import { detectServerLeak } from './leak'
-import { validateEnv } from './schema'
 import { loadEnvSources } from './sources'
+import { isStandardEnvDefinition, validateStandardEnv } from './standard'
 import { buildClientModule, buildServerModule } from './virtual'
 
 export interface ViteEnvOptions {
@@ -18,9 +18,35 @@ export interface ViteEnvOptions {
   configFile?: string
 }
 
+/**
+ * Validates environment variables against the definition.
+ * Routes to Zod or Standard Schema path based on definition type.
+ * Zod modules are loaded dynamically to avoid requiring zod for Standard Schema users.
+ */
+async function validateAndFormat(
+  def: AnyEnvDefinition,
+  rawEnv: Record<string, string>,
+): Promise<{ data: Record<string, unknown> } | { error: string }> {
+  if (isStandardEnvDefinition(def)) {
+    const result = await validateStandardEnv(def, rawEnv)
+    if (!result.success) {
+      return { error: formatStandardSchemaError(result.errors) }
+    }
+    return { data: result.data }
+  }
+
+  const { validateEnv } = await import('./schema')
+  const { formatZodError } = await import('./format')
+  const result = validateEnv(def, rawEnv)
+  if (!result.success) {
+    return { error: formatZodError(result.errors) }
+  }
+  return { data: result.data }
+}
+
 export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let resolvedConfig: ResolvedConfig
-  let envDefinition: EnvDefinition
+  let envDefinition: AnyEnvDefinition
   let lastValidated: Record<string, unknown> = {}
 
   return {
@@ -49,20 +75,25 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
 
     async buildStart() {
       const rawEnv = await loadEnvSources(resolvedConfig)
-      const result = validateEnv(envDefinition, rawEnv)
+      const result = await validateAndFormat(envDefinition, rawEnv)
 
-      if (!result.success) {
-        const formatted = formatZodError(result.errors)
+      if ('error' in result) {
         throw new Error(
-          `[vite-env] Environment validation failed:\n\n${formatted}`,
+          `[vite-env] Environment validation failed:\n\n${result.error}`,
         )
       }
 
       lastValidated = result.data
 
-      await generateDts(envDefinition, resolvedConfig.root)
+      if (isStandardEnvDefinition(envDefinition)) {
+        await generateStandardDts(envDefinition, resolvedConfig.root)
+      }
+      else {
+        const { generateDts } = await import('./dts')
+        await generateDts(envDefinition, resolvedConfig.root)
+      }
 
-      const count = Object.keys(result.data).length
+      const count = Object.keys(lastValidated).length
       resolvedConfig.logger.info(
         `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m ${count} variables validated`,
       )
@@ -119,12 +150,11 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
         debounceTimer = setTimeout(async () => {
           try {
             const rawEnv = await loadEnvSources(resolvedConfig)
-            const result = validateEnv(envDefinition, rawEnv)
+            const result = await validateAndFormat(envDefinition, rawEnv)
 
-            if (!result.success) {
-              const formatted = formatZodError(result.errors)
+            if ('error' in result) {
               resolvedConfig.logger.warn(
-                `\n  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidation failed:\n${formatted}`,
+                `\n  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidation failed:\n${result.error}`,
               )
               return
             }

@@ -3,7 +3,9 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { generateStandardDts } from './dts'
 import ViteEnv from './plugin'
+import { isStandardEnvDefinition, validateStandardEnv } from './standard'
 
 vi.mock('./sources', () => ({
   loadEnvSources: vi.fn().mockResolvedValue({}),
@@ -11,6 +13,12 @@ vi.mock('./sources', () => ({
 
 vi.mock('./dts', () => ({
   generateDts: vi.fn().mockResolvedValue(undefined),
+  generateStandardDts: vi.fn().mockResolvedValue(undefined),
+}))
+
+vi.mock('./standard', () => ({
+  isStandardEnvDefinition: vi.fn().mockReturnValue(false),
+  validateStandardEnv: vi.fn().mockResolvedValue({ success: true, data: { VITE_X: 'val' }, errors: [] }),
 }))
 
 function createMockConfig(root: string) {
@@ -229,6 +237,43 @@ describe('viteEnv plugin', () => {
       expect(loadEnvSources).toHaveBeenCalled()
       // No client module found, so no reload
       expect(mockServer.hot.send).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('standard Schema path', () => {
+    let mockConfig: any
+
+    beforeEach(() => {
+      mockConfig = createMockConfig(tmpDir)
+      writeEnvFile(tmpDir)
+    })
+
+    it('should use standard validation when definition is standard', async () => {
+      vi.mocked(isStandardEnvDefinition).mockReturnValue(true)
+
+      const plugin = ViteEnv({ configFile: 'env.mjs' })
+      const hooks = plugin as any
+
+      await hooks.configResolved(mockConfig)
+      await hooks.buildStart()
+
+      expect(validateStandardEnv).toHaveBeenCalled()
+      expect(generateStandardDts).toHaveBeenCalled()
+    })
+
+    it('should throw formatted error on standard validation failure', async () => {
+      vi.mocked(isStandardEnvDefinition).mockReturnValue(true)
+      vi.mocked(validateStandardEnv).mockResolvedValue({
+        success: false,
+        data: null,
+        errors: [{ message: 'Required', path: ['VITE_KEY'] }],
+      })
+
+      const plugin = ViteEnv({ configFile: 'env.mjs' })
+      const hooks = plugin as any
+
+      await hooks.configResolved(mockConfig)
+      await expect(hooks.buildStart()).rejects.toThrow('Environment validation failed')
     })
   })
 })
