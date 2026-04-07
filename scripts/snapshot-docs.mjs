@@ -73,9 +73,9 @@ function rewriteLinks(dir, prefix) {
       const content = fs.readFileSync(filePath, 'utf-8')
       const updated = content
         // YAML frontmatter link fields: "link: /foo" → "link: /v0.3.0/foo"
-        .replace(/(^\s*link:\s+)\//gm, `$1${prefix}/`)
+        .replaceAll(/^([ \t]*link:[ \t]+)\//gm, `$1${prefix}/`)
         // Markdown inline links: "](/foo" → "](/v0.3.0/foo"
-        .replace(/\]\(\//g, `](${prefix}/`)
+        .replaceAll('](/', `](${prefix}/`)
       if (updated !== content) {
         fs.writeFileSync(filePath, updated, 'utf-8')
         log('rewrite', filePath)
@@ -101,11 +101,11 @@ for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
 
 // Rewrite absolute internal links in copied markdown files
 console.log('\nRewriting internal links:')
-if (!dryRun) {
-  rewriteLinks(versionDir, `/v${version}`)
+if (dryRun) {
+  console.log('  [dry-run] would rewrite absolute links in all .md files')
 }
 else {
-  console.log('  [dry-run] would rewrite absolute links in all .md files')
+  rewriteLinks(versionDir, `/v${version}`)
 }
 
 // Step 2: Update versions.mjs — append new stable entry after 'next'
