@@ -157,9 +157,9 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
         if (serverModuleGuardFails.length > 0) {
           // warn once per load cycle using the last recorded fail; all importers are written to the log file
           const latest = serverModuleGuardFails.at(-1)!
-          if (guardMode === 'error')
+          if (latest.mode === 'error')
             throw new Error(formatHardError(latest))
-          if (guardMode === 'stub')
+          if (latest.mode === 'stub')
             return buildServerStubModule(latest.envName)
           resolvedConfig.logger.warn(`\n${formatGuardWarning(latest)}`)
         }
@@ -234,6 +234,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
             if (serverMod)
               server.moduleGraph.invalidateModule(serverMod)
             if (clientMod || serverMod) {
+              serverModuleGuardFails = []
               server.hot.send({ type: 'full-reload' })
               resolvedConfig.logger.info(
                 `  \x1B[32m✓\x1B[0m \x1B[36m[vite-env]\x1B[0m Env revalidated`,
