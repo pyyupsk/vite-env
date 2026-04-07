@@ -2,18 +2,20 @@
 import type { EnvDefinition, StandardEnvDefinition } from './types'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { z } from 'zod'
 
 /**
  * Writes vite-env.d.ts for Zod definitions.
  * Uses instanceof checks to infer TypeScript types from Zod schemas.
+ * Zod is loaded dynamically so this module can be imported without zod installed.
  */
 export async function generateDts(
   def: EnvDefinition,
   root: string,
 ): Promise<void> {
-  const clientFields = zodShapeToTsFields({ ...def.client })
-  const serverFields = zodShapeToTsFields({ ...def.server, ...def.client })
+  const { z } = await import('zod')
+
+  const clientFields = zodShapeToTsFields(z, { ...def.client })
+  const serverFields = zodShapeToTsFields(z, { ...def.server, ...def.client })
 
   await writeDts(root, clientFields, serverFields)
 }
@@ -82,22 +84,21 @@ function keysToTsFields(keys: string[]): string {
     .join('\n')
 }
 
-function zodShapeToTsFields(shape: z.ZodRawShape): string {
+function zodShapeToTsFields(z: any, shape: Record<string, unknown>): string {
   return Object.entries(shape)
     .map(([key, schema]) => {
-      const s = schema as z.ZodTypeAny
-      const tsType = zodToTs(s)
-      const optional = isOptional(s)
+      const tsType = zodToTs(z, schema)
+      const optional = schema instanceof z.ZodOptional
       return `    readonly ${key}${optional ? '?' : ''}: ${tsType}`
     })
     .join('\n')
 }
 
-function zodToTs(schema: z.ZodTypeAny): string {
+function zodToTs(z: any, schema: any): string {
   if (schema instanceof z.ZodOptional)
-    return zodToTs(schema.unwrap() as unknown as z.ZodTypeAny)
+    return zodToTs(z, schema.unwrap())
   if (schema instanceof z.ZodDefault)
-    return zodToTs(schema.def.innerType as unknown as z.ZodTypeAny)
+    return zodToTs(z, schema.def.innerType)
   if (schema instanceof z.ZodString)
     return 'string'
   if (schema instanceof z.ZodNumber)
@@ -107,10 +108,6 @@ function zodToTs(schema: z.ZodTypeAny): string {
   if (schema instanceof z.ZodEnum)
     return (schema.options as string[]).map(o => `'${o}'`).join(' | ')
   if (schema instanceof z.ZodPipe)
-    return zodToTs(schema.def.out as unknown as z.ZodTypeAny)
+    return zodToTs(z, schema.def.out)
   return 'string'
-}
-
-function isOptional(schema: z.ZodTypeAny): boolean {
-  return schema instanceof z.ZodOptional
 }

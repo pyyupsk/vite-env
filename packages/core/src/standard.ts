@@ -15,7 +15,7 @@ export function defineStandardEnv<T extends Omit<StandardEnvDefinition, '_standa
     }
   }
 
-  return Object.assign(definition, { _standard: true as const })
+  return { ...definition, _standard: true as const }
 }
 
 export function isStandardEnvDefinition(

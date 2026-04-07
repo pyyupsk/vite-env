@@ -7,4 +7,3 @@ export type {
   InferServerEnv,
   StandardEnvDefinition,
 } from './types'
-export { z } from 'zod'
