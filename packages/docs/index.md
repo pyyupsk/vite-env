@@ -34,8 +34,8 @@ features:
     details: "Generate documented `.env.example` files from your Zod schema with types, defaults, and required flags."
     icon:
       src: /icons/check.svg
-  - title: "Zod v4 Native"
-    details: "`z.stringbool()`, `z.url()`, `z.coerce.number()` — first-class Zod v4 support with no adapters needed."
+  - title: "Zod v4 + Standard Schema"
+    details: "First-class Zod v4 support with rich type inference. Or use Valibot, ArkType, or any Standard Schema validator."
     icon:
       src: /icons/bolt.svg
 ---

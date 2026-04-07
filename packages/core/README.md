@@ -7,6 +7,7 @@ The `env.ts` layer for Vite — define once, validate everywhere, import with ty
 - Typed virtual modules (`virtual:env/client`, `virtual:env/server`)
 - Server/client split with build-time leak detection
 - Auto-coercion via Zod v4 (`z.stringbool()`, `z.coerce.number()`)
+- Standard Schema support — use Valibot, ArkType, or any compliant validator
 - Auto `.d.ts` generation
 - Vite 8 / Rolldown native
 
@@ -21,7 +22,8 @@ pnpm add @vite-env/core zod
 **1. Define your schema** — `env.ts`
 
 ```ts
-import { defineEnv, z } from '@vite-env/core'
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
 
 export default defineEnv({
   server: {

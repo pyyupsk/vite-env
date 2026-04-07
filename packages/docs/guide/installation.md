@@ -2,7 +2,9 @@
 
 ## Core Package
 
-Install `@vite-env/core` along with `zod`, which is required as a peer dependency:
+Install `@vite-env/core` with your preferred schema validator:
+
+### With Zod (recommended)
 
 ::: code-group
 
@@ -20,6 +22,30 @@ yarn add @vite-env/core zod
 
 ```sh [bun]
 bun add @vite-env/core zod
+```
+
+:::
+
+### With any Standard Schema validator
+
+If you prefer Valibot, ArkType, or another [Standard Schema](https://github.com/standard-schema/standard-schema)-compliant validator, install it instead of Zod:
+
+::: code-group
+
+```sh [pnpm]
+pnpm add @vite-env/core valibot
+```
+
+```sh [npm]
+npm install @vite-env/core valibot
+```
+
+```sh [yarn]
+yarn add @vite-env/core valibot
+```
+
+```sh [bun]
+bun add @vite-env/core valibot
 ```
 
 :::
@@ -50,8 +76,9 @@ bun add -D @vite-env/cli
 
 ## Requirements
 
-| Requirement | Version    |
-| ----------- | ---------- |
-| Node.js     | >= 20.19.0 |
-| Vite        | >= 8.0.0   |
-| Zod         | >= 4.0.0   |
+| Requirement     | Version                                         |
+| --------------- | ----------------------------------------------- |
+| Node.js         | >= 20.19.0                                      |
+| Vite            | >= 8.0.0                                        |
+| Zod             | >= 4.0.0 (optional — for `defineEnv()`)         |
+| Standard Schema | >= 1.1.0 (optional — for `defineStandardEnv()`) |
