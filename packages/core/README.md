@@ -6,6 +6,7 @@ The `env.ts` layer for Vite — define once, validate everywhere, import with ty
 
 - Typed virtual modules (`virtual:env/client`, `virtual:env/server`)
 - Server/client split with build-time leak detection
+- Runtime access protection — warns or errors when `virtual:env/server` is imported from a client environment
 - Auto-coercion via Zod v4 (`z.stringbool()`, `z.coerce.number()`)
 - Standard Schema support — use Valibot, ArkType, or any compliant validator
 - Auto `.d.ts` generation
