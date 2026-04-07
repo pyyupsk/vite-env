@@ -1,0 +1,76 @@
+# Server vs Client
+
+`vite-env` divides environment variables into two buckets — `server` and `client` — and exposes them through separate virtual modules. The split enforces a hard boundary: secrets defined in `server` can never leak into the browser bundle.
+
+## Access matrix
+
+| Variable type            | `virtual:env/client` | `virtual:env/server` |
+| ------------------------ | :------------------: | :------------------: |
+| Client (`VITE_*` prefix) |         Yes          |         Yes          |
+| Server (no prefix)       |          No          |         Yes          |
+
+The server module includes **all** validated variables — both server-only and client. The client module includes **only** the client variables.
+
+## The `VITE_` prefix rule
+
+Every key defined under `client` must start with `VITE_`. This is enforced at `defineEnv()` call time, before any build starts. If you define a client key without the prefix, you get an immediate startup error:
+
+```
+[vite-env] Client env var "API_URL" must be prefixed with VITE_.
+  Rename it to "VITE_API_URL" or move it to "server" if it's secret.
+```
+
+This mirrors Vite's own convention and makes the exposure boundary explicit — anything prefixed with `VITE_` is expected to be public.
+
+```ts
+import { defineEnv, z } from '@vite-env/core'
+
+export default defineEnv({
+  server: {
+    DATABASE_URL: z.url(), // no prefix required — server only
+    JWT_SECRET: z.string().min(32),
+  },
+  client: {
+    VITE_API_URL: z.url(), // VITE_ prefix required
+    VITE_APP_NAME: z.string().min(1),
+    // API_URL: z.url(),        // would throw at startup
+  },
+})
+```
+
+Server keys can technically carry a `VITE_` prefix, but doing so defeats the purpose: it signals a public variable while hiding it from the client module.
+
+## TypeScript boundary enforcement
+
+The generated `vite-env.d.ts` declares separate module types for each virtual module. If you try to access a server-only variable from the client module, TypeScript will catch it:
+
+```ts
+// In a client-side file
+import { env } from 'virtual:env/client'
+
+console.log(env.VITE_API_URL) // OK
+console.log(env.DATABASE_URL) // TypeScript error:
+// Property 'DATABASE_URL' does not exist on type
+// '{ VITE_API_URL: string; VITE_APP_NAME: string; ... }'
+```
+
+The type error surfaces at development time, not at runtime. The client module's type only declares keys from the `client` section of your schema.
+
+## Importing from the correct module
+
+Use `virtual:env/client` in browser code and in any file that may be bundled for the client:
+
+```ts
+import { env } from 'virtual:env/client'
+
+const apiUrl = env.VITE_API_URL
+```
+
+Use `virtual:env/server` in server-side code, API routes, or build scripts that run only in Node:
+
+```ts
+import { env } from 'virtual:env/server'
+
+const dbUrl = env.DATABASE_URL
+const apiUrl = env.VITE_API_URL // also available here
+```
