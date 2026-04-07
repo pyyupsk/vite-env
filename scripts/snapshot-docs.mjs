@@ -6,7 +6,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
@@ -135,7 +135,7 @@ writeFile(versionsFile, updatedVersions)
 console.log('\nUpdating versioned-sidebars.mjs:')
 let rootSidebar
 try {
-  const mod = await import(sidebarFile)
+  const mod = await import(pathToFileURL(sidebarFile).href)
   rootSidebar = mod.rootSidebar
 }
 catch (e) {
@@ -161,15 +161,14 @@ for (const [key, groups] of Object.entries(rootSidebar)) {
 }
 
 // Read existing versioned sidebars and merge
-const existingContent = fs.readFileSync(versionedSidebarsFile, 'utf-8')
-const match = existingContent.match(/export const versionedSidebars = (\{[\s\S]*\})/)
 let existing = {}
-if (match) {
+if (fs.existsSync(versionedSidebarsFile)) {
   try {
-    existing = JSON.parse(match[1])
+    const mod = await import(pathToFileURL(versionedSidebarsFile).href)
+    existing = mod.versionedSidebars ?? {}
   }
-  catch {
-    console.error('❌ versioned-sidebars.mjs contains invalid JSON — it may have been manually edited. Delete it and re-run to regenerate. Aborting.')
+  catch (e) {
+    console.error(`❌ Could not import versioned-sidebars.mjs: ${e.message}`)
     process.exit(1)
   }
 }
