@@ -111,7 +111,7 @@ else {
 // Step 2: Update versions.mjs — append new stable entry after 'next'
 console.log('\nUpdating versions.mjs:')
 const versionsContent = fs.readFileSync(versionsFile, 'utf-8')
-const newVersionEntry = `  { text: 'v${version}', link: '/vite-env/v${version}/' },\n`
+const newVersionEntry = `  { text: 'v${version}', link: '/v${version}/' },\n`
 const updatedVersions = versionsContent.replace(
   /(export const versions = \[\n {2}\{ text: 'next'[^\n]+\n)/,
   `$1${newVersionEntry}`,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useData } from 'vitepress'
+import { useData, withBase } from 'vitepress'
 import { versions } from '../versions.mjs'
 
 const { page } = useData()
@@ -17,7 +17,7 @@ const latestStable = versions.find(v => !v.text.includes('next'))
     <span class="next-banner__text">
       ⚠️ You're reading unreleased (next) docs.
     </span>
-    <a :href="latestStable.link" class="next-banner__link">
+    <a :href="withBase(latestStable.link)" class="next-banner__link">
       Latest stable: {{ latestStable.text }} →
     </a>
   </div>
