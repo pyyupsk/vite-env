@@ -13,6 +13,11 @@ export interface StandardEnvDefinition {
   readonly _standard: true
 }
 
+export interface EnvPreset {
+  server?: z.ZodRawShape
+  client?: z.ZodRawShape
+}
+
 export type AnyEnvDefinition = EnvDefinition | StandardEnvDefinition
 
 export type ValidationResult

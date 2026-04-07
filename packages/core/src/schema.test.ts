@@ -8,7 +8,7 @@ describe('defineEnv', () => {
       client: { VITE_API_URL: z.string() },
       server: { DB_URL: z.string() },
     }
-    expect(defineEnv(def)).toBe(def)
+    expect(defineEnv(def)).toEqual(def)
   })
 
   it('should throw when client key lacks VITE_ prefix', () => {
@@ -90,5 +90,24 @@ describe('validateEnv', () => {
 
     expect(result.success).toBe(true)
     expect(result.data).toEqual({ SECRET: 'sec', VITE_PUB: 'pub', VITE_MODE: 'dev' })
+  })
+})
+
+describe('defineEnv with presets', () => {
+  it('returns merged shape with presets key absent', () => {
+    const preset = { server: { PRESET_VAR: z.string() } }
+    const result = defineEnv({
+      presets: [preset],
+      server: { MY_VAR: z.string() },
+    })
+    expect(result.server).toHaveProperty('PRESET_VAR')
+    expect(result.server).toHaveProperty('MY_VAR')
+    expect(result).not.toHaveProperty('presets')
+  })
+
+  it('VITE_ prefix check catches non-prefixed key in a preset client field', () => {
+    expect(() => defineEnv({
+      presets: [{ client: { NO_PREFIX: z.string() } }],
+    })).toThrow('[vite-env] Client env var "NO_PREFIX" must be prefixed with VITE_')
   })
 })
