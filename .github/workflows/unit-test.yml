@@ -3,8 +3,24 @@ name: Unit Test
 on:
   push:
     branches: [main]
+    paths:
+      - 'packages/core/**'
+      - 'packages/cli/**'
+      - 'playground/**'
+      - vitest.config.ts
+      - tsconfig.json
+      - pnpm-lock.yaml
+      - .github/workflows/unit-test.yml
   pull_request:
     branches: [main]
+    paths:
+      - 'packages/core/**'
+      - 'packages/cli/**'
+      - 'playground/**'
+      - vitest.config.ts
+      - tsconfig.json
+      - pnpm-lock.yaml
+      - .github/workflows/unit-test.yml
 
 permissions: {}
 
