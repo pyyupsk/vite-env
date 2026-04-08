@@ -16,14 +16,21 @@ What [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is for Next.js, but built
 - **Typed virtual modules** — `import { env } from 'virtual:env/client'` with full IntelliSense
 - **Server/client split** — server secrets never reach the browser bundle
 - **Build-time leak detection** — fails the build if server values appear in client chunks
+- **Runtime access protection** — Vite 8 Environment API guards `virtual:env/server` imports from client environments (`'warn'`, `'error'`, or `'stub'` mode)
 - **Auto-coercion** — `z.stringbool()`, `z.coerce.number()` just work
 - **Auto `.d.ts` generation** — no more manual `vite-env.d.ts` maintenance
 - **Auto `.env.example`** — `npx vite-env generate` from your schema
-- **Zod v4 native** — first-class support for the latest Zod with rich type inference
-- **Standard Schema support** — use Valibot, ArkType, or any Standard Schema-compliant validator
+- **Zod v4 native** — first-class support with rich type inference (enums become literal unions, optionals become `?:`)
+- **Standard Schema support** — use Valibot, ArkType, or any Standard Schema-compliant validator via `defineStandardEnv()`
 - **Platform presets** — pre-built schemas for Vercel, Railway, and Netlify
-- **Runtime access protection** — warns (or errors) when `virtual:env/server` is imported from a client environment
+- **Dev-mode `.env` watching** — revalidates automatically on `.env*` file changes with HMR reload
 - **Vite 8 / Rolldown native** — `moduleType: 'js'` on virtual modules, sequential hooks
+
+## How does it compare?
+
+`@vite-env/core` is the only Vite env tool that combines build-time validation, virtual module imports, server/client splitting, and build-time leak detection from a single `env.ts` file. If you use Next.js or need monorepo composition, [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is the better fit; if you want the lightest validation with broad Vite version support, [`@julr/vite-plugin-validate-env`](https://github.com/Julr/vite-plugin-validate-env) is worth a look.
+
+See the full comparison with feature matrix and trade-offs: **[Comparison page](https://pyyupsk.github.io/vite-env/guide/comparison.html)**
 
 ## Install
 
@@ -74,14 +81,16 @@ export default defineConfig({
 
 ```ts
 // Client code — only client vars available
-import { env } from 'virtual:env/client' // 'development' | 'test' | 'production'
-
-// Server/SSR code — all vars available
-import { env } from 'virtual:env/server'
+import { env } from 'virtual:env/client'
 
 env.VITE_API_URL // string
 env.VITE_DARK_MODE // boolean (not "true")
-env.VITE_NODE_ENV
+env.VITE_NODE_ENV // 'development' | 'test' | 'production'
+```
+
+```ts
+// Server/SSR code — all vars available
+import { env } from 'virtual:env/server'
 
 env.DATABASE_URL // string
 env.JWT_SECRET // string
@@ -99,6 +108,26 @@ env.VITE_API_URL // string (client vars also available server-side)
 - **Leak detection** scans client chunks at `generateBundle` for literal server variable values
 - **`VITE_` prefix** is enforced at `defineEnv()` call time for all `client` keys
 - **`process.env` wins** over `.env` files (CI secrets take precedence)
+
+## Standard Schema support
+
+Use any Standard Schema-compliant validator instead of Zod:
+
+```ts
+import { defineStandardEnv } from '@vite-env/core'
+import * as v from 'valibot'
+
+export default defineStandardEnv({
+  server: {
+    DATABASE_URL: v.pipe(v.string(), v.url()),
+  },
+  client: {
+    VITE_API_URL: v.pipe(v.string(), v.url()),
+  },
+})
+```
+
+Same plugin, same virtual modules, same leak detection. Zod is optional when using `defineStandardEnv()`.
 
 ## CLI
 

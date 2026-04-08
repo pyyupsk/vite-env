@@ -1,8 +1,11 @@
 shellEmulator: true
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - vite@5.4.21
 packages:
   - 'packages/*'
   - playground
+  - demo
 allowBuilds:
   esbuild: true
   simple-git-hooks: true
@@ -13,6 +16,8 @@ catalog:
   jiti: ^2.6.1
   vitepress: ^1.6.3
 catalogs:
+  demo:
+    valibot: ^1.3.1
   dev:
     '@antfu/eslint-config': ^8.0.0
     '@types/node': ^25.5.2
