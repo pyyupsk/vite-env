@@ -18,10 +18,11 @@ function defineEnv<T extends EnvDefinition>(definition: T): T
 interface EnvDefinition {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
+  presets?: EnvPreset[]
 }
 ```
 
-Both properties are optional. Each is a Zod raw shape — a plain object where every value is a Zod schema.
+`server` and `client` are optional. Each is a Zod raw shape — a plain object where every value is a Zod schema. `presets` accepts an array of platform presets that are merged before your definitions (see [Platform Presets](/guide/platform-presets)).
 
 ```ts
 import { defineEnv } from '@vite-env/core'

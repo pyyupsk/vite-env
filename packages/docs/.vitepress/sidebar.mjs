@@ -27,6 +27,7 @@ export const rootSidebar = {
         { text: 'Type Coercion', link: '/guide/coercion' },
         { text: 'Leak Detection', link: '/guide/leak-detection' },
         { text: 'Type Generation', link: '/guide/type-generation' },
+        { text: 'Platform Presets', link: '/guide/platform-presets' },
       ],
     },
   ],

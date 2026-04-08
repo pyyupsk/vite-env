@@ -21,6 +21,7 @@ What [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is for Next.js, but built
 - **Auto `.env.example`** — `npx vite-env generate` from your schema
 - **Zod v4 native** — first-class support for the latest Zod with rich type inference
 - **Standard Schema support** — use Valibot, ArkType, or any Standard Schema-compliant validator
+- **Platform presets** — pre-built schemas for Vercel, Railway, and Netlify
 - **Runtime access protection** — warns (or errors) when `virtual:env/server` is imported from a client environment
 - **Vite 8 / Rolldown native** — `moduleType: 'js'` on virtual modules, sequential hooks
 
@@ -121,6 +122,28 @@ ViteEnv({
   onClientAccessOfServerModule: 'warn', // 'warn' | 'error' | 'stub' — default changes to 'error' in 1.0.0
 })
 ```
+
+## Platform Presets
+
+Pre-built schemas for common deployment platforms — Vercel, Railway, and Netlify:
+
+```ts
+import { defineEnv } from '@vite-env/core'
+import { vercel } from '@vite-env/core/presets'
+import { z } from 'zod'
+
+export default defineEnv({
+  presets: [vercel],
+  server: {
+    DATABASE_URL: z.url(),
+  },
+  client: {
+    VITE_API_URL: z.url(),
+  },
+})
+```
+
+Available presets: `vercel`, `railway`, `netlify`. Your definitions always take precedence over preset values.
 
 ## Packages
 

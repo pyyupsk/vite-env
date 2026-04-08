@@ -63,6 +63,28 @@ When Vite starts (dev server or production build), the plugin runs through this 
 
 You never access a variable that failed validation. You never drift out of sync with your types.
 
+## Platform presets
+
+Deploying to Vercel, Railway, or Netlify? Instead of manually defining every platform-injected variable, use a preset:
+
+```ts
+import { defineEnv } from '@vite-env/core'
+import { vercel } from '@vite-env/core/presets'
+import { z } from 'zod'
+
+export default defineEnv({
+  presets: [vercel],
+  server: {
+    DATABASE_URL: z.url(),
+  },
+  client: {
+    VITE_API_URL: z.url(),
+  },
+})
+```
+
+Presets provide validated, typed schemas for all platform environment variables. Your definitions always win over preset values. See [Platform Presets](/guide/platform-presets) for details.
+
 ---
 
 Ready to add it to a project? See [Quick Start](/guide/quick-start).

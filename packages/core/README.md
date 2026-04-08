@@ -9,6 +9,7 @@ The `env.ts` layer for Vite — define once, validate everywhere, import with ty
 - Runtime access protection — warns or errors when `virtual:env/server` is imported from a client environment
 - Auto-coercion via Zod v4 (`z.stringbool()`, `z.coerce.number()`)
 - Standard Schema support — use Valibot, ArkType, or any compliant validator
+- Platform presets — pre-built schemas for Vercel, Railway, and Netlify
 - Auto `.d.ts` generation
 - Vite 8 / Rolldown native
 
@@ -61,6 +62,22 @@ env.VITE_API_URL // string
 env.VITE_DARK_MODE // boolean
 env.VITE_NODE_ENV // 'development' | 'test' | 'production'
 ```
+
+### Platform presets
+
+```ts
+import { defineEnv } from '@vite-env/core'
+import { vercel } from '@vite-env/core/presets'
+import { z } from 'zod'
+
+export default defineEnv({
+  presets: [vercel],
+  server: { DATABASE_URL: z.url() },
+  client: { VITE_API_URL: z.url() },
+})
+```
+
+Available presets: `vercel`, `railway`, `netlify`.
 
 See the [full documentation](https://pyyupsk.github.io/vite-env/) for server/client split details, CLI tools, and more.
 

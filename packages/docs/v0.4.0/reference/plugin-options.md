@@ -15,11 +15,11 @@ export default defineConfig({
 
 ## ViteEnvOptions
 
-| Option                          | Type                          | Default      | Description                                                                    |
-| ------------------------------- | ----------------------------- | ------------ | ------------------------------------------------------------------------------ |
-| `configFile`                    | `string`                      | `'./env.ts'` | Path to the env definition file, relative to the Vite root                    |
-| `serverEnvironments`            | `string[]`                    | `['ssr']`    | Vite 8 environment names allowed to import `virtual:env/server`                |
-| `onClientAccessOfServerModule`  | `'warn' \| 'error' \| 'stub'` | `'warn'`     | Behavior when `virtual:env/server` is imported from a disallowed environment   |
+| Option                         | Type                          | Default      | Description                                                                  |
+| ------------------------------ | ----------------------------- | ------------ | ---------------------------------------------------------------------------- |
+| `configFile`                   | `string`                      | `'./env.ts'` | Path to the env definition file, relative to the Vite root                   |
+| `serverEnvironments`           | `string[]`                    | `['ssr']`    | Vite 8 environment names allowed to import `virtual:env/server`              |
+| `onClientAccessOfServerModule` | `'warn' \| 'error' \| 'stub'` | `'warn'`     | Behavior when `virtual:env/server` is imported from a disallowed environment |
 
 ### configFile
 
@@ -50,11 +50,11 @@ ViteEnv({ onClientAccessOfServerModule: 'error' })
 
 Controls what happens when `virtual:env/server` is imported from an environment not in `serverEnvironments`.
 
-| Value    | Behavior                                                                                                   |
-| -------- | ---------------------------------------------------------------------------------------------------------- |
-| `'warn'` | Prints a deprecation warning to the terminal and writes `vite-env-warnings.log`. Build exits with code 1. |
+| Value     | Behavior                                                                                                  |
+| --------- | --------------------------------------------------------------------------------------------------------- |
+| `'warn'`  | Prints a deprecation warning to the terminal and writes `vite-env-warnings.log`. Build exits with code 1. |
 | `'error'` | Throws a hard build error. No artifacts are emitted.                                                      |
-| `'stub'` | Returns a module that throws at runtime if the import actually executes.                                   |
+| `'stub'`  | Returns a module that throws at runtime if the import actually executes.                                  |
 
 The default is `'warn'` in the 0.x release series. **It will change to `'error'` in 1.0.0.**
 
