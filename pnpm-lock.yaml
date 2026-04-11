@@ -29,6 +29,9 @@ catalogs:
     '@antfu/eslint-config':
       specifier: ^8.0.0
       version: 8.0.0
+    '@pyyupsk/nit':
+      specifier: ^0.1.0
+      version: 0.1.0
     '@types/node':
       specifier: ^25.5.2
       version: 25.5.2
@@ -50,9 +53,6 @@ catalogs:
     lint-staged:
       specifier: ^16.4.0
       version: 16.4.0
-    simple-git-hooks:
-      specifier: ^2.13.1
-      version: 2.13.1
     tsdown:
       specifier: ^0.21.7
       version: 0.21.7
@@ -76,6 +76,9 @@ importers:
       '@antfu/eslint-config':
         specifier: catalog:dev
         version: 8.0.0(@typescript-eslint/rule-tester@8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(@typescript-eslint/typescript-estree@8.58.0(typescript@6.0.2))(@typescript-eslint/utils@8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(@vue/compiler-sfc@3.5.32)(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)(vitest@4.1.2(@types/node@25.5.2)(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)))
+      '@pyyupsk/nit':
+        specifier: catalog:dev
+        version: 0.1.0
       '@types/node':
         specifier: catalog:dev
         version: 25.5.2
@@ -91,9 +94,6 @@ importers:
       lint-staged:
         specifier: catalog:dev
         version: 16.4.0
-      simple-git-hooks:
-        specifier: catalog:dev
-        version: 2.13.1
       typescript:
         specifier: catalog:dev
         version: 6.0.2
@@ -871,6 +871,11 @@ packages:
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@pyyupsk/nit@0.1.0':
+    resolution: {integrity: sha512-IzsuQUaJqmTPNlZ4weW0dOGJnJsyjTninhZ0ARCvJmzs544epp48pIkNF0wRKTImfhCspQcInWHEVYtLVgYoug==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@quansync/fs@1.0.0':
     resolution: {integrity: sha512-4TJ3DFtlf1L5LDMaM6CanJ/0lckGNtJcMjQ1NAV6zDmA0tEHKZtxNKin8EgPaVX1YzljbxckyT2tJrpQKAtngQ==}
@@ -2617,10 +2622,6 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-git-hooks@2.13.1:
-    resolution: {integrity: sha512-WszCLXwT4h2k1ufIXAgsbiTOazqqevFCIncOuUBZJ91DdvWcC5+OFkluWRQPrcuSYd8fjq+o2y1QfWqYMoAToQ==}
-    hasBin: true
-
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
@@ -3562,6 +3563,8 @@ snapshots:
   '@oxc-project/types@0.122.0': {}
 
   '@pkgr/core@0.2.9': {}
+
+  '@pyyupsk/nit@0.1.0': {}
 
   '@quansync/fs@1.0.0':
     dependencies:
@@ -5543,8 +5546,6 @@ snapshots:
   siginfo@2.0.0: {}
 
   signal-exit@4.1.0: {}
-
-  simple-git-hooks@2.13.1: {}
 
   sisteransi@1.0.5: {}
 

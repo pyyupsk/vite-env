@@ -11,7 +11,7 @@
     "typecheck": "pnpm run -r typecheck",
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
-    "prepare": "npx simple-git-hooks",
+    "prepare": "nit install",
     "release": "bumpp -r -x 'node scripts/snapshot-docs.mjs'",
     "docs:dev": "pnpm --filter @vite-env/docs run dev",
     "docs:build": "pnpm --filter @vite-env/docs run build",
@@ -19,17 +19,19 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
+    "@pyyupsk/nit": "catalog:dev",
     "@types/node": "catalog:dev",
     "@vitest/coverage-v8": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:dev",
     "lint-staged": "catalog:dev",
-    "simple-git-hooks": "catalog:dev",
     "typescript": "catalog:dev",
     "vitest": "catalog:dev"
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+  "nit": {
+    "hooks": {
+      "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+    }
   },
   "lint-staged": {
     "*": "eslint --fix"
