@@ -24,7 +24,7 @@ clientSection.appendChild(clientHeading)
 const clientGrid = document.createElement('div')
 clientGrid.className = 'env-grid'
 
-const clientVars: Array<[string, unknown]> = [
+const clientVars: [string, unknown][] = [
   ['VITE_API_URL', env.VITE_API_URL],
   ['VITE_APP_NAME', env.VITE_APP_NAME],
   ['VITE_DEBUG', env.VITE_DEBUG],

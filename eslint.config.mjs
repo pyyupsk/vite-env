@@ -1,9 +1,22 @@
-import antfu from '@antfu/eslint-config'
+import { defineConfig } from '@pyyupsk/eslint-config'
 
-export default antfu({
-  ignores: ['.local/**', 'docs/**'],
-}, {
-  rules: {
-    'test/prefer-lowercase-title': ['error', { ignore: ['it'] }],
+export default [
+  ...defineConfig({
+    ignores: ['.local/**', 'docs/**'],
+  }),
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
+    },
   },
-})
+  {
+    files: ['**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+]

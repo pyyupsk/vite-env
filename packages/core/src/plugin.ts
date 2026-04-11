@@ -14,7 +14,7 @@ import { loadEnvSources } from './sources'
 import { isStandardEnvDefinition, validateStandardEnv } from './standard'
 import { buildClientModule, buildServerModule } from './virtual'
 
-export interface ViteEnvOptions {
+export type ViteEnvOptions = {
   /**
    * Path to env definition file.
    * @default './env.ts' (resolved from project root)

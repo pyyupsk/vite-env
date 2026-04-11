@@ -70,7 +70,6 @@ describe('writeWarningsLog', () => {
   it('content contains no ANSI escape codes', async () => {
     await writeWarningsLog([fail1], '/project')
     const content = vi.mocked(fs.writeFile).mock.calls[0][1] as string
-    // eslint-disable-next-line no-control-regex
     expect(content).not.toMatch(/\x1B\[/)
   })
 

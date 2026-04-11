@@ -46,7 +46,6 @@ export default defineConfig({
 
     editLink: {
       pattern: ({ filePath }) =>
-        // eslint-disable-next-line e18e/prefer-static-regex
         /^v\d/.test(filePath)
           ? (undefined as unknown as string)
           : `https://github.com/pyyupsk/vite-env/edit/main/packages/docs/${filePath}`,

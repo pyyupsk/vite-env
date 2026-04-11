@@ -21,7 +21,7 @@ export function defineStandardEnv<T extends Omit<StandardEnvDefinition, '_standa
 export function isStandardEnvDefinition(
   def: unknown,
 ): def is StandardEnvDefinition {
-  return def != null && typeof def === 'object' && '_standard' in def && (def as any)._standard === true
+  return def != null && typeof def === 'object' && '_standard' in def && (def as Record<string, unknown>)._standard === true
 }
 
 export async function validateStandardEnv(

@@ -1,5 +1,6 @@
 // @env node
 import type { EnvDefinition, StandardEnvDefinition } from './types'
+import type { z as ZodNs } from 'zod'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -84,7 +85,7 @@ function keysToTsFields(keys: string[]): string {
     .join('\n')
 }
 
-function zodShapeToTsFields(z: any, shape: Record<string, unknown>): string {
+function zodShapeToTsFields(z: typeof ZodNs, shape: Record<string, unknown>): string {
   return Object.entries(shape)
     .map(([key, schema]) => {
       const tsType = zodToTs(z, schema)
@@ -94,7 +95,7 @@ function zodShapeToTsFields(z: any, shape: Record<string, unknown>): string {
     .join('\n')
 }
 
-function zodToTs(z: any, schema: any): string {
+function zodToTs(z: typeof ZodNs, schema: unknown): string {
   if (schema instanceof z.ZodOptional)
     return zodToTs(z, schema.unwrap())
   if (schema instanceof z.ZodDefault)

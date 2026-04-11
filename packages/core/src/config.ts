@@ -3,7 +3,7 @@ import { createJiti } from 'jiti'
 
 export async function loadEnvConfig(configPath: string): Promise<EnvDefinition> {
   const jiti = createJiti(configPath)
-  const mod: Record<string, unknown> = await jiti.import(configPath) as any
+  const mod = await jiti.import<Record<string, unknown>>(configPath)
   const def: unknown = mod.default ?? mod
 
   if (!def || typeof def !== 'object') {

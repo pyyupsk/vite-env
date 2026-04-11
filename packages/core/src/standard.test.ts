@@ -2,7 +2,7 @@ import type { StandardSchemaV1 } from '@standard-schema/spec'
 import { describe, expect, it } from 'vitest'
 import { defineStandardEnv, isStandardEnvDefinition, validateStandardEnv } from './standard'
 
-function mockSchema(validator: (input: unknown) => { value: unknown } | { issues: { message: string, path?: ReadonlyArray<PropertyKey> }[] }): StandardSchemaV1 {
+function mockSchema(validator: (input: unknown) => { value: unknown } | { issues: { message: string, path?: readonly PropertyKey[] }[] }): StandardSchemaV1 {
   return {
     '~standard': {
       version: 1,

@@ -1,19 +1,19 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import type { z } from 'zod'
 
-export interface EnvDefinition {
+export type EnvDefinition = {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
 }
 
-export interface StandardEnvDefinition {
+export type StandardEnvDefinition = {
   server?: Record<string, StandardSchemaV1>
   client?: Record<string, StandardSchemaV1>
   /** @internal */
   readonly _standard: true
 }
 
-export interface EnvPreset {
+export type EnvPreset = {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
 }
@@ -24,9 +24,9 @@ export type ValidationResult
   = | { success: true, data: Record<string, unknown>, errors: [] }
     | { success: false, data: null, errors: z.core.$ZodIssue[] }
 
-export interface StandardValidationIssue {
+export type StandardValidationIssue = {
   message: string
-  path: ReadonlyArray<PropertyKey | StandardSchemaV1.PathSegment>
+  path: readonly (PropertyKey | StandardSchemaV1.PathSegment)[]
 }
 
 export type StandardValidationResult

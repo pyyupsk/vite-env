@@ -3,26 +3,26 @@ trustPolicy: no-downgrade
 trustPolicyExclude:
   - vite@5.4.21
 packages:
-  - 'packages/*'
+  - "packages/*"
   - playground
   - demo
 allowBuilds:
-  '@pyyupsk/nit': true
+  "@pyyupsk/nit": true
   esbuild: true
 catalog:
-  '@fontsource-variable/geist': ^5.2.8
-  '@fontsource-variable/geist-mono': ^5.2.7
-  '@standard-schema/spec': ^1.1.0
+  "@fontsource-variable/geist": ^5.2.8
+  "@fontsource-variable/geist-mono": ^5.2.7
+  "@standard-schema/spec": ^1.1.0
   jiti: ^2.6.1
   vitepress: ^1.6.3
 catalogs:
   demo:
     valibot: ^1.3.1
   dev:
-    '@antfu/eslint-config': ^8.0.0
-    '@pyyupsk/nit': ^0.1.0
-    '@types/node': ^25.5.2
-    '@vitest/coverage-v8': ^4.1.2
+    "@pyyupsk/eslint-config": ^0.3.0
+    "@pyyupsk/nit": ^0.1.0
+    "@types/node": ^25.5.2
+    "@vitest/coverage-v8": ^4.1.2
     bumpp: ^11.0.1
     citty: ^0.2.2
     consola: ^3.4.2

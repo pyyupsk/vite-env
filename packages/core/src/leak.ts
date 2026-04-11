@@ -1,6 +1,6 @@
 import type { AnyEnvDefinition } from './types'
 
-interface LeakReport {
+type LeakReport = {
   key: string
   chunk: string
 }

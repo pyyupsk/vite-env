@@ -1,9 +1,9 @@
 import type { EnvDefinition, EnvPreset, ValidationResult } from './types'
 import { z } from 'zod'
 
-interface DefineEnvInput extends EnvDefinition {
+type DefineEnvInput = {
   presets?: EnvPreset[]
-}
+} & EnvDefinition
 
 function warnSideConflicts(
   keys: string[],

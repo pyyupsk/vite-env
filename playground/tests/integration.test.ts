@@ -7,7 +7,7 @@ import { build } from 'vite'
 import { afterEach, describe, expect, it } from 'vitest'
 
 type BuildResult = Awaited<ReturnType<typeof build>>
-type BuildOutput = Extract<BuildResult extends Array<infer T> ? T : BuildResult, { output: unknown }>
+type BuildOutput = Extract<BuildResult extends (infer T)[] ? T : BuildResult, { output: unknown }>
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')

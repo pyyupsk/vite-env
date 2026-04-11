@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 import { formatGuardLogEntry, formatGuardWarning, formatHardError, formatStandardSchemaError, formatZodError, IMPORTER_MAX_LEN, truncateImporter } from './format'
 
 function stripAnsi(str: string): string {
-  // eslint-disable-next-line no-control-regex
   return str.replaceAll(/\x1B\[[0-9;]*m/g, '')
 }
 

@@ -18,7 +18,7 @@
     "docs:preview": "pnpm --filter @vite-env/docs run preview"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "catalog:dev",
+    "@pyyupsk/eslint-config": "catalog:dev",
     "@pyyupsk/nit": "catalog:dev",
     "@types/node": "catalog:dev",
     "@vitest/coverage-v8": "catalog:dev",
