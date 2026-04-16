@@ -10,7 +10,10 @@ A variable is considered leaked when its exact value appears inside any chunk's 
 
 ## When It Runs
 
-Leak detection fires in Vite's `generateBundle` hook, which runs after the bundle is fully assembled. It is **skipped entirely for SSR builds** (`config.build.ssr` is truthy) — server bundles are expected to contain server values.
+Leak detection fires in Vite's `generateBundle` hook, which runs after the bundle is fully assembled. It is skipped entirely in two cases:
+
+- **SSR builds** — when `config.build.ssr` is truthy, the legacy SSR bundle is server-side by definition.
+- **Server environments** — when the current Vite 8 environment name is listed in `serverEnvironments` (default: `['ssr']`). This means adding `"rsc"` to `serverEnvironments` also exempts the RSC environment's bundle from leak scanning, since RSC output never reaches the browser.
 
 ## The 8-Character Minimum
 

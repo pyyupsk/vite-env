@@ -12,25 +12,25 @@ Several tools address the gap in Vite's environment variable handling. Here is h
 
 ## Feature Matrix
 
-| Feature | `@julr/vite-plugin-validate-env` | `@t3-oss/env-core` | `@vite-env/core` |
-| --- | --- | --- | --- |
-| **Validation timing** | Build time (Vite `config` hook) | Import time (app startup) | Build time (Vite `buildStart` hook) |
-| **Server/client split** | No | Yes (runtime Proxy) | Yes (separate virtual modules) |
-| **Runtime access protection** | No | Yes (Proxy throws on misuse) | Yes (Vite 8 Environment API guard) |
-| **Build-time leak scanning** | No | No | Yes (scans client chunks for server values) |
-| **`virtual:env` module** | No (`import.meta.env` only) | No (returns plain object) | Yes (`virtual:env/client` + `virtual:env/server`) |
-| **Auto `.d.ts` generation** | No (manual `ImportMetaEnvAugmented` setup) | No (types inferred from schema) | Yes (generates `vite-env.d.ts` automatically) |
-| **Auto `.env.example`** | No | No | Yes (`npx vite-env generate`) |
-| **CLI tools** | No | No | Yes (`check`, `generate`, `types`) |
-| **Schema libraries** | Standard Schema + built-in validator | Standard Schema (Zod, Valibot, ArkType) | Zod v4 + Standard Schema |
-| **Platform presets** | No | Yes (Vercel, Railway, Netlify, Render, Fly, + more) | Yes (Vercel, Railway, Netlify) |
-| **Monorepo / extends** | No | Yes (`extends` composes multiple env objects) | No |
-| **Framework adapters** | No (Vite only) | Yes (Next.js, Nuxt, core) | No (Vite only) |
-| **Vite version support** | v2–v8 | N/A (framework-agnostic) | v8+ only |
-| **Zod v4 native** | No (Zod via Standard Schema, typically v3) | Yes (v3 + v4 via Standard Schema) | Yes (first-class `defineEnv()` with rich type introspection) |
-| **No `runtimeEnv` boilerplate** | Yes | No (required for Next.js/Nuxt tree-shaking) | Yes |
-| **Dev-mode `.env` watching** | No (validates once at startup) | No (validates once at import) | Yes (watches `.env*` files, revalidates on change) |
-| **Built-in validator (zero deps)** | Yes (`Schema.string()`, `Schema.number()`, etc.) | No | No |
+| Feature                            | `@julr/vite-plugin-validate-env`                 | `@t3-oss/env-core`                                  | `@vite-env/core`                                             |
+| ---------------------------------- | ------------------------------------------------ | --------------------------------------------------- | ------------------------------------------------------------ |
+| **Validation timing**              | Build time (Vite `config` hook)                  | Import time (app startup)                           | Build time (Vite `buildStart` hook)                          |
+| **Server/client split**            | No                                               | Yes (runtime Proxy)                                 | Yes (separate virtual modules)                               |
+| **Runtime access protection**      | No                                               | Yes (Proxy throws on misuse)                        | Yes (Vite 8 Environment API guard)                           |
+| **Build-time leak scanning**       | No                                               | No                                                  | Yes (scans client chunks for server values)                  |
+| **`virtual:env` module**           | No (`import.meta.env` only)                      | No (returns plain object)                           | Yes (`virtual:env/client` + `virtual:env/server`)            |
+| **Auto `.d.ts` generation**        | No (manual `ImportMetaEnvAugmented` setup)       | No (types inferred from schema)                     | Yes (generates `vite-env.d.ts` automatically)                |
+| **Auto `.env.example`**            | No                                               | No                                                  | Yes (`npx vite-env generate`)                                |
+| **CLI tools**                      | No                                               | No                                                  | Yes (`check`, `generate`, `types`)                           |
+| **Schema libraries**               | Standard Schema + built-in validator             | Standard Schema (Zod, Valibot, ArkType)             | Zod v4 + Standard Schema                                     |
+| **Platform presets**               | No                                               | Yes (Vercel, Railway, Netlify, Render, Fly, + more) | Yes (Vercel, Railway, Netlify)                               |
+| **Monorepo / extends**             | No                                               | Yes (`extends` composes multiple env objects)       | No                                                           |
+| **Framework adapters**             | No (Vite only)                                   | Yes (Next.js, Nuxt, core)                           | No (Vite only)                                               |
+| **Vite version support**           | v2–v8                                            | N/A (framework-agnostic)                            | v8+ only                                                     |
+| **Zod v4 native**                  | No (Zod via Standard Schema, typically v3)       | Yes (v3 + v4 via Standard Schema)                   | Yes (first-class `defineEnv()` with rich type introspection) |
+| **No `runtimeEnv` boilerplate**    | Yes                                              | No (required for Next.js/Nuxt tree-shaking)         | Yes                                                          |
+| **Dev-mode `.env` watching**       | No (validates once at startup)                   | No (validates once at import)                       | Yes (watches `.env*` files, revalidates on change)           |
+| **Built-in validator (zero deps)** | Yes (`Schema.string()`, `Schema.number()`, etc.) | No                                                  | No                                                           |
 
 ## Trade-offs
 

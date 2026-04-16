@@ -103,9 +103,9 @@ It merges `server` and `client` shapes into a single Zod object schema and runs 
 ### ValidationResult
 
 ```ts
-type ValidationResult
-  = | { success: true, data: Record<string, unknown>, errors: [] }
-    | { success: false, data: null, errors: z.core.$ZodIssue[] }
+type ValidationResult =
+  | { success: true; data: Record<string, unknown>; errors: [] }
+  | { success: false; data: null; errors: z.core.$ZodIssue[] }
 ```
 
 On success, `data` contains the validated and coerced values. On failure, `errors` contains the Zod issue list and `data` is `null`.
@@ -123,8 +123,7 @@ const result = validateEnv(def, process.env as Record<string, string>)
 
 if (result.success) {
   console.log(result.data.PORT) // number
-}
-else {
+} else {
   console.error(result.errors)
 }
 ```
@@ -213,7 +212,7 @@ async function validateStandardEnv(
 It iterates each key in the combined `server` + `client` shapes and calls `schema['~standard'].validate()` per key, collecting errors with the key name prepended to the path.
 
 ```ts
-type StandardValidationResult
-  = | { success: true, data: Record<string, unknown>, errors: [] }
-    | { success: false, data: null, errors: StandardValidationIssue[] }
+type StandardValidationResult =
+  | { success: true; data: Record<string, unknown>; errors: [] }
+  | { success: false; data: null; errors: StandardValidationIssue[] }
 ```

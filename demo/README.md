@@ -4,14 +4,14 @@ A minimal demo showing `@vite-env/core` working end-to-end with typed virtual mo
 
 ## What's inside
 
-| File | Purpose |
-| --- | --- |
-| `env.ts` | Zod v4 schema — `defineEnv()` with server + client variables |
-| `env.standard.ts` | Valibot schema — `defineStandardEnv()` showing Standard Schema support |
-| `vite.config.ts` | Plugin setup with all three options documented |
-| `src/main.ts` | Client code importing `virtual:env/client` with typed values |
-| `src/server-leak.ts` | Commented-out `virtual:env/server` import to demo the guard |
-| `.env` | Sample environment variables |
+| File                 | Purpose                                                                |
+| -------------------- | ---------------------------------------------------------------------- |
+| `env.ts`             | Zod v4 schema — `defineEnv()` with server + client variables           |
+| `env.standard.ts`    | Valibot schema — `defineStandardEnv()` showing Standard Schema support |
+| `vite.config.ts`     | Plugin setup with all three options documented                         |
+| `src/main.ts`        | Client code importing `virtual:env/client` with typed values           |
+| `src/server-leak.ts` | Commented-out `virtual:env/server` import to demo the guard            |
+| `.env`               | Sample environment variables                                           |
 
 ## Run it
 
@@ -41,10 +41,12 @@ With the default `onClientAccessOfServerModule: 'warn'`, the build completes but
 ## Try the leak detector
 
 1. Add this to `src/main.ts`:
+
    ```ts
    const secret = 'this-is-a-super-secret-jwt-key-that-is-at-least-32-chars'
    console.log(secret)
    ```
+
 2. Run `pnpm build`
 
 The build fails because a server variable's literal value appears in a client chunk.

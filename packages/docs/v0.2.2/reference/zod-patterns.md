@@ -77,7 +77,7 @@ Uses the default when the variable is not set. The inferred type is `string` (no
 ## Custom Validation
 
 ```ts
-OPENAI_API_KEY: z.string().refine(val => val.startsWith('sk-'), {
+OPENAI_API_KEY: z.string().refine((val) => val.startsWith('sk-'), {
   error: 'Must start with sk-',
 })
 ```
@@ -96,7 +96,7 @@ export default defineEnv({
     DB_POOL_SIZE: z.coerce.number().int().min(1).max(100).default(10),
     OPENAI_API_KEY: z
       .string()
-      .refine(v => v.startsWith('sk-'), { error: 'Must start with sk-' }),
+      .refine((v) => v.startsWith('sk-'), { error: 'Must start with sk-' }),
     SENTRY_DSN: z.string().optional(),
   },
   client: {

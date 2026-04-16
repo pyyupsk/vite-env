@@ -35,12 +35,16 @@ The path is resolved relative to `config.root` (your Vite project root, which de
 ViteEnv({ serverEnvironments: ['ssr', 'workerd'] })
 ```
 
-A list of Vite 8 environment names that are permitted to import `virtual:env/server`. Defaults to `['ssr']`, which covers standard SSR builds. Add other names for edge runtimes:
+A list of Vite 8 environment names treated as server-side. Defaults to `['ssr']`. This controls two things:
+
+1. **Import access** — environments in this list are permitted to import `virtual:env/server`. Others are subject to `onClientAccessOfServerModule`.
+2. **Leak detection** — the bundle scanner is skipped entirely for environments in this list, since their output never reaches the browser.
+
+Common additions:
 
 - Cloudflare Workers: `'workerd'`
+- React Server Components: `'rsc'`
 - Deno Deploy: `'ssr'` (already included by default)
-
-Any environment not in this list is subject to the behavior set by `onClientAccessOfServerModule`.
 
 ### onClientAccessOfServerModule
 
