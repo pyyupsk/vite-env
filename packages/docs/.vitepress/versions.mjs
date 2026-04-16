@@ -7,7 +7,7 @@
 
 /** @type {Array<{ text: string, link: string }>} */
 export const versions = [
-  { text: 'next', link: '/' },
+  { text: 'v0.5.1 (current)', link: '/' },
   { text: 'v0.5.0', link: '/v0.5.0/' },
   { text: 'v0.4.0', link: '/v0.4.0/' },
   { text: 'v0.3.0', link: '/v0.3.0/' },

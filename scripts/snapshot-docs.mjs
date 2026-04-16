@@ -117,16 +117,17 @@ for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
 console.log('\nRewriting internal links:')
 rewriteLinks(versionDir, `/v${version}`)
 
-// Step 2: Update versions.mjs — append new stable entry after 'next'
+// Step 2: Update versions.mjs — convert (current) entry to versioned, insert new entry
 console.log('\nUpdating versions.mjs:')
 const versionsContent = fs.readFileSync(versionsFile, 'utf-8')
+// Convert: { text: 'vX.Y.Z (current)', link: '/' } → { text: 'vX.Y.Z', link: '/vX.Y.Z/' }
 const newVersionEntry = `  { text: 'v${version}', link: '/v${version}/' },\n`
 const updatedVersions = versionsContent.replace(
-  /(export const versions = \[\n {2}\{ text: 'next'[^\n]+\n)/,
-  `$1${newVersionEntry}`,
+  /  \{ text: 'v[\d.]+ \(current\)', link: '\/' \},/,
+  newVersionEntry.trimEnd(),
 )
 if (updatedVersions === versionsContent) {
-  console.error('❌ Could not find insertion point in versions.mjs. Aborting.')
+  console.error('❌ Could not find (current) entry in versions.mjs. Aborting.')
   process.exit(1)
 }
 writeFile(versionsFile, updatedVersions)

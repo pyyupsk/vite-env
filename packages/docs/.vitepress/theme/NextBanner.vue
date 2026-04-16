@@ -10,10 +10,13 @@ const isNextDocs = computed(() => !/^v\d/.test(page.value.relativePath))
 
 // First entry whose text does not include 'next' is the latest stable version
 const latestStable = versions.find(v => !v.text.includes('next'))
+
+// Don't show banner when already on the latest stable (link: '/')
+const showBanner = computed(() => isNextDocs.value && latestStable && latestStable.link !== '/')
 </script>
 
 <template>
-  <div v-if="isNextDocs && latestStable" class="next-banner">
+  <div v-if="showBanner" class="next-banner">
     <span class="next-banner__text">
       ⚠️ You're reading unreleased (next) docs.
     </span>

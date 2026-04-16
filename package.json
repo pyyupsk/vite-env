@@ -6,16 +6,19 @@
   "scripts": {
     "build": "pnpm run -r build",
     "dev": "pnpm run -r dev",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "typecheck": "pnpm run -r typecheck",
+    "docs:build": "pnpm --filter @vite-env/docs run build",
+    "docs:dev": "pnpm --filter @vite-env/docs run dev",
+    "docs:preview": "pnpm --filter @vite-env/docs run preview",
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
+    "postrelease": "node scripts/update-latest.mjs",
     "prepare": "nit install",
-    "release": "bumpp -r -x 'node scripts/snapshot-docs.mjs'",
-    "docs:dev": "pnpm --filter @vite-env/docs run dev",
-    "docs:build": "pnpm --filter @vite-env/docs run build",
-    "docs:preview": "pnpm --filter @vite-env/docs run preview"
+    "prerelease": "node scripts/snapshot-docs.mjs",
+    "release": "bumpp -r",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest run --watch",
+    "typecheck": "pnpm run -r typecheck"
   },
   "devDependencies": {
     "@pyyupsk/eslint-config": "catalog:dev",
