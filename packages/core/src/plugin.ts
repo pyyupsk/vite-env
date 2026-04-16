@@ -182,8 +182,12 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       didSetExitCode = true
     },
 
-    generateBundle(_options, bundle) {
+    generateBundle(this: Rollup.PluginContext, _options, bundle) {
       if (resolvedConfig.build.ssr)
+        return
+
+      const envName = this.environment?.name ?? 'client'
+      if (serverEnvs.includes(envName))
         return
 
       const leaks = detectServerLeak(
