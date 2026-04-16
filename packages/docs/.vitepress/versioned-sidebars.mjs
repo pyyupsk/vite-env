@@ -2,341 +2,456 @@
 
 /** @type {import('vitepress').DefaultTheme.SidebarMulti} */
 export const versionedSidebars = {
-  '/v0.3.0/guide/': [
+  "/v0.3.0/guide/": [
     {
-      text: 'Introduction',
-      items: [
+      "text": "Introduction",
+      "items": [
         {
-          text: 'What is vite-env?',
-          link: '/v0.3.0/guide/introduction',
+          "text": "What is vite-env?",
+          "link": "/v0.3.0/guide/introduction"
         },
         {
-          text: 'Why vite-env?',
-          link: '/v0.3.0/guide/why',
+          "text": "Why vite-env?",
+          "link": "/v0.3.0/guide/why"
         },
         {
-          text: 'Comparison',
-          link: '/v0.3.0/guide/comparison',
-        },
-      ],
+          "text": "Comparison",
+          "link": "/v0.3.0/guide/comparison"
+        }
+      ]
     },
     {
-      text: 'Getting Started',
-      items: [
+      "text": "Getting Started",
+      "items": [
         {
-          text: 'Installation',
-          link: '/v0.3.0/guide/installation',
+          "text": "Installation",
+          "link": "/v0.3.0/guide/installation"
         },
         {
-          text: 'Quick Start',
-          link: '/v0.3.0/guide/quick-start',
+          "text": "Quick Start",
+          "link": "/v0.3.0/guide/quick-start"
         },
         {
-          text: 'How It Works',
-          link: '/v0.3.0/guide/how-it-works',
-        },
-      ],
+          "text": "How It Works",
+          "link": "/v0.3.0/guide/how-it-works"
+        }
+      ]
     },
     {
-      text: 'Core Concepts',
-      items: [
+      "text": "Core Concepts",
+      "items": [
         {
-          text: 'Server vs Client',
-          link: '/v0.3.0/guide/server-client',
+          "text": "Server vs Client",
+          "link": "/v0.3.0/guide/server-client"
         },
         {
-          text: 'Virtual Modules',
-          link: '/v0.3.0/guide/virtual-modules',
+          "text": "Virtual Modules",
+          "link": "/v0.3.0/guide/virtual-modules"
         },
         {
-          text: 'Type Coercion',
-          link: '/v0.3.0/guide/coercion',
+          "text": "Type Coercion",
+          "link": "/v0.3.0/guide/coercion"
         },
         {
-          text: 'Leak Detection',
-          link: '/v0.3.0/guide/leak-detection',
+          "text": "Leak Detection",
+          "link": "/v0.3.0/guide/leak-detection"
         },
         {
-          text: 'Type Generation',
-          link: '/v0.3.0/guide/type-generation',
-        },
-      ],
-    },
+          "text": "Type Generation",
+          "link": "/v0.3.0/guide/type-generation"
+        }
+      ]
+    }
   ],
-  '/v0.3.0/reference/': [
+  "/v0.3.0/reference/": [
     {
-      text: 'API Reference',
-      items: [
+      "text": "API Reference",
+      "items": [
         {
-          text: 'defineEnv()',
-          link: '/v0.3.0/reference/define-env',
+          "text": "defineEnv()",
+          "link": "/v0.3.0/reference/define-env"
         },
         {
-          text: 'Plugin Options',
-          link: '/v0.3.0/reference/plugin-options',
+          "text": "Plugin Options",
+          "link": "/v0.3.0/reference/plugin-options"
         },
         {
-          text: 'Zod v4 Patterns',
-          link: '/v0.3.0/reference/zod-patterns',
+          "text": "Zod v4 Patterns",
+          "link": "/v0.3.0/reference/zod-patterns"
         },
         {
-          text: 'Env Priority',
-          link: '/v0.3.0/reference/env-priority',
+          "text": "Env Priority",
+          "link": "/v0.3.0/reference/env-priority"
         },
         {
-          text: 'Vite 8 / Rolldown',
-          link: '/v0.3.0/reference/vite8',
-        },
-      ],
-    },
+          "text": "Vite 8 / Rolldown",
+          "link": "/v0.3.0/reference/vite8"
+        }
+      ]
+    }
   ],
-  '/v0.3.0/cli/': [
+  "/v0.3.0/cli/": [
     {
-      text: 'CLI',
-      items: [
+      "text": "CLI",
+      "items": [
         {
-          text: 'Overview',
-          link: '/v0.3.0/cli/overview',
+          "text": "Overview",
+          "link": "/v0.3.0/cli/overview"
         },
         {
-          text: 'vite-env check',
-          link: '/v0.3.0/cli/check',
+          "text": "vite-env check",
+          "link": "/v0.3.0/cli/check"
         },
         {
-          text: 'vite-env generate',
-          link: '/v0.3.0/cli/generate',
+          "text": "vite-env generate",
+          "link": "/v0.3.0/cli/generate"
         },
         {
-          text: 'vite-env types',
-          link: '/v0.3.0/cli/types',
-        },
-      ],
-    },
+          "text": "vite-env types",
+          "link": "/v0.3.0/cli/types"
+        }
+      ]
+    }
   ],
-  '/v0.4.0/guide/': [
+  "/v0.4.0/guide/": [
     {
-      text: 'Introduction',
-      items: [
+      "text": "Introduction",
+      "items": [
         {
-          text: 'What is vite-env?',
-          link: '/v0.4.0/guide/introduction',
+          "text": "What is vite-env?",
+          "link": "/v0.4.0/guide/introduction"
         },
         {
-          text: 'Why vite-env?',
-          link: '/v0.4.0/guide/why',
+          "text": "Why vite-env?",
+          "link": "/v0.4.0/guide/why"
         },
         {
-          text: 'Comparison',
-          link: '/v0.4.0/guide/comparison',
-        },
-      ],
+          "text": "Comparison",
+          "link": "/v0.4.0/guide/comparison"
+        }
+      ]
     },
     {
-      text: 'Getting Started',
-      items: [
+      "text": "Getting Started",
+      "items": [
         {
-          text: 'Installation',
-          link: '/v0.4.0/guide/installation',
+          "text": "Installation",
+          "link": "/v0.4.0/guide/installation"
         },
         {
-          text: 'Quick Start',
-          link: '/v0.4.0/guide/quick-start',
+          "text": "Quick Start",
+          "link": "/v0.4.0/guide/quick-start"
         },
         {
-          text: 'How It Works',
-          link: '/v0.4.0/guide/how-it-works',
-        },
-      ],
+          "text": "How It Works",
+          "link": "/v0.4.0/guide/how-it-works"
+        }
+      ]
     },
     {
-      text: 'Core Concepts',
-      items: [
+      "text": "Core Concepts",
+      "items": [
         {
-          text: 'Server vs Client',
-          link: '/v0.4.0/guide/server-client',
+          "text": "Server vs Client",
+          "link": "/v0.4.0/guide/server-client"
         },
         {
-          text: 'Virtual Modules',
-          link: '/v0.4.0/guide/virtual-modules',
+          "text": "Virtual Modules",
+          "link": "/v0.4.0/guide/virtual-modules"
         },
         {
-          text: 'Type Coercion',
-          link: '/v0.4.0/guide/coercion',
+          "text": "Type Coercion",
+          "link": "/v0.4.0/guide/coercion"
         },
         {
-          text: 'Leak Detection',
-          link: '/v0.4.0/guide/leak-detection',
+          "text": "Leak Detection",
+          "link": "/v0.4.0/guide/leak-detection"
         },
         {
-          text: 'Type Generation',
-          link: '/v0.4.0/guide/type-generation',
-        },
-      ],
-    },
+          "text": "Type Generation",
+          "link": "/v0.4.0/guide/type-generation"
+        }
+      ]
+    }
   ],
-  '/v0.4.0/reference/': [
+  "/v0.4.0/reference/": [
     {
-      text: 'API Reference',
-      items: [
+      "text": "API Reference",
+      "items": [
         {
-          text: 'defineEnv()',
-          link: '/v0.4.0/reference/define-env',
+          "text": "defineEnv()",
+          "link": "/v0.4.0/reference/define-env"
         },
         {
-          text: 'Plugin Options',
-          link: '/v0.4.0/reference/plugin-options',
+          "text": "Plugin Options",
+          "link": "/v0.4.0/reference/plugin-options"
         },
         {
-          text: 'Zod v4 Patterns',
-          link: '/v0.4.0/reference/zod-patterns',
+          "text": "Zod v4 Patterns",
+          "link": "/v0.4.0/reference/zod-patterns"
         },
         {
-          text: 'Env Priority',
-          link: '/v0.4.0/reference/env-priority',
+          "text": "Env Priority",
+          "link": "/v0.4.0/reference/env-priority"
         },
         {
-          text: 'Vite 8 / Rolldown',
-          link: '/v0.4.0/reference/vite8',
-        },
-      ],
-    },
+          "text": "Vite 8 / Rolldown",
+          "link": "/v0.4.0/reference/vite8"
+        }
+      ]
+    }
   ],
-  '/v0.4.0/cli/': [
+  "/v0.4.0/cli/": [
     {
-      text: 'CLI',
-      items: [
+      "text": "CLI",
+      "items": [
         {
-          text: 'Overview',
-          link: '/v0.4.0/cli/overview',
+          "text": "Overview",
+          "link": "/v0.4.0/cli/overview"
         },
         {
-          text: 'vite-env check',
-          link: '/v0.4.0/cli/check',
+          "text": "vite-env check",
+          "link": "/v0.4.0/cli/check"
         },
         {
-          text: 'vite-env generate',
-          link: '/v0.4.0/cli/generate',
+          "text": "vite-env generate",
+          "link": "/v0.4.0/cli/generate"
         },
         {
-          text: 'vite-env types',
-          link: '/v0.4.0/cli/types',
-        },
-      ],
-    },
+          "text": "vite-env types",
+          "link": "/v0.4.0/cli/types"
+        }
+      ]
+    }
   ],
-  '/v0.5.0/guide/': [
+  "/v0.5.0/guide/": [
     {
-      text: 'Introduction',
-      items: [
+      "text": "Introduction",
+      "items": [
         {
-          text: 'What is vite-env?',
-          link: '/v0.5.0/guide/introduction',
+          "text": "What is vite-env?",
+          "link": "/v0.5.0/guide/introduction"
         },
         {
-          text: 'Why vite-env?',
-          link: '/v0.5.0/guide/why',
+          "text": "Why vite-env?",
+          "link": "/v0.5.0/guide/why"
         },
         {
-          text: 'Comparison',
-          link: '/v0.5.0/guide/comparison',
-        },
-      ],
+          "text": "Comparison",
+          "link": "/v0.5.0/guide/comparison"
+        }
+      ]
     },
     {
-      text: 'Getting Started',
-      items: [
+      "text": "Getting Started",
+      "items": [
         {
-          text: 'Installation',
-          link: '/v0.5.0/guide/installation',
+          "text": "Installation",
+          "link": "/v0.5.0/guide/installation"
         },
         {
-          text: 'Quick Start',
-          link: '/v0.5.0/guide/quick-start',
+          "text": "Quick Start",
+          "link": "/v0.5.0/guide/quick-start"
         },
         {
-          text: 'How It Works',
-          link: '/v0.5.0/guide/how-it-works',
-        },
-      ],
+          "text": "How It Works",
+          "link": "/v0.5.0/guide/how-it-works"
+        }
+      ]
     },
     {
-      text: 'Core Concepts',
-      items: [
+      "text": "Core Concepts",
+      "items": [
         {
-          text: 'Server vs Client',
-          link: '/v0.5.0/guide/server-client',
+          "text": "Server vs Client",
+          "link": "/v0.5.0/guide/server-client"
         },
         {
-          text: 'Virtual Modules',
-          link: '/v0.5.0/guide/virtual-modules',
+          "text": "Virtual Modules",
+          "link": "/v0.5.0/guide/virtual-modules"
         },
         {
-          text: 'Type Coercion',
-          link: '/v0.5.0/guide/coercion',
+          "text": "Type Coercion",
+          "link": "/v0.5.0/guide/coercion"
         },
         {
-          text: 'Leak Detection',
-          link: '/v0.5.0/guide/leak-detection',
+          "text": "Leak Detection",
+          "link": "/v0.5.0/guide/leak-detection"
         },
         {
-          text: 'Type Generation',
-          link: '/v0.5.0/guide/type-generation',
+          "text": "Type Generation",
+          "link": "/v0.5.0/guide/type-generation"
         },
         {
-          text: 'Platform Presets',
-          link: '/v0.5.0/guide/platform-presets',
-        },
-      ],
-    },
+          "text": "Platform Presets",
+          "link": "/v0.5.0/guide/platform-presets"
+        }
+      ]
+    }
   ],
-  '/v0.5.0/reference/': [
+  "/v0.5.0/reference/": [
     {
-      text: 'API Reference',
-      items: [
+      "text": "API Reference",
+      "items": [
         {
-          text: 'defineEnv()',
-          link: '/v0.5.0/reference/define-env',
+          "text": "defineEnv()",
+          "link": "/v0.5.0/reference/define-env"
         },
         {
-          text: 'Plugin Options',
-          link: '/v0.5.0/reference/plugin-options',
+          "text": "Plugin Options",
+          "link": "/v0.5.0/reference/plugin-options"
         },
         {
-          text: 'Zod v4 Patterns',
-          link: '/v0.5.0/reference/zod-patterns',
+          "text": "Zod v4 Patterns",
+          "link": "/v0.5.0/reference/zod-patterns"
         },
         {
-          text: 'Env Priority',
-          link: '/v0.5.0/reference/env-priority',
+          "text": "Env Priority",
+          "link": "/v0.5.0/reference/env-priority"
         },
         {
-          text: 'Vite 8 / Rolldown',
-          link: '/v0.5.0/reference/vite8',
-        },
-      ],
-    },
+          "text": "Vite 8 / Rolldown",
+          "link": "/v0.5.0/reference/vite8"
+        }
+      ]
+    }
   ],
-  '/v0.5.0/cli/': [
+  "/v0.5.0/cli/": [
     {
-      text: 'CLI',
-      items: [
+      "text": "CLI",
+      "items": [
         {
-          text: 'Overview',
-          link: '/v0.5.0/cli/overview',
+          "text": "Overview",
+          "link": "/v0.5.0/cli/overview"
         },
         {
-          text: 'vite-env check',
-          link: '/v0.5.0/cli/check',
+          "text": "vite-env check",
+          "link": "/v0.5.0/cli/check"
         },
         {
-          text: 'vite-env generate',
-          link: '/v0.5.0/cli/generate',
+          "text": "vite-env generate",
+          "link": "/v0.5.0/cli/generate"
         },
         {
-          text: 'vite-env types',
-          link: '/v0.5.0/cli/types',
-        },
-      ],
-    },
+          "text": "vite-env types",
+          "link": "/v0.5.0/cli/types"
+        }
+      ]
+    }
   ],
+  "/v0.5.1/guide/": [
+    {
+      "text": "Introduction",
+      "items": [
+        {
+          "text": "What is vite-env?",
+          "link": "/v0.5.1/guide/introduction"
+        },
+        {
+          "text": "Why vite-env?",
+          "link": "/v0.5.1/guide/why"
+        },
+        {
+          "text": "Comparison",
+          "link": "/v0.5.1/guide/comparison"
+        }
+      ]
+    },
+    {
+      "text": "Getting Started",
+      "items": [
+        {
+          "text": "Installation",
+          "link": "/v0.5.1/guide/installation"
+        },
+        {
+          "text": "Quick Start",
+          "link": "/v0.5.1/guide/quick-start"
+        },
+        {
+          "text": "How It Works",
+          "link": "/v0.5.1/guide/how-it-works"
+        }
+      ]
+    },
+    {
+      "text": "Core Concepts",
+      "items": [
+        {
+          "text": "Server vs Client",
+          "link": "/v0.5.1/guide/server-client"
+        },
+        {
+          "text": "Virtual Modules",
+          "link": "/v0.5.1/guide/virtual-modules"
+        },
+        {
+          "text": "Type Coercion",
+          "link": "/v0.5.1/guide/coercion"
+        },
+        {
+          "text": "Leak Detection",
+          "link": "/v0.5.1/guide/leak-detection"
+        },
+        {
+          "text": "Type Generation",
+          "link": "/v0.5.1/guide/type-generation"
+        },
+        {
+          "text": "Platform Presets",
+          "link": "/v0.5.1/guide/platform-presets"
+        }
+      ]
+    }
+  ],
+  "/v0.5.1/reference/": [
+    {
+      "text": "API Reference",
+      "items": [
+        {
+          "text": "defineEnv()",
+          "link": "/v0.5.1/reference/define-env"
+        },
+        {
+          "text": "Plugin Options",
+          "link": "/v0.5.1/reference/plugin-options"
+        },
+        {
+          "text": "Zod v4 Patterns",
+          "link": "/v0.5.1/reference/zod-patterns"
+        },
+        {
+          "text": "Env Priority",
+          "link": "/v0.5.1/reference/env-priority"
+        },
+        {
+          "text": "Vite 8 / Rolldown",
+          "link": "/v0.5.1/reference/vite8"
+        }
+      ]
+    }
+  ],
+  "/v0.5.1/cli/": [
+    {
+      "text": "CLI",
+      "items": [
+        {
+          "text": "Overview",
+          "link": "/v0.5.1/cli/overview"
+        },
+        {
+          "text": "vite-env check",
+          "link": "/v0.5.1/cli/check"
+        },
+        {
+          "text": "vite-env generate",
+          "link": "/v0.5.1/cli/generate"
+        },
+        {
+          "text": "vite-env types",
+          "link": "/v0.5.1/cli/types"
+        }
+      ]
+    }
+  ]
 }
