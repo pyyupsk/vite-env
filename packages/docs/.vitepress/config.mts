@@ -22,7 +22,7 @@ export default defineConfig({
       { text: 'Reference', link: '/reference/define-env' },
       { text: 'CLI', link: '/cli/overview' },
       {
-        text: `v${pkg.version} (next)`,
+        text: `v${pkg.version} (current)`,
         items: [
           ...versions,
           {
