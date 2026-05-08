@@ -129,7 +129,7 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "prepack": "pnpm build",
+    "prepack": "bun run build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

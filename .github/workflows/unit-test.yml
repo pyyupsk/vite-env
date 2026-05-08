@@ -9,7 +9,7 @@ on:
       - 'apps/playground/**'
       - vitest.config.ts
       - tsconfig.json
-      - pnpm-lock.yaml
+      - bun.lock
       - .github/workflows/unit-test.yml
   pull_request:
     branches: [main]
@@ -19,15 +19,42 @@ on:
       - 'apps/playground/**'
       - vitest.config.ts
       - tsconfig.json
-      - pnpm-lock.yaml
+      - bun.lock
       - .github/workflows/unit-test.yml
 
 permissions: {}
 
 jobs:
-  unit-test:
-    uses: sxzz/workflows/.github/workflows/unit-test.yml@v1
-    with:
-      build-for-lint: true
+  lint:
+    runs-on: ubuntu-latest
     permissions:
       contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: bun run lint
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24, 26]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.2
+        with:
+          bun-version: latest
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: ${{ matrix.node }}
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: bun run test
