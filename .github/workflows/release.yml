@@ -17,21 +17,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+      - uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.2
+        with:
+          bun-version: latest
 
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org
 
-      - run: pnpm install
+      - run: bun install --frozen-lockfile
 
-      - run: pnpm run build
+      - run: bun run build
 
-      - run: pnpx changelogithub
+      - run: bunx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: pnpm -r publish --access public --no-git-checks
+      - name: Publish packages to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for pkg in packages/core packages/cli; do
+            (cd "$pkg" && npm publish --access public --provenance)
+          done

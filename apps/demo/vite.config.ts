@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     ViteEnv({
       // Use VITE_ENV_CONFIG env var to switch between Zod and Standard Schema demos.
-      // Default: 'env.ts' (Zod). Run `pnpm dev:standard` to use 'env.standard.ts' (Valibot).
+      // Default: 'env.ts' (Zod). Run `bun run dev:standard` to use 'env.standard.ts' (Valibot).
       configFile: process.env.VITE_ENV_CONFIG ?? './env.ts',
 
       // Environments allowed to import virtual:env/server.
