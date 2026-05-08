@@ -102,11 +102,11 @@ importers:
         specifier: catalog:dev
         version: 4.1.2(@types/node@25.5.2)(vite@8.0.8(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3))
 
-  demo:
+  apps/demo:
     dependencies:
       '@vite-env/core':
         specifier: workspace:*
-        version: link:../packages/core
+        version: link:../../packages/core
     devDependencies:
       '@types/node':
         specifier: catalog:dev
@@ -120,6 +120,31 @@ importers:
       vite:
         specifier: '>=8.0.5'
         version: 8.0.8(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)
+      zod:
+        specifier: catalog:dev
+        version: 4.3.6
+
+  apps/playground:
+    dependencies:
+      '@vite-env/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@vite-env/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+    devDependencies:
+      '@types/node':
+        specifier: catalog:dev
+        version: 25.5.2
+      typescript:
+        specifier: catalog:dev
+        version: 6.0.2
+      vite:
+        specifier: '>=8.0.5'
+        version: 8.0.8(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)
+      vitest:
+        specifier: catalog:dev
+        version: 4.1.2(@types/node@25.5.2)(vite@8.0.8(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3))
       zod:
         specifier: catalog:dev
         version: 4.3.6
@@ -197,31 +222,6 @@ importers:
       vitepress:
         specifier: 'catalog:'
         version: 1.6.4(@algolia/client-search@5.50.1)(@types/node@25.5.2)(change-case@5.4.4)(esbuild@0.27.7)(jiti@2.6.1)(postcss@8.5.8)(search-insights@2.17.3)(typescript@6.0.2)(yaml@2.8.3)
-
-  playground:
-    dependencies:
-      '@vite-env/cli':
-        specifier: workspace:*
-        version: link:../packages/cli
-      '@vite-env/core':
-        specifier: workspace:*
-        version: link:../packages/core
-    devDependencies:
-      '@types/node':
-        specifier: catalog:dev
-        version: 25.5.2
-      typescript:
-        specifier: catalog:dev
-        version: 6.0.2
-      vite:
-        specifier: '>=8.0.5'
-        version: 8.0.8(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)
-      vitest:
-        specifier: catalog:dev
-        version: 4.1.2(@types/node@25.5.2)(vite@8.0.8(@types/node@25.5.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3))
-      zod:
-        specifier: catalog:dev
-        version: 4.3.6
 
 packages:
 

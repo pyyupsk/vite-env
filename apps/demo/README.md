@@ -21,7 +21,7 @@ pnpm install
 pnpm --filter @vite-env/core build
 
 # Zod path (default)
-cd demo
+cd apps/demo
 pnpm dev
 
 # Standard Schema path (Valibot)
@@ -53,6 +53,6 @@ The build fails because a server variable's literal value appears in a client ch
 
 ## StackBlitz
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/pyyupsk/vite-env/tree/main/demo)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/pyyupsk/vite-env/tree/main/apps/demo)
 
 > Note: StackBlitz runs in WebContainers. The demo works for showing virtual modules and typed env, but build-time features (leak detection, access protection) require a full `vite build` which may not run in the browser sandbox.
