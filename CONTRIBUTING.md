@@ -40,10 +40,10 @@ pnpm --filter @vite-env/core build
 
 ### Playground
 
-The `playground/` directory is a working Vite app configured with the plugin. Use it to manually test changes:
+The `apps/playground/` directory is a working Vite app configured with the plugin. Use it to manually test changes:
 
 ```bash
-pnpm --filter playground dev
+pnpm --filter @vite-env/playground dev
 ```
 
 ## Project Structure
@@ -52,7 +52,8 @@ pnpm --filter playground dev
 packages/core   → @vite-env/core   Vite plugin, validation, virtual modules, leak detection
 packages/cli    → @vite-env/cli    CLI commands (check, generate, types) — thin wrappers over core
 packages/docs   → @vite-env/docs   VitePress documentation site
-playground/     → demo app for manual testing
+apps/playground → @vite-env/playground   manual testing app
+apps/demo       → @vite-env/demo         end-to-end demo app
 ```
 
 ## Code Conventions

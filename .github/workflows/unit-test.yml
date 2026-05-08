@@ -6,7 +6,7 @@ on:
     paths:
       - 'packages/core/**'
       - 'packages/cli/**'
-      - 'playground/**'
+      - 'apps/playground/**'
       - vitest.config.ts
       - tsconfig.json
       - pnpm-lock.yaml
@@ -16,7 +16,7 @@ on:
     paths:
       - 'packages/core/**'
       - 'packages/cli/**'
-      - 'playground/**'
+      - 'apps/playground/**'
       - vitest.config.ts
       - tsconfig.json
       - pnpm-lock.yaml
