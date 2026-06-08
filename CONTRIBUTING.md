@@ -20,7 +20,7 @@ bun run build
 
 ```bash
 bun run dev         # watch mode for all packages
-bun test            # vitest in watch mode
+bun test            # vitest run (non-watch)
 bun run lint        # check for lint errors
 bun run lint:fix    # auto-fix lint errors
 bun run typecheck   # type-check all packages
