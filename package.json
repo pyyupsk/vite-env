@@ -5,14 +5,9 @@
   "scripts": {
     "build": "bun run --filter '*' build",
     "dev": "bun run --filter '*' dev",
-    "docs:build": "bun run --filter @vite-env/docs build",
-    "docs:dev": "bun run --filter @vite-env/docs dev",
-    "docs:preview": "bun run --filter @vite-env/docs preview",
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
-    "postrelease": "node scripts/update-latest.mjs",
     "prepare": "nit install",
-    "prerelease": "node scripts/snapshot-docs.mjs",
     "release": "bumpp -r",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -47,11 +42,8 @@
       "apps/*"
     ],
     "catalog": {
-      "@fontsource-variable/geist": "^5.2.8",
-      "@fontsource-variable/geist-mono": "^5.2.7",
       "@standard-schema/spec": "^1.1.0",
-      "jiti": "^2.6.1",
-      "vitepress": "^1.6.3"
+      "jiti": "^2.6.1"
     },
     "catalogs": {
       "demo": {
