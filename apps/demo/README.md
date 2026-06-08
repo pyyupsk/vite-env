@@ -17,15 +17,15 @@ A minimal demo showing `@vite-env/core` working end-to-end with typed virtual mo
 
 ```bash
 # From the repo root
-pnpm install
-pnpm --filter @vite-env/core build
+bun install
+bun run --filter @vite-env/core build
 
 # Zod path (default)
 cd apps/demo
-pnpm dev
+bun run dev
 
 # Standard Schema path (Valibot)
-pnpm dev:standard
+bun run dev:standard
 ```
 
 Open `http://localhost:5173` to see typed env variables rendered with their runtime types.
@@ -34,7 +34,7 @@ Open `http://localhost:5173` to see typed env variables rendered with their runt
 
 1. Open `src/server-leak.ts`
 2. Uncomment the `import { env } from 'virtual:env/server'` line
-3. Run `pnpm build`
+3. Run `bun run build`
 
 With the default `onClientAccessOfServerModule: 'warn'`, the build completes but logs a warning and exits with code 1. Change it to `'error'` in `vite.config.ts` to see a hard build failure, or `'stub'` to get a module that throws at runtime.
 
@@ -47,7 +47,7 @@ With the default `onClientAccessOfServerModule: 'warn'`, the build completes but
    console.log(secret)
    ```
 
-2. Run `pnpm build`
+2. Run `bun run build`
 
 The build fails because a server variable's literal value appears in a client chunk.
 

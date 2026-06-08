@@ -48,7 +48,7 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "prepack": "pnpm build",
+    "prepack": "bun run build",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {

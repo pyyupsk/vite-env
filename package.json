@@ -2,13 +2,12 @@
   "name": "@vite-env/monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "build": "pnpm run -r build",
-    "dev": "pnpm run -r dev",
-    "docs:build": "pnpm --filter @vite-env/docs run build",
-    "docs:dev": "pnpm --filter @vite-env/docs run dev",
-    "docs:preview": "pnpm --filter @vite-env/docs run preview",
+    "build": "bun run --filter '*' build",
+    "dev": "bun run --filter '*' dev",
+    "docs:build": "bun run --filter @vite-env/docs build",
+    "docs:dev": "bun run --filter @vite-env/docs dev",
+    "docs:preview": "bun run --filter @vite-env/docs preview",
     "lint": "eslint . --cache --concurrency=auto",
     "lint:fix": "eslint . --cache --concurrency=auto --fix",
     "postrelease": "node scripts/update-latest.mjs",
@@ -18,7 +17,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest run --watch",
-    "typecheck": "pnpm run -r typecheck"
+    "typecheck": "bun run --filter '*' typecheck"
   },
   "devDependencies": {
     "@pyyupsk/eslint-config": "catalog:dev",
@@ -31,9 +30,54 @@
     "typescript": "catalog:dev",
     "vitest": "catalog:dev"
   },
+  "engines": {
+    "bun": ">=1.3.0"
+  },
+  "trustedDependencies": [
+    "@pyyupsk/nit",
+    "esbuild"
+  ],
+  "overrides": {
+    "esbuild": ">=0.25.0",
+    "vite": ">=8.0.5"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "apps/*"
+    ],
+    "catalog": {
+      "@fontsource-variable/geist": "^5.2.8",
+      "@fontsource-variable/geist-mono": "^5.2.7",
+      "@standard-schema/spec": "^1.1.0",
+      "jiti": "^2.6.1",
+      "vitepress": "^1.6.3"
+    },
+    "catalogs": {
+      "demo": {
+        "valibot": "^1.3.1"
+      },
+      "dev": {
+        "@pyyupsk/eslint-config": "^0.3.0",
+        "@pyyupsk/nit": "^0.1.0",
+        "@types/node": "^25.5.2",
+        "@vitest/coverage-v8": "^4.1.2",
+        "bumpp": "^11.0.1",
+        "citty": "^0.2.2",
+        "consola": "^3.4.2",
+        "eslint": "^10.2.0",
+        "lint-staged": "^16.4.0",
+        "tsdown": "^0.21.7",
+        "typescript": "^6.0.2",
+        "vite": "^8.0.8",
+        "vitest": "^4.1.2",
+        "zod": "^4.3.6"
+      }
+    }
+  },
   "nit": {
     "hooks": {
-      "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+      "pre-commit": "bun install --frozen-lockfile && bunx lint-staged"
     }
   },
   "lint-staged": {

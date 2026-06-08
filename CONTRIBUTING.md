@@ -5,37 +5,37 @@ Thanks for your interest in contributing! This guide covers everything you need 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) >= 20.19.0
-- [pnpm](https://pnpm.io/) 10.33.0
+- [Bun](https://bun.sh/) >= 1.3.0
 
 ## Setup
 
 ```bash
 git clone https://github.com/pyyupsk/vite-env.git
 cd vite-env
-pnpm install
-pnpm build
+bun install
+bun run build
 ```
 
 ## Development Workflow
 
 ```bash
-pnpm dev            # watch mode for all packages
-pnpm test           # vitest in watch mode
-pnpm lint           # check for lint errors
-pnpm lint:fix       # auto-fix lint errors
-pnpm typecheck      # type-check all packages
+bun run dev         # watch mode for all packages
+bun test            # vitest run (non-watch)
+bun run lint        # check for lint errors
+bun run lint:fix    # auto-fix lint errors
+bun run typecheck   # type-check all packages
 ```
 
 ### Running a Single Test
 
 ```bash
-pnpm test -- packages/core/src/leak.test.ts
+bun test packages/core/src/leak.test.ts
 ```
 
 ### Building a Single Package
 
 ```bash
-pnpm --filter @vite-env/core build
+bun run --filter @vite-env/core build
 ```
 
 ### Playground
@@ -43,7 +43,7 @@ pnpm --filter @vite-env/core build
 The `apps/playground/` directory is a working Vite app configured with the plugin. Use it to manually test changes:
 
 ```bash
-pnpm --filter @vite-env/playground dev
+bun run --filter @vite-env/playground dev
 ```
 
 ## Project Structure
@@ -71,8 +71,8 @@ apps/demo       → @vite-env/demo         end-to-end demo app
 
 1. Fork the repository and create a branch from `main`.
 2. Make your changes.
-3. Add or update tests as needed — ensure `pnpm test -- --run` passes.
-4. Run `pnpm lint:fix` and `pnpm typecheck`.
+3. Add or update tests as needed — ensure `bun run test` passes.
+4. Run `bun run lint:fix` and `bun run typecheck`.
 5. Commit with a descriptive message.
 6. Open a pull request against `main`.
 
@@ -81,7 +81,7 @@ apps/demo       → @vite-env/demo         end-to-end demo app
 Releases follow a 4-step flow:
 
 1. Update docs and READMEs for the new version, commit as `docs: ...`
-2. Run `pnpm release` — bumpp bumps all package versions and generates a versioned doc snapshot, committed as `chore: release vX.Y.Z`
+2. Run `bun run release` — bumpp bumps all package versions and generates a versioned doc snapshot, committed as `chore: release vX.Y.Z`
 3. Commit the generated snapshot as `docs(versioned): snapshot vX.Y.Z docs`
 4. Push — CI publishes to npm and deploys docs automatically
 
