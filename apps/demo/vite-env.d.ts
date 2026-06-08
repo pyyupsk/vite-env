@@ -1,3 +1,4 @@
+/* oxlint-disable */
 /* eslint-disable */
 // @ts-nocheck
 // biome-ignore-all lint: auto-generated
