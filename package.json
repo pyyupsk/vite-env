@@ -51,6 +51,8 @@
       },
       "dev": {
         "@eslint/js": "^10.0.1",
+        "@fontsource-variable/geist": "^5.2.9",
+        "@fontsource-variable/geist-mono": "^5.2.8",
         "@tailwindcss/vite": "^4.1.11",
         "@pyyupsk/eslint-config": "^0.3.0",
         "@pyyupsk/nit": "^0.1.0",

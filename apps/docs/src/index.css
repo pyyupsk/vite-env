@@ -1,1 +1,179 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 @import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Neutrals */
+  --color-black: #050507;
+  --color-neutral-950: #08080a;
+  --color-neutral-900: #0d0d10;
+  --color-neutral-880: #111114;
+  --color-neutral-850: #15151a;
+  --color-neutral-800: #1a1a20;
+  --color-neutral-750: #1f1f26;
+  --color-neutral-700: #26262e;
+  --color-neutral-650: #2e2e37;
+  --color-neutral-600: #3a3a44;
+  --color-neutral-500: #555560;
+  --color-neutral-400: #71717a;
+  --color-neutral-300: #8b8b94;
+  --color-neutral-200: #a1a1aa;
+  --color-neutral-100: #c9c9d1;
+  --color-neutral-50: #e8e8ec;
+  --color-white: #fafafa;
+
+  /* Violet */
+  --color-violet-50: #efeaff;
+  --color-violet-100: #ddd3ff;
+  --color-violet-200: #c3b2ff;
+  --color-violet-300: #a48cff;
+  --color-violet-400: #8b73ff;
+  --color-violet-500: #7c5cff;
+  --color-violet-600: #6a47f0;
+  --color-violet-700: #5836cc;
+  --color-violet-800: #432a99;
+  --color-violet-glow: rgba(124, 92, 255, 0.35);
+
+  /* Cyan */
+  --color-cyan-300: #7fe6ff;
+  --color-cyan-400: #41d8ff;
+  --color-cyan-500: #18c6f5;
+  --color-cyan-600: #0ea5cc;
+
+  /* Semantic */
+  --color-green-400: #4ade80;
+  --color-green-500: #2fcf76;
+  --color-red-400: #ff6b6b;
+  --color-red-500: #f5484a;
+  --color-amber-400: #f7b955;
+  --color-amber-500: #f5a623;
+  --color-blue-400: #5c9dff;
+
+  /* Surfaces */
+  --color-bg-base: var(--color-neutral-950);
+  --color-surface-1: var(--color-neutral-900);
+  --color-surface-2: var(--color-neutral-880);
+  --color-surface-3: var(--color-neutral-850);
+  --color-surface-raised: var(--color-neutral-800);
+  --color-surface-inset: var(--color-black);
+  --color-surface-code: #0b0b0e;
+
+  /* Text */
+  --color-text-strong: var(--color-white);
+  --color-text-body: var(--color-neutral-100);
+  --color-text-muted: var(--color-neutral-200);
+  --color-text-subtle: var(--color-neutral-400);
+  --color-text-faint: var(--color-neutral-500);
+  --color-text-on-accent: #ffffff;
+
+  /* Borders */
+  --color-border-subtle: var(--color-neutral-800);
+  --color-border-default: var(--color-neutral-700);
+  --color-border-strong: var(--color-neutral-650);
+  --color-border-accent: var(--color-violet-500);
+  --color-hairline: rgba(255, 255, 255, 0.06);
+
+  /* Accent */
+  --color-accent: var(--color-violet-500);
+  --color-accent-hover: var(--color-violet-400);
+  --color-accent-press: var(--color-violet-600);
+  --color-accent-soft: rgba(124, 92, 255, 0.12);
+  --color-accent-soft-hover: rgba(124, 92, 255, 0.18);
+  --color-accent-text: var(--color-violet-300);
+  --color-accent-2: var(--color-cyan-400);
+  --color-accent-2-soft: rgba(65, 216, 255, 0.12);
+
+  /* Status */
+  --color-success: var(--color-green-500);
+  --color-success-soft: rgba(47, 207, 118, 0.12);
+  --color-danger: var(--color-red-500);
+  --color-danger-soft: rgba(245, 72, 74, 0.12);
+  --color-warning: var(--color-amber-500);
+  --color-warning-soft: rgba(245, 166, 35, 0.12);
+  --color-info: var(--color-blue-400);
+
+  /* Syntax */
+  --color-syntax-bg: var(--color-surface-code);
+  --color-syntax-plain: var(--color-neutral-100);
+  --color-syntax-comment: var(--color-neutral-400);
+  --color-syntax-keyword: var(--color-violet-300);
+  --color-syntax-string: var(--color-green-400);
+  --color-syntax-number: var(--color-amber-400);
+  --color-syntax-fn: var(--color-cyan-400);
+  --color-syntax-type: #ffb86c;
+  --color-syntax-punct: var(--color-neutral-300);
+
+  /* Spacing (4px grid) */
+  --spacing-px: 1px;
+  --spacing-0-5: 0.125rem;
+  --spacing-1: 0.25rem;
+  --spacing-1-5: 0.375rem;
+  --spacing-2: 0.5rem;
+  --spacing-2-5: 0.625rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+
+  /* Radii */
+  --radius-none: 0;
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+  --container-2xl: 1320px;
+  --sidebar-width: 264px;
+  --toc-width: 220px;
+  --header-height: 56px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-popover: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--color-border-default);
+  --shadow-inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-inset-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-glow-accent: 0 0 0 1px var(--color-violet-500), 0 0 24px -4px var(--color-violet-glow);
+  --shadow-glow-accent-soft: 0 0 32px -8px var(--color-violet-glow);
+  --shadow-focus-ring: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-violet-500);
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Durations */
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+}
+
+/* Base */
+html {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

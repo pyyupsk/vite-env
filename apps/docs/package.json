@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "catalog:dev",
+    "@fontsource-variable/geist-mono": "catalog:dev",
     "react": "catalog:dev",
     "react-dom": "catalog:dev"
   },
