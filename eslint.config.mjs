@@ -10,7 +10,9 @@ const docsDir = fileURLToPath(new URL('./apps/docs', import.meta.url))
 const docsFiles = ['apps/docs/**/*.{ts,tsx}']
 
 export default [
-  ...defineConfig(),
+  ...defineConfig({
+    ignores: ['.claude/**'],
+  }),
   {
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', {

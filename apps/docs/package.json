@@ -12,8 +12,13 @@
   "dependencies": {
     "@fontsource-variable/geist": "catalog:dev",
     "@fontsource-variable/geist-mono": "catalog:dev",
+    "class-variance-authority": "catalog:dev",
+    "clsx": "catalog:dev",
+    "lucide-react": "catalog:dev",
     "react": "catalog:dev",
-    "react-dom": "catalog:dev"
+    "react-dom": "catalog:dev",
+    "shiki": "catalog:dev",
+    "tailwind-merge": "catalog:dev"
   },
   "devDependencies": {
     "@eslint/js": "catalog:dev",

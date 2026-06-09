@@ -51,6 +51,10 @@
       },
       "dev": {
         "@eslint/js": "^10.0.1",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "shiki": "^4.2.0",
+        "tailwind-merge": "^3.6.0",
         "@fontsource-variable/geist": "^5.2.9",
         "@fontsource-variable/geist-mono": "^5.2.8",
         "@tailwindcss/vite": "^4.1.11",
@@ -76,6 +80,7 @@
         "typescript-eslint": "^8.59.2",
         "vite": "^8.0.8",
         "vitest": "^4.1.2",
+        "lucide-react": "^1.17.0",
         "zod": "^4.3.6"
       }
     }
