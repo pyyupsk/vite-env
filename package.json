@@ -51,6 +51,7 @@
       },
       "dev": {
         "@eslint/js": "^10.0.1",
+        "@tailwindcss/vite": "^4.1.11",
         "@pyyupsk/eslint-config": "^0.3.0",
         "@pyyupsk/nit": "^0.1.0",
         "@types/node": "^25.5.2",

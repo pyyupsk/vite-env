@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@eslint/js": "catalog:dev",
+    "@tailwindcss/vite": "catalog:dev",
     "@types/node": "catalog:dev",
     "@types/react": "catalog:dev",
     "@types/react-dom": "catalog:dev",
