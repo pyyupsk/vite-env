@@ -1,10 +1,19 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Router, Route, Switch } from 'wouter'
 import { LandingPage } from './features/landing'
+import { DocsLayout } from './features/docs/layout'
 import './styles/index.css'
+
+const routerBase = (import.meta.env['VITE_ROUTER_BASE'] as string | undefined) ?? ''
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <LandingPage />
+    <Router base={routerBase}>
+      <Switch>
+        <Route path="/" component={LandingPage} />
+        <Route path="/docs/:page?" component={DocsLayout} />
+      </Switch>
+    </Router>
   </StrictMode>,
 )

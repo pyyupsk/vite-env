@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { CodeBlock } from '@/components/ui/code-block'
 import { ArrowRight } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github'
+import { Link } from 'wouter'
 
 const HERO_CODE = `import { defineEnv, z } from "vite-env"
 
@@ -50,13 +51,13 @@ export function HeroSection() {
         </p>
 
         <div className="flex justify-center gap-3 mb-[60px] flex-wrap">
-          <a
+          <Link
             href="/docs"
             className="inline-flex items-center gap-2 px-5 h-10 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md transition-colors duration-fast no-underline"
           >
             Get started
             <ArrowRight size={18} strokeWidth={1.5} />
-          </a>
+          </Link>
           <a
             href="https://github.com/pyyupsk/vite-env"
             target="_blank"

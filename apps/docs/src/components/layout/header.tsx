@@ -2,6 +2,8 @@ import { buttonVariants } from '@/components/ui/button/variants'
 import { ArrowRight } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github'
 import { cn } from '@/lib/cn'
+import { Link } from 'wouter'
+import { useMemo } from 'react'
 
 const NAV_LINKS = [
   { label: 'Docs', href: '/docs' },
@@ -9,30 +11,32 @@ const NAV_LINKS = [
   { label: 'Changelog', href: '#' },
 ]
 
-export function Header() {
+export function Header({ location }: { location?: string }) {
+  const isDocs = useMemo(() => location?.startsWith("/docs"), [location]);
+
   return (
     <header
       className="sticky top-0 z-100 h-14 border-b border-hairline backdrop-blur-md bg-neutral-950/85"
     >
-      <div className="container-section flex items-center h-full">
-        <a href="/" className="flex items-center gap-2 mr-10 shrink-0 no-underline">
+      <div className={cn("flex items-center h-full", isDocs ? "px-4" : "container-section")}>
+        <Link href="/" className="flex items-center gap-2 mr-10 shrink-0 no-underline">
           <img src="/logo.svg" width={26} height={26} alt="" />
           <span className="font-mono font-semibold text-sm">
             <span className="text-text-strong">vite</span>
             <span className="text-text-faint">-</span>
             <span className="text-accent-text">env</span>
           </span>
-        </a>
+        </Link>
 
         <nav className="flex gap-6 flex-1">
           {NAV_LINKS.map(({ label, href }) => (
-            <a
+            <Link
               key={label}
               href={href}
               className="text-sm text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
             >
               {label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -46,13 +50,13 @@ export function Header() {
             <GithubIcon size={15} />
             GitHub
           </a>
-          <a
+          <Link
             href="/docs"
             className={cn(buttonVariants({ variant: 'primary', size: 'sm' }), 'no-underline')}
           >
             Get started
             <ArrowRight size={13} strokeWidth={1.5} />
-          </a>
+          </Link>
         </div>
       </div>
     </header>

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build",
+    "build": "velite build && tsc -b && vite build",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -18,7 +18,8 @@
     "react": "catalog:dev",
     "react-dom": "catalog:dev",
     "shiki": "catalog:dev",
-    "tailwind-merge": "catalog:dev"
+    "tailwind-merge": "catalog:dev",
+    "wouter": "catalog:dev"
   },
   "devDependencies": {
     "@eslint/js": "catalog:dev",
@@ -27,6 +28,8 @@
     "@types/react": "catalog:dev",
     "@types/react-dom": "catalog:dev",
     "@vitejs/plugin-react": "catalog:dev",
+    "rehype-slug": "catalog:dev",
+    "velite": "catalog:dev",
     "eslint": "catalog:dev",
     "eslint-plugin-react-hooks": "catalog:dev",
     "eslint-plugin-react-refresh": "catalog:dev",
