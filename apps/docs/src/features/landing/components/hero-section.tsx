@@ -18,7 +18,7 @@ export default defineEnv({
 
 export function HeroSection() {
   return (
-    <section className="relative text-center px-10 pt-[88px] pb-20 overflow-hidden">
+    <section className="relative px-10 py-20 overflow-hidden min-h-screen grid place-content-center text-center">
       <div className="absolute inset-0 pointer-events-none bg-grid opacity-35" />
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-content-xl h-[480px] pointer-events-none"

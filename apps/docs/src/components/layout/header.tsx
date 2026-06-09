@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github'
 import { cn } from '@/lib/cn'
 import { Link } from 'wouter'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 
 const NAV_LINKS = [
   { label: 'Docs', href: '/docs', external: false },
@@ -12,11 +12,30 @@ const NAV_LINKS = [
 ]
 
 export function Header({ location }: { location?: string }) {
+  const [scrolled, setScrolled] = useState(false);
+
   const isDocs = useMemo(() => location?.startsWith("/docs"), [location]);
+  const isHome = !location || location === '/';
+
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isHome]);
+
+  const transparent = isHome && !scrolled;
 
   return (
     <header
-      className="sticky top-0 z-100 h-14 border-b border-hairline backdrop-blur-md bg-neutral-950/85"
+      className={cn(
+        'top-0 z-100 h-14 border-b transition-colors duration-200',
+        isHome ? 'fixed w-full' : 'sticky',
+        transparent
+          ? 'border-transparent backdrop-blur-none bg-transparent'
+          : 'border-hairline backdrop-blur-md bg-neutral-950/85',
+      )}
     >
       <div className={cn("flex items-center h-full", isDocs ? "px-4" : "container-section")}>
         <Link href="/" className="flex items-center gap-2 mr-10 shrink-0 no-underline">
