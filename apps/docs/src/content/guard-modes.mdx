@@ -1,0 +1,45 @@
+---
+title: Guard modes
+description: What happens when a disallowed environment imports virtual:env/server.
+section: Reference
+order: 4
+---
+
+Guard modes control what the plugin does when an environment not listed in `serverEnvironments` imports `virtual:env/server`. Configure via `onClientAccessOfServerModule`:
+
+```ts
+ViteEnv({
+  onClientAccessOfServerModule: 'warn', // default — changes to 'error' in 1.0
+})
+```
+
+## warn
+
+Default in 0.x. The server module is still served but a warning is printed and `vite-env-warnings.log` is written to the project root. The build succeeds but **exits with code 1** — useful for catching violations in CI without breaking an existing codebase.
+
+```
+⚠ [vite-env] virtual:env/server imported from 'client' environment
+  importer: src/components/UserCard.tsx
+```
+
+The default will change to `'error'` in 1.0.
+
+## error
+
+The build fails immediately with a hard error when the server module is imported from a disallowed environment. No output artifacts are emitted. Recommended for all production builds once your codebase is clean.
+
+## stub
+
+The server module is replaced with a stub that throws at runtime:
+
+```ts
+// What the 'client' environment receives when mode is 'stub'
+throw new Error(
+  '[vite-env] virtual:env/server was imported in the "client" environment. '
+  + 'This module is server-only and was replaced with a stub. '
+  + 'To allow this environment: add it to serverEnvironments. '
+  + 'To suppress this stub: ensure this import never executes in the "client" environment.'
+)
+```
+
+Use `stub` for testing environments (Vitest jsdom) or isomorphic files where the import exists but the server code path is never actually reached.

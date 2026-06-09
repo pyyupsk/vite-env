@@ -1,0 +1,37 @@
+---
+title: Server leak detection
+description: How vite-env scans output chunks for accidental server secret exposure.
+section: Reference
+order: 5
+---
+
+## How it works
+
+During `generateBundle`, vite-env scans every client-bound output chunk for the literal string values of server-only variables. If a value appears in a client chunk, the build throws immediately:
+
+```
+[vite-env] Server environment variables detected in client bundle!
+
+  ✗ DATABASE_URL found in dist/assets/index-Bg3kL9xM.js
+
+  These variables are marked as server-only and must never reach the browser.
+```
+
+This catches leaks that guard mode misses — for example, a value passed through a prop chain or inlined by the bundler's constant folding.
+
+Leak detection runs **only on client builds** — skipped when `build.ssr` is true or the current environment is listed in `serverEnvironments`.
+
+## False positives
+
+Values shorter than 8 characters are skipped. Short strings appear frequently enough across unrelated code that matching on them would produce too many false alarms. When values are skipped a warning is logged:
+
+```
+⚠ [vite-env] Leak detection skipped 2 server variable(s) with values
+  shorter than 8 chars: PORT, NODE_ENV
+```
+
+If you hit a false positive on a longer value, verify whether the value is genuinely reaching the client. If it is intentional, move that variable to the `client` block in your schema.
+
+## Disabling
+
+No configuration option — leak detection is always enabled on client builds. This is intentional: it is a safety net, not a feature to toggle off.

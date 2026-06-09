@@ -1,0 +1,71 @@
+---
+title: Introduction
+description: vite-env validates env vars at build time and emits typed virtual modules.
+section: Getting started
+order: 1
+---
+
+## What is vite-env?
+
+vite-env is a Vite plugin that reads your `env.ts` schema, validates the running environment at build time, and emits two virtual modules with fully inferred TypeScript types. Missing or malformed keys fail the build — not production.
+
+## How it works
+
+1. You define a schema in `env.ts` using `defineEnv()` and Zod
+2. The plugin reads and validates all env sources on `buildStart`
+3. Two frozen virtual modules are emitted: `virtual:env/client` and `virtual:env/server`
+4. A `vite-env.d.ts` file is written to the project root with inferred types
+
+```ts
+// env.ts
+import { defineEnv } from '@vite-env/core'
+import { z } from 'zod'
+
+export default defineEnv({
+  server: {
+    DATABASE_URL: z.string().url(),
+    PORT: z.coerce.number().default(3000),
+  },
+  client: {
+    VITE_API_URL: z.string().url(),
+  },
+})
+```
+
+```ts
+// src/db.ts
+import { env } from 'virtual:env/server'
+
+// env.DATABASE_URL → string (guaranteed valid)
+const db = createClient(env.DATABASE_URL)
+```
+
+## Installation
+
+```bash
+npm install -D @vite-env/core
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import ViteEnv from '@vite-env/core/plugin'
+
+export default defineConfig({
+  plugins: [ViteEnv()],
+})
+```
+
+The plugin looks for `env.ts` in the project root by default. Override with `configFile` option.
+
+## Env sources
+
+Variables are merged in priority order (highest first):
+
+1. `process.env` — CI pipeline secrets win
+2. `.env.[mode].local`
+3. `.env.[mode]`
+4. `.env.local`
+5. `.env`
+
+No prefix filter is applied — the schema is the filter.
