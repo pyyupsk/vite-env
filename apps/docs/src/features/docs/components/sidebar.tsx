@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'wouter'
+import { Link } from 'wouter'
 import type { NavSection } from '../nav'
 
 type SidebarProps = Readonly<{
@@ -7,8 +7,6 @@ type SidebarProps = Readonly<{
 }>
 
 export function Sidebar({ sections, currentSlug }: SidebarProps) {
-  const [location] = useLocation()
-
   return (
     <aside className="w-[264px] shrink-0 h-full overflow-y-auto border-r border-border-subtle py-5">
       {sections.map((section) => (
@@ -17,7 +15,7 @@ export function Sidebar({ sections, currentSlug }: SidebarProps) {
             {section.title}
           </div>
           {section.items.map((item) => {
-            const isActive = item.slug === currentSlug || location === `/docs/${item.slug}`
+            const isActive = item.slug === currentSlug
             return (
               <Link
                 key={item.slug}

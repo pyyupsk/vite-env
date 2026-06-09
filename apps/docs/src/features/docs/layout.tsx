@@ -1,4 +1,4 @@
-import { useMemo, Suspense, useEffect, useRef, type ComponentType } from 'react'
+import { useMemo, useEffect, useRef, type ComponentType } from 'react'
 import { useParams, Redirect, Link, useLocation } from 'wouter'
 import * as runtime from 'react/jsx-runtime'
 import { docs } from '#velite'
@@ -14,8 +14,7 @@ const DEFAULT_SLUG = 'getting-started'
 function MDXContent({ code }: Readonly<{ code: string }>) {
   const Component = useMemo(() => {
     const fn = new Function(code)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (fn({ ...runtime }) as any).default as ComponentType<{
+    return (fn({ ...runtime })).default as ComponentType<{
       components?: Record<string, ComponentType>
     }>
   }, [code])
@@ -62,13 +61,7 @@ export function DocsLayout() {
               </p>
             )}
 
-            <Suspense
-              fallback={
-                <div className="text-sm text-text-faint animate-pulse">Loading…</div>
-              }
-            >
-              <MDXContent code={doc.body} />
-            </Suspense>
+            <MDXContent code={doc.body} />
 
             <div className="flex justify-between mt-12 pt-6 border-t border-hairline gap-4">
               {prev ? (
@@ -103,7 +96,7 @@ export function DocsLayout() {
           </div>
         </main>
 
-        <TOC items={doc.toc} />
+        <TOC items={doc.toc} /> {/* nosonar */}
       </div>
     </div>
   )

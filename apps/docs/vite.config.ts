@@ -4,14 +4,20 @@ import tailwindcss from '@tailwindcss/vite'
 import { build } from 'velite'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
 
-function velite(): Plugin {
+const { version: coreVersion } = JSON.parse(
+  readFileSync(resolve(__dirname, '../../packages/core/package.json'), 'utf-8'),
+) as { version: string }
+
+function velite(command: string): Plugin {
   const contentDir = resolve(__dirname, 'src/content')
 
   return {
     name: 'velite',
 
     async buildStart() {
+      if (command === 'build') return
       await build({ logLevel: 'warn' })
     },
 
@@ -33,7 +39,10 @@ function velite(): Plugin {
 
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/vite-env/' : '/',
-  plugins: [tailwindcss(), velite(), react()],
+  plugins: [tailwindcss(), velite(command), react()],
+  define: {
+    __CORE_VERSION__: JSON.stringify(coreVersion),
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

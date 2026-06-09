@@ -27,8 +27,8 @@ export function HeroSection() {
 
       <div className="relative max-w-content-xl mx-auto">
         <div className="flex justify-center items-center gap-3 mb-7">
-          <Badge variant="accent" dot>v0.5.3</Badge>
-          <span className="font-mono text-xs text-text-faint tracking-wide">
+          <Badge variant="accent" dot>v{__CORE_VERSION__}</Badge>
+          <span className="font-mono text-xs text-text-faint tracking-wide">{/* nosonar */}
             // vite plugin for build-time env validation
           </span>
         </div>

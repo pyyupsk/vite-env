@@ -39,7 +39,7 @@ export function Header({ location }: Readonly<{ location?: string }>) {
     >
       <div className={cn("flex items-center h-full", isDocs ? "px-4" : "container-section")}>
         <Link href="/" className="flex items-center gap-2 mr-10 shrink-0 no-underline">
-          <img src="/logo.svg" width={26} height={26} alt="" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} width={26} height={26} alt="" />
           <span className="font-mono font-semibold text-sm">
             <span className="text-text-strong">vite</span>
             <span className="text-text-faint">-</span>

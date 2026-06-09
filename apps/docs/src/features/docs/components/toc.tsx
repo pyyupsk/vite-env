@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import type { Doc } from '#velite'
 import { Link } from 'wouter'
 
@@ -16,7 +16,7 @@ type TOCProps = Readonly<{
 }>
 
 export function TOC({ items }: TOCProps) {
-  const flat = flattenToc(items)
+  const flat = useMemo(() => flattenToc(items), [items])
   const [activeUrl, setActiveUrl] = useState<string>('')
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export function TOC({ items }: TOCProps) {
 
     headings.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [items]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [flat])
 
   return (
     <aside className="w-[220px] shrink-0 h-full overflow-y-auto px-5 py-5">
