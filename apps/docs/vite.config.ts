@@ -31,8 +31,8 @@ function velite(): Plugin {
   }
 }
 
-export default defineConfig({
-  base: '/vite-env/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/vite-env/' : '/',
   plugins: [tailwindcss(), velite(), react()],
   resolve: {
     alias: {
@@ -43,4 +43,4 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
   },
-})
+}))

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pyyupsk.github.io/vite-env/sitemap.xml
