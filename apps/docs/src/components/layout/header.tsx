@@ -6,9 +6,9 @@ import { Link } from 'wouter'
 import { useMemo } from 'react'
 
 const NAV_LINKS = [
-  { label: 'Docs', href: '/docs' },
-  { label: 'Examples', href: '#' },
-  { label: 'Changelog', href: '#' },
+  { label: 'Docs', href: '/docs', external: false },
+  { label: 'Examples', href: 'https://github.com/pyyupsk/vite-env/tree/main/examples', external: true },
+  { label: 'Changelog', href: 'https://github.com/pyyupsk/vite-env/releases', external: true },
 ]
 
 export function Header({ location }: { location?: string }) {
@@ -29,15 +29,27 @@ export function Header({ location }: { location?: string }) {
         </Link>
 
         <nav className="flex gap-6 flex-1">
-          {NAV_LINKS.map(({ label, href }) => (
-            <Link
-              key={label}
-              href={href}
-              className="text-sm text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
-            >
-              {label}
-            </Link>
-          ))}
+          {NAV_LINKS.map(({ label, href, external }) =>
+            external ? (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
+              >
+                {label}
+              </a>
+            ) : (
+              <Link
+                key={label}
+                href={href}
+                className="text-sm text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
+              >
+                {label}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
