@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'wouter'
 import type { NavSection } from '../nav'
 
-type SidebarProps = {
+type SidebarProps = Readonly<{
   sections: NavSection[]
   currentSlug: string
-}
+}>
 
 export function Sidebar({ sections, currentSlug }: SidebarProps) {
   const [location] = useLocation()

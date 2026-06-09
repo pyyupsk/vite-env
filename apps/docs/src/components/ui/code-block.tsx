@@ -28,6 +28,9 @@ export function CodeBlock({ filename, dots = true, lang = 'typescript', code, ch
   }, [code])
 
   const hasHeader = dots || filename
+  const codeContent = html
+    ? <div className="[&>pre]:m-0 [&>pre]:p-4 [&>pre]:pl-5 [&>pre]:overflow-x-auto [&>pre]:leading-relaxed [&>pre]:bg-transparent!" dangerouslySetInnerHTML={{ __html: html }} />
+    : <pre className="m-0 p-4 pl-5 overflow-x-auto text-text-subtle leading-relaxed">{code}</pre>
 
   return (
     <div className="rounded-lg border border-border-subtle bg-surface-code shadow-inset-ring overflow-hidden text-sm font-mono">
@@ -52,11 +55,7 @@ export function CodeBlock({ filename, dots = true, lang = 'typescript', code, ch
           )}
         </div>
       )}
-      {code ? (
-        html
-          ? <div className="[&>pre]:m-0 [&>pre]:p-4 [&>pre]:pl-5 [&>pre]:overflow-x-auto [&>pre]:leading-relaxed [&>pre]:bg-transparent!" dangerouslySetInnerHTML={{ __html: html }} />
-          : <pre className="m-0 p-4 pl-5 overflow-x-auto text-text-subtle leading-relaxed">{code}</pre>
-      ) : (
+      {code ? codeContent : (
         <pre className="m-0 p-4 pl-5 overflow-x-auto leading-relaxed text-syntax-plain">
           <code>{children}</code>
         </pre>

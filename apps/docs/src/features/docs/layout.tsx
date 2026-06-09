@@ -11,7 +11,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const DEFAULT_SLUG = 'getting-started'
 
-function MDXContent({ code }: { code: string }) {
+function MDXContent({ code }: Readonly<{ code: string }>) {
   const Component = useMemo(() => {
     const fn = new Function(code)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

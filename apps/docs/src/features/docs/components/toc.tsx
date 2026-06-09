@@ -11,9 +11,9 @@ function flattenToc(items: TocEntry[], depth = 0): { entry: TocEntry; depth: num
   ])
 }
 
-type TOCProps = {
+type TOCProps = Readonly<{
   items: TocEntry[]
-}
+}>
 
 export function TOC({ items }: TOCProps) {
   const flat = flattenToc(items)

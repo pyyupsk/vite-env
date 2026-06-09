@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: 'Changelog', href: 'https://github.com/pyyupsk/vite-env/releases', external: true },
 ]
 
-export function Header({ location }: { location?: string }) {
+export function Header({ location }: Readonly<{ location?: string }>) {
   const [scrolled, setScrolled] = useState(false);
 
   const isDocs = useMemo(() => location?.startsWith("/docs"), [location]);

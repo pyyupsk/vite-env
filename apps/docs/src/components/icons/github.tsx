@@ -1,8 +1,8 @@
-type GithubIconProps = {
+type GithubIconProps = Readonly<{
   size?: number
   className?: string
   strokeWidth?: number
-}
+}>
 
 export function GithubIcon({ size = 16, className, strokeWidth = 1.5 }: GithubIconProps) {
   return (
