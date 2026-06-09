@@ -1,4 +1,4 @@
-import { useMemo, Suspense, useEffect, useRef } from 'react'
+import { useMemo, Suspense, useEffect, useRef, type ComponentType } from 'react'
 import { useParams, Redirect, Link, useLocation } from 'wouter'
 import * as runtime from 'react/jsx-runtime'
 import { docs } from '#velite'
@@ -15,8 +15,8 @@ function MDXContent({ code }: { code: string }) {
   const Component = useMemo(() => {
     const fn = new Function(code)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (fn({ ...runtime }) as any).default as React.ComponentType<{
-      components?: Record<string, React.ComponentType>
+    return (fn({ ...runtime }) as any).default as ComponentType<{
+      components?: Record<string, ComponentType>
     }>
   }, [code])
   return <Component components={mdxComponents} />
