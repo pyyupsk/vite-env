@@ -32,7 +32,7 @@ function velite(): Plugin {
 }
 
 export default defineConfig({
-  base: './',
+  base: '/vite-env/',
   plugins: [tailwindcss(), velite(), react()],
   resolve: {
     alias: {
