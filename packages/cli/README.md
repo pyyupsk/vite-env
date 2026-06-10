@@ -5,7 +5,7 @@ CLI companion for [`@vite-env/core`](https://www.npmjs.com/package/@vite-env/cor
 ## Install
 
 ```bash
-pnpm add -D @vite-env/cli
+npm install -D @vite-env/cli
 ```
 
 ## Commands

@@ -1,0 +1,81 @@
+---
+title: Platform presets
+description: Named env presets for Vercel, Railway, and Netlify.
+section: Reference
+order: 6
+---
+
+Presets inject well-known platform variables into your schema. Import from `@vite-env/core/presets` and pass in the `presets` array.
+
+## Vercel
+
+```ts
+import { defineEnv } from '@vite-env/core'
+import { vercel } from '@vite-env/core/presets'
+import { z } from 'zod'
+
+export default defineEnv({
+  presets: [vercel],
+  server: {
+    DATABASE_URL: z.string().url(),
+  },
+})
+```
+
+Injects (server-only):
+
+| Variable | Type |
+|---|---|
+| `VERCEL` | `'1'` |
+| `VERCEL_ENV` | `'production' \| 'preview' \| 'development'` |
+| `VERCEL_URL` | `string` (bare hostname, no scheme) |
+| `VERCEL_PROJECT_PRODUCTION_URL` | `string` |
+| `VERCEL_DEPLOYMENT_ID` | `string` |
+| `VERCEL_REGION` | `string` (optional) |
+| `VERCEL_GIT_COMMIT_SHA` | `string` (optional) |
+| `VERCEL_BRANCH_URL` | `string` (optional) |
+
+Plus additional git and skew protection fields.
+
+## Railway
+
+```ts
+import { railway } from '@vite-env/core/presets'
+
+export default defineEnv({
+  presets: [railway],
+  server: { DATABASE_URL: z.string().url() },
+})
+```
+
+Injects (server-only): `RAILWAY_ENVIRONMENT_ID`, `RAILWAY_ENVIRONMENT_NAME`, `RAILWAY_SERVICE_ID`, `RAILWAY_SERVICE_NAME`, `RAILWAY_PROJECT_ID`, `RAILWAY_PROJECT_NAME`, `RAILWAY_DEPLOYMENT_ID`, and optional git/domain fields.
+
+Note: `PORT` is intentionally excluded — it is a generic name set by many tools independently. Define it yourself if needed.
+
+## Netlify
+
+```ts
+import { netlify } from '@vite-env/core/presets'
+
+export default defineEnv({
+  presets: [netlify],
+  server: { DATABASE_URL: z.string().url() },
+})
+```
+
+Injects (server-only):
+
+| Variable | Type |
+|---|---|
+| `NETLIFY` | `'true'` |
+| `BUILD_ID` | `string` |
+| `CONTEXT` | `'production' \| 'deploy-preview' \| 'branch-deploy' \| 'dev'` |
+| `DEPLOY_ID` | `string` |
+| `DEPLOY_URL` | `string` (full URL) |
+| `URL` | `string` (full URL) |
+| `BRANCH` | `string` |
+| `COMMIT_REF` | `string` |
+
+---
+
+Presets are plain `{ server, client }` objects — spread them manually if you need finer control. Your own keys always win over preset keys on collision.

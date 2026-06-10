@@ -1,0 +1,89 @@
+---
+title: Virtual modules
+description: virtual:env/client and virtual:env/server — what they emit, how types work, and SSR.
+section: Reference
+order: 3
+---
+
+## virtual:env/client
+
+Contains only the `client` keys from your schema. Safe to import from any browser-bound module.
+
+```ts
+import { env } from 'virtual:env/client'
+
+// Only VITE_* keys present
+console.log(env.VITE_API_URL)
+```
+
+## virtual:env/server
+
+Contains all validated variables — both `server` and `client` keys.
+
+```ts
+import { env } from 'virtual:env/server'
+
+const db = createClient(env.DATABASE_URL)
+const server = createServer({ port: env.PORT })
+```
+
+Importing this from a disallowed environment triggers the configured [guard mode](/docs/guard-modes).
+
+## Emitted module shape
+
+Both modules emit a frozen object — mutation throws in strict mode:
+
+```ts
+// What virtual:env/server resolves to at runtime
+export const env = Object.freeze({
+  DATABASE_URL: "postgres://...",
+  PORT: 3000,
+  VITE_API_URL: "https://api.example.com",
+})
+export default env
+```
+
+## Type generation
+
+On every `buildStart`, the plugin writes `vite-env.d.ts` to the project root. This file augments both virtual module declarations with types inferred from your Zod schema:
+
+```ts
+// vite-env.d.ts (auto-generated — do not edit)
+declare module 'virtual:env/client' {
+  const env: {
+    readonly VITE_API_URL: string
+  }
+  export { env }
+  export default env
+}
+
+declare module 'virtual:env/server' {
+  const env: {
+    readonly DATABASE_URL: string
+    readonly PORT: number
+    readonly VITE_API_URL: string
+  }
+  export { env }
+  export default env
+}
+```
+
+Add `vite-env.d.ts` to your `tsconfig.json` include array or reference it with a triple-slash directive to get editor autocomplete.
+
+## SSR
+
+In SSR mode both modules resolve normally on the server. The `virtual:env/client` module still returns only the client subset — matching what the browser receives.
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  plugins: [ViteEnv()],
+  // No extra SSR config needed — 'ssr' is in serverEnvironments by default
+})
+```
+
+For edge runtimes not named `'ssr'`, add them to `serverEnvironments`:
+
+```ts
+ViteEnv({ serverEnvironments: ['ssr', 'workerd'] })
+```

@@ -51,7 +51,6 @@ bun run --filter @vite-env/playground dev
 ```text
 packages/core   → @vite-env/core   Vite plugin, validation, virtual modules, leak detection
 packages/cli    → @vite-env/cli    CLI commands (check, generate, types) — thin wrappers over core
-packages/docs   → @vite-env/docs   VitePress documentation site
 apps/playground → @vite-env/playground   manual testing app
 apps/demo       → @vite-env/demo         end-to-end demo app
 ```
@@ -81,9 +80,8 @@ apps/demo       → @vite-env/demo         end-to-end demo app
 Releases follow a 4-step flow:
 
 1. Update docs and READMEs for the new version, commit as `docs: ...`
-2. Run `bun run release` — bumpp bumps all package versions and generates a versioned doc snapshot, committed as `chore: release vX.Y.Z`
-3. Commit the generated snapshot as `docs(versioned): snapshot vX.Y.Z docs`
-4. Push — CI publishes to npm and deploys docs automatically
+2. Run `bun run release` — bumpp bumps all package versions, committed as `chore: release vX.Y.Z`
+3. Push — CI publishes to npm automatically
 
 ## License
 

@@ -1,0 +1,69 @@
+---
+title: Standard Schema
+description: Use any Standard Schema v1 compatible validator instead of Zod.
+section: Reference
+order: 7
+---
+
+vite-env supports [Standard Schema v1](https://standardschema.dev) — the interoperability spec for TypeScript schema validators. Use `defineStandardEnv` instead of `defineEnv` and add `_standard: true`.
+
+## Usage
+
+```ts
+import { defineStandardEnv } from '@vite-env/core'
+import * as v from 'valibot'
+
+export default defineStandardEnv({
+  _standard: true,
+  server: {
+    DATABASE_URL: v.pipe(v.string(), v.url()),
+    PORT:         v.optional(v.pipe(v.string(), v.transform(Number)), '3000'),
+  },
+  client: {
+    VITE_API_URL: v.pipe(v.string(), v.url()),
+  },
+})
+```
+
+The `_standard: true` marker tells the plugin to use the Standard Schema validation path. Zod is not loaded at all — no Zod in your `node_modules` is fine.
+
+**Client keys must still be prefixed with `VITE_`** — the same rule applies regardless of validation path.
+
+## Supported adapters
+
+Any library implementing `StandardSchemaV1` works:
+
+| Library | Notes |
+|---|---|
+| Valibot | Native Standard Schema support |
+| ArkType | Native Standard Schema support |
+| Effect Schema | Via `@effect/schema` adapter |
+| TypeBox | Via `@sinclair/typebox` adapter |
+
+## Type generation
+
+The Standard Schema path generates `vite-env.d.ts` with all fields typed as `string` — there is no runtime type introspection available across Standard Schema implementations.
+
+```ts
+// vite-env.d.ts when using defineStandardEnv
+declare module 'virtual:env/server' {
+  const env: {
+    readonly DATABASE_URL: string  // always string, even if you coerce to number
+    readonly PORT: string
+    readonly VITE_API_URL: string
+  }
+}
+```
+
+For richer inferred types (`number`, `boolean`, union literals), use `defineEnv` with Zod instead.
+
+## vs Zod path
+
+Both paths produce the same runtime output — a frozen `env` object. The differences:
+
+| | Zod path | Standard Schema path |
+|---|---|---|
+| Import | `defineEnv` | `defineStandardEnv` + `_standard: true` |
+| Generated types | Inferred from schema | All `string` |
+| Zod required | Yes | No |
+| Preset support | Yes (`presets` array) | Not yet |

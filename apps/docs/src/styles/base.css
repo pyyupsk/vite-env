@@ -1,0 +1,74 @@
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv01", "ss01";
+    background-color: var(--color-bg-base);
+    color: var(--color-text-body);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    margin: 0;
+  }
+
+  ::selection {
+    background: var(--color-accent-soft-hover);
+    color: var(--color-text-strong);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    color: var(--color-text-strong);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a:not([class*='bg-'], [class*='border-']) {
+    color: var(--color-accent-text);
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus-ring);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+  }
+}
+
+/* Container utilities */
+@utility container-section {
+  margin-inline: auto;
+  padding-inline: 2.5rem;
+  max-width: var(--width-section);
+}
+
+@utility container-page {
+  margin-inline: auto;
+  padding-inline: 2.5rem;
+  max-width: var(--width-page);
+}
+
+/* Grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
+  background-size: 40px 40px;
+}

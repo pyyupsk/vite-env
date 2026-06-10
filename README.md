@@ -35,8 +35,8 @@ See the full comparison with feature matrix and trade-offs: **[Comparison page](
 ## Install
 
 ```bash
-pnpm add @vite-env/core zod
-pnpm add -D @vite-env/cli # optional — for check/generate/types commands
+npm install @vite-env/core zod
+npm install -D @vite-env/cli # optional — for check/generate/types commands
 ```
 
 ## Usage

@@ -1,0 +1,159 @@
+@theme {
+  /* Fonts */
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Neutrals */
+  --color-black:        oklch(0.1163 0.0062 285.40);
+  --color-neutral-950:  oklch(0.1354 0.0047 285.76);
+  --color-neutral-900:  oklch(0.1605 0.0063 285.67);
+  --color-neutral-880:  oklch(0.1790 0.0061 285.77);
+  --color-neutral-850:  oklch(0.1980 0.0100 285.46);
+  --color-neutral-800:  oklch(0.2205 0.0116 285.41);
+  --color-neutral-750:  oklch(0.2423 0.0133 285.37);
+  --color-neutral-700:  oklch(0.2720 0.0147 285.38);
+  --color-neutral-650:  oklch(0.3049 0.0161 285.41);
+  --color-neutral-600:  oklch(0.3524 0.0172 285.48);
+  --color-neutral-500:  oklch(0.4535 0.0178 285.67);
+  --color-neutral-400:  oklch(0.5517 0.0138 285.94);
+  --color-neutral-300:  oklch(0.6397 0.0133 286.02);
+  --color-neutral-200:  oklch(0.7118 0.0129 286.07);
+  --color-neutral-100:  oklch(0.8383 0.0110 286.16);
+  --color-neutral-50:   oklch(0.9321 0.0054 286.30);
+  --color-white:        oklch(0.9851 0 0);
+
+  /* Violet */
+  --color-violet-50:   oklch(0.9471 0.0285 296.75);
+  --color-violet-100:  oklch(0.8889 0.0608 295.55);
+  --color-violet-200:  oklch(0.8056 0.1085 293.96);
+  --color-violet-300:  oklch(0.7109 0.1641 291.24);
+  --color-violet-400:  oklch(0.6474 0.1998 287.33);
+  --color-violet-500:  oklch(0.5990 0.2299 286.20);
+  --color-violet-600:  oklch(0.5424 0.2375 284.75);
+  --color-violet-700:  oklch(0.4727 0.2155 285.03);
+  --color-violet-800:  oklch(0.3900 0.1695 285.84);
+  --color-violet-glow: oklch(0.5990 0.2299 286.20 / 0.35);
+
+  /* Cyan */
+  --color-cyan-300: oklch(0.8715 0.1019 215.41);
+  --color-cyan-400: oklch(0.8206 0.1333 219.40);
+  --color-cyan-500: oklch(0.7684 0.1405 223.52);
+  --color-cyan-600: oklch(0.6705 0.1228 222.95);
+
+  /* Semantic */
+  --color-green-400: oklch(0.8003 0.1821 151.71);
+  --color-green-500: oklch(0.7547 0.1803 153.11);
+  --color-red-400:   oklch(0.7116 0.1812 22.84);
+  --color-red-500:   oklch(0.6514 0.2095 24.58);
+  --color-amber-400: oklch(0.8246 0.1358 76.72);
+  --color-amber-500: oklch(0.7837 0.1587 72.99);
+  --color-blue-400:  oklch(0.6978 0.1593 258.42);
+
+  /* Surfaces */
+  --color-bg-base:       var(--color-neutral-950);
+  --color-surface-1:     var(--color-neutral-900);
+  --color-surface-2:     var(--color-neutral-880);
+  --color-surface-3:     var(--color-neutral-850);
+  --color-surface-raised: var(--color-neutral-800);
+  --color-surface-inset: var(--color-black);
+  --color-surface-code:  oklch(0.1510 0.0064 285.61);
+
+  /* Text */
+  --color-text-strong:    var(--color-white);
+  --color-text-body:      var(--color-neutral-100);
+  --color-text-muted:     var(--color-neutral-200);
+  --color-text-subtle:    var(--color-neutral-400);
+  --color-text-faint:     var(--color-neutral-500);
+  --color-text-on-accent: oklch(1 0 0);
+
+  /* Borders */
+  --color-border-subtle:  var(--color-neutral-800);
+  --color-border-default: var(--color-neutral-700);
+  --color-border-strong:  var(--color-neutral-650);
+  --color-border-accent:  var(--color-violet-500);
+  --color-hairline:       oklch(1 0 0 / 0.06);
+
+  /* Accent */
+  --color-accent:          var(--color-violet-500);
+  --color-accent-hover:    var(--color-violet-400);
+  --color-accent-press:    var(--color-violet-600);
+  --color-accent-soft:     oklch(0.5990 0.2299 286.20 / 0.12);
+  --color-accent-soft-hover: oklch(0.5990 0.2299 286.20 / 0.18);
+  --color-accent-text:     var(--color-violet-300);
+  --color-accent-2:        var(--color-cyan-400);
+  --color-accent-2-soft:   oklch(0.8206 0.1333 219.40 / 0.12);
+
+  /* Status */
+  --color-success:      var(--color-green-500);
+  --color-success-soft: oklch(0.7547 0.1803 153.11 / 0.12);
+  --color-danger:       var(--color-red-500);
+  --color-danger-soft:  oklch(0.6514 0.2095 24.58 / 0.12);
+  --color-warning:      var(--color-amber-500);
+  --color-warning-soft: oklch(0.7837 0.1587 72.99 / 0.12);
+  --color-info:         var(--color-blue-400);
+
+  /* Syntax */
+  --color-syntax-bg:      var(--color-surface-code);
+  --color-syntax-plain:   var(--color-neutral-100);
+  --color-syntax-comment: var(--color-neutral-400);
+  --color-syntax-keyword: var(--color-violet-300);
+  --color-syntax-string:  var(--color-green-400);
+  --color-syntax-number:  var(--color-amber-400);
+  --color-syntax-fn:      var(--color-cyan-400);
+  --color-syntax-type:    oklch(0.8339 0.1241 66.56);
+  --color-syntax-punct:   var(--color-neutral-300);
+
+  /* Radii */
+  --radius-none: 0;
+  --radius-xs:   3px;
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-2xl:  16px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --width-content-sm:      500px;
+  --width-content-md:      600px;
+  --width-content-lg:      680px;
+  --width-content-xl:      800px;
+  --width-content-2xl:     920px;
+  --width-section:         1160px;
+  --width-page:            1200px;
+  --max-width-content-sm:  500px;
+  --max-width-content-md:  600px;
+  --max-width-content-lg:  680px;
+  --max-width-content-xl:  800px;
+  --max-width-content-2xl: 920px;
+  --max-width-section:     1160px;
+  --max-width-page:        1200px;
+  --sidebar-width:         264px;
+  --toc-width:             220px;
+  --header-height:         56px;
+
+  /* Shadows */
+  --shadow-xs:           0 1px 2px oklch(0 0 0 / 0.4);
+  --shadow-sm:           0 2px 6px oklch(0 0 0 / 0.45);
+  --shadow-md:           0 6px 20px oklch(0 0 0 / 0.5);
+  --shadow-lg:           0 16px 48px oklch(0 0 0 / 0.6);
+  --shadow-popover:      0 12px 36px oklch(0 0 0 / 0.65), 0 0 0 1px var(--color-border-default);
+  --shadow-inset-top:    inset 0 1px 0 oklch(1 0 0 / 0.05);
+  --shadow-inset-ring:   inset 0 0 0 1px oklch(1 0 0 / 0.04);
+  --shadow-glow-accent:  0 0 0 1px var(--color-violet-500), 0 0 24px -4px var(--color-violet-glow);
+  --shadow-glow-accent-soft: 0 0 32px -8px var(--color-violet-glow);
+  --shadow-focus-ring:   0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-violet-500);
+
+  /* Easing */
+  --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Durations */
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+  --transition-duration-fast: 120ms;
+  --transition-duration-base: 180ms;
+  --transition-duration-slow: 280ms;
+}
