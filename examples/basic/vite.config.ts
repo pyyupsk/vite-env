@@ -1,13 +1,10 @@
-import process from 'node:process'
 import ViteEnv from '@vite-env/core/plugin'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
     ViteEnv({
-      // Use VITE_ENV_CONFIG env var to switch between Zod and Standard Schema demos.
-      // Default: 'env.ts' (Zod). Run `bun run dev:standard` to use 'env.standard.ts' (Valibot).
-      configFile: process.env.VITE_ENV_CONFIG ?? './env.ts',
+      configFile: './env.ts',
 
       // Environments allowed to import virtual:env/server.
       // Default is ['ssr']. The client environment is always blocked.

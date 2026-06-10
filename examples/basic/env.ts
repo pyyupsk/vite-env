@@ -1,9 +1,3 @@
-/**
- * Zod-based env definition (default).
- *
- * This demonstrates defineEnv() with Zod v4 — the primary path
- * that provides rich .d.ts type inference (enums, optionals, booleans).
- */
 import { defineEnv } from '@vite-env/core'
 import { z } from 'zod'
 

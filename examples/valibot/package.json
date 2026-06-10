@@ -1,13 +1,13 @@
 {
-  "name": "@vite-env/demo",
+  "name": "@vite-env/example-valibot",
   "type": "module",
-  "version": "0.5.3",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "dev:standard": "VITE_ENV_CONFIG=env.standard.ts vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@vite-env/core": "workspace:*"
@@ -15,8 +15,7 @@
   "devDependencies": {
     "@types/node": "catalog:dev",
     "typescript": "catalog:dev",
-    "valibot": "catalog:demo",
-    "vite": "catalog:dev",
-    "zod": "catalog:dev"
+    "valibot": "catalog:examples",
+    "vite": "catalog:dev"
   }
 }

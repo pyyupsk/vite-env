@@ -3,9 +3,12 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "resolveJsonModule": true,
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "types": [
-      "node"
+      "vite/client"
     ],
     "strict": true,
     "noEmit": true,
@@ -13,8 +16,10 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "exclude": [
-    "apps/docs",
-    "examples"
+  "include": [
+    "src",
+    "env.ts",
+    "vite.config.ts",
+    "vite-env.d.ts"
   ]
 }

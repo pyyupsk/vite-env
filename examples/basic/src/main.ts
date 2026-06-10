@@ -1,6 +1,5 @@
 import { env } from 'virtual:env/client'
-
-// ── Render client env variables ─────────────────────────────────────────────
+import './server-guard'
 
 const app = document.querySelector<HTMLDivElement>('#app')!
 
@@ -13,8 +12,6 @@ subtitle.textContent = 'Typed environment variables from virtual:env/client'
 
 app.appendChild(title)
 app.appendChild(subtitle)
-
-// ── Client variables section ────────────────────────────────────────────────
 
 const clientSection = document.createElement('section')
 const clientHeading = document.createElement('h2')
@@ -58,8 +55,6 @@ for (const [key, value] of clientVars) {
 clientSection.appendChild(clientGrid)
 app.appendChild(clientSection)
 
-// ── Server access protection demo ───────────────────────────────────────────
-
 const guardSection = document.createElement('section')
 const guardHeading = document.createElement('h2')
 guardHeading.textContent = 'Runtime Access Protection'
@@ -69,15 +64,13 @@ const guardNote = document.createElement('div')
 guardNote.className = 'warning'
 guardNote.textContent
   = '// Importing virtual:env/server from client code triggers the guard.\n'
-    + '// With onClientAccessOfServerModule: \'error\' → build fails.\n'
-    + '// With \'warn\' → build succeeds with exit code 1.\n'
-    + '// With \'stub\' → module throws at runtime.\n'
-    + '//\n'
-    + '// Uncomment the import in src/server-leak.ts and rebuild to see it in action.'
+  + '// With onClientAccessOfServerModule: \'error\' → build fails.\n'
+  + '// With \'warn\' → build succeeds with exit code 1.\n'
+  + '// With \'stub\' → module throws at runtime.\n'
+  + '//\n'
+  + '// Uncomment the import in src/server-guard.ts and rebuild to see it in action.'
 guardSection.appendChild(guardNote)
 app.appendChild(guardSection)
-
-// ── Footer ──────────────────────────────────────────────────────────────────
 
 const footer = document.createElement('footer')
 const footerText = document.createTextNode('Built with ')

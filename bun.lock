@@ -15,20 +15,6 @@
         "vitest": "catalog:dev",
       },
     },
-    "apps/demo": {
-      "name": "@vite-env/demo",
-      "version": "0.5.3",
-      "dependencies": {
-        "@vite-env/core": "workspace:*",
-      },
-      "devDependencies": {
-        "@types/node": "catalog:dev",
-        "typescript": "catalog:dev",
-        "valibot": "catalog:demo",
-        "vite": "catalog:dev",
-        "zod": "catalog:dev",
-      },
-    },
     "apps/docs": {
       "name": "@vite-env/docs",
       "version": "0.0.0",
@@ -62,19 +48,30 @@
         "vite": "catalog:dev",
       },
     },
-    "apps/playground": {
-      "name": "@vite-env/playground",
-      "version": "0.5.3",
+    "examples/basic": {
+      "name": "@vite-env/example-basic",
+      "version": "0.0.0",
       "dependencies": {
-        "@vite-env/cli": "workspace:*",
         "@vite-env/core": "workspace:*",
       },
       "devDependencies": {
         "@types/node": "catalog:dev",
         "typescript": "catalog:dev",
         "vite": "catalog:dev",
-        "vitest": "catalog:dev",
         "zod": "catalog:dev",
+      },
+    },
+    "examples/valibot": {
+      "name": "@vite-env/example-valibot",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "typescript": "catalog:dev",
+        "valibot": "catalog:examples",
+        "vite": "catalog:dev",
       },
     },
     "packages/cli": {
@@ -141,9 +138,6 @@
       "citty": "^0.2.2",
       "consola": "^3.4.2",
     },
-    "demo": {
-      "valibot": "^1.3.1",
-    },
     "dev": {
       "@eslint/js": "^10.0.1",
       "@pyyupsk/eslint-config": "^0.3.0",
@@ -179,6 +173,9 @@
       "tailwind-merge": "^3.6.0",
       "velite": "^0.3.1",
       "wouter": "^3.3.0",
+    },
+    "examples": {
+      "valibot": "^1.3.1",
     },
   },
   "packages": {
@@ -532,11 +529,11 @@
 
     "@vite-env/core": ["@vite-env/core@workspace:packages/core"],
 
-    "@vite-env/demo": ["@vite-env/demo@workspace:apps/demo"],
-
     "@vite-env/docs": ["@vite-env/docs@workspace:apps/docs"],
 
-    "@vite-env/playground": ["@vite-env/playground@workspace:apps/playground"],
+    "@vite-env/example-basic": ["@vite-env/example-basic@workspace:examples/basic"],
+
+    "@vite-env/example-valibot": ["@vite-env/example-valibot@workspace:examples/valibot"],
 
     "@vitejs/plugin-react": ["@vitejs/plugin-react@6.0.2", "", { "dependencies": { "@rolldown/pluginutils": "^1.0.0" }, "peerDependencies": { "@rolldown/plugin-babel": "^0.1.7 || ^0.2.0", "babel-plugin-react-compiler": "^1.0.0", "vite": "^8.0.0" }, "optionalPeers": ["@rolldown/plugin-babel", "babel-plugin-react-compiler"] }, "sha512-DlSMqo4WhThw4vB8Mpn0Woe9J+Jfq1geJ61AKW0QEgLzGMNwtIMdxbDUzLxcun8W7NbJO0e2Jg/Nxm3cCSVzzg=="],
 
