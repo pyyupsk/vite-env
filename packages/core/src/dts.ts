@@ -15,10 +15,30 @@ export async function generateDts(
 ): Promise<void> {
   const { z } = await import('zod')
 
-  const clientFields = zodShapeToTsFields(z, { ...def.client })
-  const serverFields = zodShapeToTsFields(z, { ...def.server, ...def.client })
+  const gatedKeys = gatedPresetKeys(def)
+  const clientFields = zodShapeToTsFields(z, { ...def.client }, gatedKeys)
+  const serverFields = zodShapeToTsFields(z, { ...def.server, ...def.client }, gatedKeys)
 
   await writeDts(root, clientFields, serverFields)
+}
+
+/**
+ * Detection-gated preset keys (not user-overridden) validate as optional
+ * off-platform — typing them required would lie during local dev.
+ */
+function gatedPresetKeys(def: EnvDefinition): Set<string> {
+  const keys = new Set<string>()
+  for (const preset of def.presets ?? []) {
+    if (!preset.detect)
+      continue
+    for (const side of ['server', 'client'] as const) {
+      for (const [key, schema] of Object.entries(preset[side] ?? {})) {
+        if (def[side]?.[key] === schema)
+          keys.add(key)
+      }
+    }
+  }
+  return keys
 }
 
 /**
@@ -98,11 +118,11 @@ function keysToTsFields(keys: string[]): string {
     .join('\n')
 }
 
-function zodShapeToTsFields(z: typeof ZodNs, shape: Record<string, unknown>): string {
+function zodShapeToTsFields(z: typeof ZodNs, shape: Record<string, unknown>, gatedKeys: Set<string>): string {
   return Object.entries(shape)
     .map(([key, schema]) => {
       const tsType = zodToTs(z, schema)
-      const optional = schema instanceof z.ZodOptional
+      const optional = schema instanceof z.ZodOptional || gatedKeys.has(key)
       return `    readonly ${key}${optional ? '?' : ''}: ${tsType}`
     })
     .join('\n')

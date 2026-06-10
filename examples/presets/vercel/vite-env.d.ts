@@ -15,12 +15,12 @@ declare module 'virtual:env/client' {
 
 declare module 'virtual:env/server' {
   const env: {
-    readonly VERCEL: '1'
-    readonly VERCEL_ENV: 'production' | 'preview' | 'development'
-    readonly VERCEL_URL: string
+    readonly VERCEL?: '1'
+    readonly VERCEL_ENV?: 'production' | 'preview' | 'development'
+    readonly VERCEL_URL?: string
     readonly VERCEL_BRANCH_URL?: string
-    readonly VERCEL_PROJECT_PRODUCTION_URL: string
-    readonly VERCEL_DEPLOYMENT_ID: string
+    readonly VERCEL_PROJECT_PRODUCTION_URL?: string
+    readonly VERCEL_DEPLOYMENT_ID?: string
     readonly VERCEL_REGION?: string
     readonly VERCEL_GIT_PROVIDER?: string
     readonly VERCEL_GIT_REPO_SLUG?: string

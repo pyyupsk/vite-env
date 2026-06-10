@@ -105,6 +105,49 @@ describe('generateDts', () => {
     expect(content).toContain('readonly REDIS_URL?: string')
   })
 
+  it('should mark detection-gated preset keys as optional', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    const presetSchema = z.string().min(1)
+    await generateDts({
+      server: { VERCEL_ENV: presetSchema, MY_VAR: z.string() },
+      presets: [{ server: { VERCEL_ENV: presetSchema }, detect: env => env.VERCEL === '1' }],
+    }, '/tmp')
+    const content = writeFile.mock.calls[0][1] as string
+
+    expect(content).toContain('readonly VERCEL_ENV?: string')
+    expect(content).toContain('readonly MY_VAR: string')
+  })
+
+  it('should keep user-overridden preset keys required', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    await generateDts({
+      server: { VERCEL_ENV: z.string().min(1) },
+      presets: [{ server: { VERCEL_ENV: z.string() }, detect: env => env.VERCEL === '1' }],
+    }, '/tmp')
+    const content = writeFile.mock.calls[0][1] as string
+
+    expect(content).toContain('readonly VERCEL_ENV: string')
+    expect(content).not.toContain('VERCEL_ENV?')
+  })
+
+  it('should keep keys from detect-less presets required', async () => {
+    const writeFile = await getWriteFile()
+    writeFile.mockResolvedValue(undefined)
+
+    const presetSchema = z.string().min(1)
+    await generateDts({
+      server: { ALWAYS_REQUIRED: presetSchema },
+      presets: [{ server: { ALWAYS_REQUIRED: presetSchema } }],
+    }, '/tmp')
+    const content = writeFile.mock.calls[0][1] as string
+
+    expect(content).toContain('readonly ALWAYS_REQUIRED: string')
+  })
+
   it('should not mark defaulted fields as optional', async () => {
     const writeFile = await getWriteFile()
     writeFile.mockResolvedValue(undefined)

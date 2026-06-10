@@ -8,4 +8,4 @@ Platform presets from `@vite-env/core/presets`. Each preset is a typed bundle of
 | [`railway`](./railway)   | `railway` | service/project/deployment ids, domains, TCP proxy        |
 | [`netlify`](./netlify)   | `netlify` | `CONTEXT`, deploy URLs, build + commit metadata            |
 
-Committed `.env` files mimic what each platform injects, so builds run locally.
+Presets are detection-gated: vars are required on the platform (marker var present — `VERCEL=1`, `RAILWAY_ENVIRONMENT_ID`, `NETLIFY=true`) and optional locally, so plain `vite dev` works without faking platform vars.
