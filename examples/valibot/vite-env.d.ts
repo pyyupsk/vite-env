@@ -6,22 +6,22 @@
 // Do not edit manually — re-generated on every dev server start and build
 // Tip: for richer types, use defineEnv() with Zod instead of defineStandardEnv()
 
-declare module 'virtual:env/client' {
+declare module "virtual:env/client" {
   const env: {
-    readonly VITE_API_URL: string
-    readonly VITE_APP_NAME: string
-  }
-  export { env }
-  export default env
+    readonly VITE_API_URL: string;
+    readonly VITE_APP_NAME: string;
+  };
+  export { env };
+  export default env;
 }
 
-declare module 'virtual:env/server' {
+declare module "virtual:env/server" {
   const env: {
-    readonly DATABASE_URL: string
-    readonly JWT_SECRET: string
-    readonly VITE_API_URL: string
-    readonly VITE_APP_NAME: string
-  }
-  export { env }
-  export default env
+    readonly DATABASE_URL: string;
+    readonly JWT_SECRET: string;
+    readonly VITE_API_URL: string;
+    readonly VITE_APP_NAME: string;
+  };
+  export { env };
+  export default env;
 }

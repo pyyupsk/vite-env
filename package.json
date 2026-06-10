@@ -1,40 +1,6 @@
 {
   "name": "@vite-env/monorepo",
-  "type": "module",
   "private": true,
-  "scripts": {
-    "build": "bun run --filter '*' build",
-    "dev": "bun run --filter '*' dev",
-    "lint": "eslint . --cache --concurrency=auto",
-    "lint:fix": "eslint . --cache --concurrency=auto --fix",
-    "prepare": "nit install",
-    "release": "bumpp -r",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest run --watch",
-    "typecheck": "bun run --filter '*' typecheck"
-  },
-  "devDependencies": {
-    "@pyyupsk/eslint-config": "catalog:dev",
-    "@pyyupsk/nit": "catalog:dev",
-    "@types/node": "catalog:dev",
-    "@vitest/coverage-v8": "catalog:dev",
-    "bumpp": "catalog:dev",
-    "eslint": "catalog:dev",
-    "typescript": "catalog:dev",
-    "vitest": "catalog:dev"
-  },
-  "engines": {
-    "bun": ">=1.3.0"
-  },
-  "trustedDependencies": [
-    "@pyyupsk/nit",
-    "esbuild"
-  ],
-  "overrides": {
-    "esbuild": ">=0.25.0",
-    "vite": ">=8.0.5"
-  },
   "workspaces": {
     "packages": [
       "packages/*",
@@ -52,17 +18,14 @@
         "consola": "^3.4.2"
       },
       "dev": {
-        "@eslint/js": "^10.0.1",
-        "@pyyupsk/eslint-config": "^0.3.0",
         "@pyyupsk/nit": "^0.3.0",
         "@types/node": "^25.9.2",
         "@vitest/coverage-v8": "^4.1.8",
         "bumpp": "^11.1.0",
-        "eslint": "^10.4.1",
-        "globals": "^17.6.0",
+        "oxfmt": "latest",
+        "oxlint": "latest",
         "tsdown": "^0.21.7",
         "typescript": "^6.0.3",
-        "typescript-eslint": "^8.59.2",
         "vite": "^8.0.8",
         "vitest": "^4.1.8",
         "zod": "^4.3.6"
@@ -76,8 +39,6 @@
         "@vitejs/plugin-react": "^6.0.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
-        "eslint-plugin-react-hooks": "^7.1.1",
-        "eslint-plugin-react-refresh": "^0.5.2",
         "lucide-react": "^1.17.0",
         "react": "^19.2.6",
         "react-dom": "^19.2.6",
@@ -92,13 +53,49 @@
       }
     }
   },
+  "type": "module",
+  "scripts": {
+    "build": "bun run --filter '*' build",
+    "dev": "bun run --filter '*' dev",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "prepare": "nit install",
+    "release": "bumpp -r",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest run --watch",
+    "typecheck": "bun run --filter '*' typecheck"
+  },
+  "devDependencies": {
+    "@pyyupsk/nit": "catalog:dev",
+    "@types/node": "catalog:dev",
+    "@vitest/coverage-v8": "catalog:dev",
+    "bumpp": "catalog:dev",
+    "oxfmt": "catalog:dev",
+    "oxlint": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev"
+  },
+  "overrides": {
+    "esbuild": ">=0.25.0",
+    "vite": ">=8.0.5"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  },
   "nit": {
     "hooks": {
       "pre-commit": {
         "stages": {
-          "**/*": "bunx eslint --fix {staged_files}"
+          "**/*": "bunx oxlint --fix {staged_files}"
         }
       }
     }
-  }
+  },
+  "trustedDependencies": [
+    "@pyyupsk/nit",
+    "esbuild"
+  ]
 }

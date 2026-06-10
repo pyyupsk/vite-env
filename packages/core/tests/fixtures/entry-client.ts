@@ -1,1 +1,1 @@
-export { env as clientEnv } from 'virtual:env/client'
+export { env as clientEnv } from "virtual:env/client";

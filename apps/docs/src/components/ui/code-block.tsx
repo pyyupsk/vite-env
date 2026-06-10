@@ -1,36 +1,48 @@
-import { useCallback, useEffect, useState, type PropsWithChildren } from 'react'
-import { Check, Copy } from 'lucide-react'
-import { highlight } from '@/lib/highlighter'
+import { useCallback, useEffect, useState, type PropsWithChildren } from "react";
+import { Check, Copy } from "lucide-react";
+import { highlight } from "@/lib/highlighter";
 
 type CodeBlockProps = PropsWithChildren<{
-  filename?: string
-  dots?: boolean
-  lang?: string
-  code?: string
-}>
+  filename?: string;
+  dots?: boolean;
+  lang?: string;
+  code?: string;
+}>;
 
-export function CodeBlock({ filename, dots = true, lang = 'typescript', code, children }: CodeBlockProps) {
-  const [html, setHtml] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
+export function CodeBlock({
+  filename,
+  dots = true,
+  lang = "typescript",
+  code,
+  children,
+}: CodeBlockProps) {
+  const [html, setHtml] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!code) return
-    highlight(code, lang).then(setHtml)
-  }, [code, lang])
+    if (!code) return;
+    highlight(code, lang).then(setHtml);
+  }, [code, lang]);
 
   const handleCopy = useCallback(() => {
-    const text = code ?? ''
-    if (!text) return
+    const text = code ?? "";
+    if (!text) return;
     navigator.clipboard.writeText(text).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
-    })
-  }, [code])
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }, [code]);
 
-  const hasHeader = dots || filename
-  const codeContent = html
-    ? <div className="[&>pre]:m-0 [&>pre]:p-4 [&>pre]:pl-5 [&>pre]:overflow-x-auto [&>pre]:leading-relaxed [&>pre]:bg-transparent!" dangerouslySetInnerHTML={{ __html: html }} />
-    : <pre className="m-0 p-4 pl-5 overflow-x-auto text-text-subtle leading-relaxed">{code}</pre>
+  const hasHeader = dots || filename;
+  const codeContent = html ? (
+    <div
+      className="[&>pre]:m-0 [&>pre]:p-4 [&>pre]:pl-5 [&>pre]:overflow-x-auto [&>pre]:leading-relaxed [&>pre]:bg-transparent!"
+      // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  ) : (
+    <pre className="m-0 p-4 pl-5 overflow-x-auto text-text-subtle leading-relaxed">{code}</pre>
+  );
 
   return (
     <div className="rounded-lg border border-border-subtle bg-surface-code shadow-inset-ring overflow-hidden text-sm font-mono">
@@ -49,17 +61,23 @@ export function CodeBlock({ filename, dots = true, lang = 'typescript', code, ch
               onClick={handleCopy}
               className="ml-auto flex items-center gap-1 text-xs font-mono text-text-faint hover:text-text-subtle transition-colors duration-fast cursor-pointer bg-transparent border-0 p-0"
             >
-              {copied ? <Check size={12} strokeWidth={1.5} /> : <Copy size={12} strokeWidth={1.5} />}
-              {copied ? 'copied' : 'copy'}
+              {copied ? (
+                <Check size={12} strokeWidth={1.5} />
+              ) : (
+                <Copy size={12} strokeWidth={1.5} />
+              )}
+              {copied ? "copied" : "copy"}
             </button>
           )}
         </div>
       )}
-      {code ? codeContent : (
+      {code ? (
+        codeContent
+      ) : (
         <pre className="m-0 p-4 pl-5 overflow-x-auto leading-relaxed text-syntax-plain">
           <code>{children}</code>
         </pre>
       )}
     </div>
-  )
+  );
 }

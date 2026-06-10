@@ -1,8 +1,9 @@
-import { Badge } from '@/components/ui/badge'
-import { CodeBlock } from '@/components/ui/code-block'
-import { ArrowRight } from 'lucide-react'
-import { GithubIcon } from '@/components/icons/github'
-import { Link } from 'wouter'
+import { Badge } from "@/components/ui/badge";
+import { CodeBlock } from "@/components/ui/code-block";
+import { ArrowRight } from "lucide-react";
+import { GithubIcon } from "@/components/icons/github";
+import { Link } from "wouter";
+import type { CSSProperties } from "react";
 
 const HERO_CODE = `import { defineEnv } from "@vite-env/core"
 import { z } from "zod"
@@ -15,7 +16,20 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.string().url(),
   },
-})`
+})`;
+
+const gradientBgStyle: CSSProperties = {
+  background:
+    "radial-gradient(50% 65% at 50% 0%, color-mix(in oklch, var(--color-violet-500) 22%, transparent) 0%, transparent 80%)",
+};
+
+const gradientTextStyle: CSSProperties = {
+  background:
+    "linear-gradient(118deg, var(--color-white) 10%, var(--color-violet-300) 55%, var(--color-cyan-400))",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
+};
 
 export function HeroSection() {
   return (
@@ -23,32 +37,27 @@ export function HeroSection() {
       <div className="absolute inset-0 pointer-events-none bg-grid opacity-35" />
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-content-xl h-[480px] pointer-events-none"
-        style={{ background: 'radial-gradient(50% 65% at 50% 0%, color-mix(in oklch, var(--color-violet-500) 22%, transparent) 0%, transparent 80%)' }}
+        style={gradientBgStyle}
       />
 
       <div className="relative max-w-content-xl mx-auto">
         <div className="flex justify-center items-center gap-3 mb-7">
-          <Badge variant="accent" dot>v{__CORE_VERSION__}</Badge>
-          <span className="font-mono text-xs text-text-faint tracking-wide">{/* nosonar */}
+          <Badge variant="accent" dot>
+            v{__CORE_VERSION__}
+          </Badge>
+          <span className="font-mono text-xs text-text-faint tracking-wide">
+            {/* nosonar */}
             // vite plugin for build-time env validation
           </span>
         </div>
 
         <h1 className="text-[clamp(40px,6vw,68px)] font-semibold leading-[1.06] tracking-[-0.03em] text-text-strong mb-5">
-          Typed env,{' '}
-          <span style={{
-            background: 'linear-gradient(118deg, var(--color-white) 10%, var(--color-violet-300) 55%, var(--color-cyan-400))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}>
-            zero boilerplate.
-          </span>
+          Typed env, <span style={gradientTextStyle}>zero boilerplate.</span>
         </h1>
 
         <p className="text-[17px] leading-[1.65] text-text-muted max-w-content-sm mx-auto mb-9">
-          vite-env reads your schema once and hands every module
-          a fully typed env object — validated at build, never at runtime.
+          vite-env reads your schema once and hands every module a fully typed env object —
+          validated at build, never at runtime.
         </p>
 
         <div className="flex justify-center gap-3 mb-[60px] flex-wrap">
@@ -75,5 +84,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

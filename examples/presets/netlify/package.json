@@ -1,7 +1,7 @@
 {
   "name": "@vite-env/example-preset-netlify",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "dev": "vite",

@@ -1,7 +1,7 @@
 {
   "name": "@vite-env/example-ssr",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build && vite build --ssr src/entry-server.ts",
     "dev": "node server.mjs",

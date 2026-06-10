@@ -4,17 +4,12 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "exclude": [
-    "apps/docs",
-    "examples"
-  ]
+  "exclude": ["apps/docs", "examples"]
 }

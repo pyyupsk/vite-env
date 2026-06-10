@@ -1,10 +1,10 @@
-import { Link } from 'wouter'
-import type { NavSection } from '../nav'
+import { Link } from "wouter";
+import type { NavSection } from "../nav";
 
 type SidebarProps = Readonly<{
-  sections: NavSection[]
-  currentSlug: string
-}>
+  sections: NavSection[];
+  currentSlug: string;
+}>;
 
 export function Sidebar({ sections, currentSlug }: SidebarProps) {
   return (
@@ -15,25 +15,25 @@ export function Sidebar({ sections, currentSlug }: SidebarProps) {
             {section.title}
           </div>
           {section.items.map((item) => {
-            const isActive = item.slug === currentSlug
+            const isActive = item.slug === currentSlug;
             return (
               <Link
                 key={item.slug}
                 to={`/docs/${item.slug}`}
                 className={[
-                  'block w-full text-left px-4 py-[5px] text-[13.5px] font-sans no-underline',
-                  'border-l-2 transition-colors duration-fast',
+                  "block w-full text-left px-4 py-[5px] text-[13.5px] font-sans no-underline",
+                  "border-l-2 transition-colors duration-fast",
                   isActive
-                    ? 'bg-accent-soft text-accent-text border-accent'
-                    : 'text-text-subtle border-transparent hover:text-text-body hover:bg-surface-1',
-                ].join(' ')}
+                    ? "bg-accent-soft text-accent-text border-accent"
+                    : "text-text-subtle border-transparent hover:text-text-body hover:bg-surface-1",
+                ].join(" ")}
               >
                 {item.label}
               </Link>
-            )
+            );
           })}
         </div>
       ))}
     </aside>
-  )
+  );
 }

@@ -1,0 +1,21 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "plugins": ["typescript", "react", "jsx-a11y", "react-perf"],
+  "rules": {
+    "no-unused-vars": "off",
+    "typescript/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "react/self-closing-comp": "error",
+    "react/jsx-boolean-value": ["error", "never"],
+    "react-perf/jsx-no-new-object-as-prop": "warn",
+    "react-perf/jsx-no-new-array-as-prop": "warn",
+    "react-perf/jsx-no-new-function-as-prop": "warn",
+    "jsx-a11y/heading-has-content": "off"
+  }
+}

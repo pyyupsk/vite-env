@@ -1,1 +1,1 @@
-export { env as serverEnv } from 'virtual:env/server'
+export { env as serverEnv } from "virtual:env/server";

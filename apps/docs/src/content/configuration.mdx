@@ -29,46 +29,46 @@ ViteEnv({
 Accepts `server`, `client`, and an optional `presets` array. Returns the merged schema.
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { z } from "zod";
 
 export default defineEnv({
   server: {
     DATABASE_URL: z.string().url(),
-    SECRET_KEY:   z.string().min(32),
-    PORT:         z.coerce.number().default(3000),
+    SECRET_KEY: z.string().min(32),
+    PORT: z.coerce.number().default(3000),
   },
   client: {
-    VITE_API_URL:   z.string().url(),
-    VITE_APP_TITLE: z.string().default('My App'),
+    VITE_API_URL: z.string().url(),
+    VITE_APP_TITLE: z.string().default("My App"),
   },
-})
+});
 ```
 
 **Client keys must be prefixed with `VITE_`** — this is enforced at startup and throws synchronously if violated.
 
 ## Server / client split
 
-| Block | Keys | Available in |
-|---|---|---|
-| `server` | Any name | `virtual:env/server` only |
-| `client` | Must start with `VITE_` | Both modules |
+| Block    | Keys                    | Available in              |
+| -------- | ----------------------- | ------------------------- |
+| `server` | Any name                | `virtual:env/server` only |
+| `client` | Must start with `VITE_` | Both modules              |
 
 ## Presets
 
 Presets inject platform variables into the schema. Pass them in the `presets` array:
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { vercel } from '@vite-env/core/presets'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { vercel } from "@vite-env/core/presets";
+import { z } from "zod";
 
 export default defineEnv({
   presets: [vercel],
   server: {
     DATABASE_URL: z.string().url(),
   },
-})
+});
 ```
 
 Your own keys win over preset keys if there is a name collision. Duplicate keys across multiple presets log a warning — the last preset wins. The `presets` key is removed from the output; only the merged `server`/`client` shapes remain.

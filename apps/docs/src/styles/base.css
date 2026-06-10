@@ -36,7 +36,7 @@
     margin: 0;
   }
 
-  a:not([class*='bg-'], [class*='border-']) {
+  a:not([class*="bg-"], [class*="border-"]) {
     color: var(--color-accent-text);
     text-decoration: none;
   }

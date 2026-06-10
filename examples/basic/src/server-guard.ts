@@ -15,4 +15,4 @@
 // If using 'stub' mode, this would throw at runtime:
 // console.log(env.DATABASE_URL)
 
-export {} // NOSONAR -- empty export keeps this a module while the demo import above stays commented out
+export {}; // NOSONAR -- empty export keeps this a module while the demo import above stays commented out

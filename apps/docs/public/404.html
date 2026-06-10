@@ -1,31 +1,24 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <title>Redirecting…</title>
-  <script>
-    const seg = 1
-    const l = globalThis.location
-    l.replace(
-      l.protocol +
-      '//' +
-      l.hostname +
-      (l.port ? ':' + l.port : '') +
-      l.pathname
-        .split('/')
-        .slice(0, 1 + seg)
-        .join('/') +
-      '/?p=/' +
-      l.pathname
-        .slice(1)
-        .split('/')
-        .slice(seg)
-        .join('/')
-        .replaceAll('&', '~and~') +
-      (l.search ? '&q=' + l.search.slice(1).replaceAll('&', '~and~') : '') +
-      l.hash,
-    )
-  </script>
-</head>
-
+  <head>
+    <title>Redirecting…</title>
+    <script>
+      const seg = 1;
+      const l = globalThis.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + seg)
+            .join("/") +
+          "/?p=/" +
+          l.pathname.slice(1).split("/").slice(seg).join("/").replaceAll("&", "~and~") +
+          (l.search ? "&q=" + l.search.slice(1).replaceAll("&", "~and~") : "") +
+          l.hash,
+      );
+    </script>
+  </head>
 </html>
