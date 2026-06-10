@@ -1,5 +1,5 @@
-export { defineEnv } from './schema'
-export { defineStandardEnv } from './standard'
+export { defineEnv } from "./schema";
+export { defineStandardEnv } from "./standard";
 export type {
   AnyEnvDefinition,
   EnvDefinition,
@@ -7,4 +7,4 @@ export type {
   InferClientEnv,
   InferServerEnv,
   StandardEnvDefinition,
-} from './types'
+} from "./types";

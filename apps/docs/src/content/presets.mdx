@@ -12,42 +12,42 @@ Each preset carries a `detect` predicate checking the platform's marker variable
 ## Vercel
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { vercel } from '@vite-env/core/presets'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { vercel } from "@vite-env/core/presets";
+import { z } from "zod";
 
 export default defineEnv({
   presets: [vercel],
   server: {
     DATABASE_URL: z.string().url(),
   },
-})
+});
 ```
 
 Injects (server-only):
 
-| Variable | Type |
-|---|---|
-| `VERCEL` | `'1'` |
-| `VERCEL_ENV` | `'production' \| 'preview' \| 'development'` |
-| `VERCEL_URL` | `string` (bare hostname, no scheme) |
-| `VERCEL_PROJECT_PRODUCTION_URL` | `string` |
-| `VERCEL_DEPLOYMENT_ID` | `string` |
-| `VERCEL_REGION` | `string` (optional) |
-| `VERCEL_GIT_COMMIT_SHA` | `string` (optional) |
-| `VERCEL_BRANCH_URL` | `string` (optional) |
+| Variable                        | Type                                         |
+| ------------------------------- | -------------------------------------------- |
+| `VERCEL`                        | `'1'`                                        |
+| `VERCEL_ENV`                    | `'production' \| 'preview' \| 'development'` |
+| `VERCEL_URL`                    | `string` (bare hostname, no scheme)          |
+| `VERCEL_PROJECT_PRODUCTION_URL` | `string`                                     |
+| `VERCEL_DEPLOYMENT_ID`          | `string`                                     |
+| `VERCEL_REGION`                 | `string` (optional)                          |
+| `VERCEL_GIT_COMMIT_SHA`         | `string` (optional)                          |
+| `VERCEL_BRANCH_URL`             | `string` (optional)                          |
 
 Plus additional git and skew protection fields.
 
 ## Railway
 
 ```ts
-import { railway } from '@vite-env/core/presets'
+import { railway } from "@vite-env/core/presets";
 
 export default defineEnv({
   presets: [railway],
   server: { DATABASE_URL: z.string().url() },
-})
+});
 ```
 
 Injects (server-only): `RAILWAY_ENVIRONMENT_ID`, `RAILWAY_ENVIRONMENT_NAME`, `RAILWAY_SERVICE_ID`, `RAILWAY_SERVICE_NAME`, `RAILWAY_PROJECT_ID`, `RAILWAY_PROJECT_NAME`, `RAILWAY_DEPLOYMENT_ID`, and optional git/domain fields.
@@ -57,26 +57,26 @@ Note: `PORT` is intentionally excluded — it is a generic name set by many tool
 ## Netlify
 
 ```ts
-import { netlify } from '@vite-env/core/presets'
+import { netlify } from "@vite-env/core/presets";
 
 export default defineEnv({
   presets: [netlify],
   server: { DATABASE_URL: z.string().url() },
-})
+});
 ```
 
 Injects (server-only):
 
-| Variable | Type |
-|---|---|
-| `NETLIFY` | `'true'` |
-| `BUILD_ID` | `string` |
-| `CONTEXT` | `'production' \| 'deploy-preview' \| 'branch-deploy' \| 'dev'` |
-| `DEPLOY_ID` | `string` |
-| `DEPLOY_URL` | `string` (full URL) |
-| `URL` | `string` (full URL) |
-| `BRANCH` | `string` |
-| `COMMIT_REF` | `string` |
+| Variable     | Type                                                           |
+| ------------ | -------------------------------------------------------------- |
+| `NETLIFY`    | `'true'`                                                       |
+| `BUILD_ID`   | `string`                                                       |
+| `CONTEXT`    | `'production' \| 'deploy-preview' \| 'branch-deploy' \| 'dev'` |
+| `DEPLOY_ID`  | `string`                                                       |
+| `DEPLOY_URL` | `string` (full URL)                                            |
+| `URL`        | `string` (full URL)                                            |
+| `BRANCH`     | `string`                                                       |
+| `COMMIT_REF` | `string`                                                       |
 
 ---
 

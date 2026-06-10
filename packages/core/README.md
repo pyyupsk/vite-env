@@ -24,8 +24,8 @@ npm install @vite-env/core zod
 **1. Define your schema** — `env.ts`
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { z } from "zod";
 
 export default defineEnv({
   server: {
@@ -35,46 +35,44 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.url(),
     VITE_DARK_MODE: z.stringbool().default(false),
-    VITE_NODE_ENV: z
-      .enum(['development', 'test', 'production'])
-      .default('development'),
+    VITE_NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   },
-})
+});
 ```
 
 **2. Add the plugin** — `vite.config.ts`
 
 ```ts
-import ViteEnv from '@vite-env/core/plugin'
-import { defineConfig } from 'vite'
+import ViteEnv from "@vite-env/core/plugin";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [ViteEnv()],
-})
+});
 ```
 
 **3. Import typed env**
 
 ```ts
-import { env } from 'virtual:env/client'
+import { env } from "virtual:env/client";
 
-env.VITE_API_URL // string
-env.VITE_DARK_MODE // boolean
-env.VITE_NODE_ENV // 'development' | 'test' | 'production'
+env.VITE_API_URL; // string
+env.VITE_DARK_MODE; // boolean
+env.VITE_NODE_ENV; // 'development' | 'test' | 'production'
 ```
 
 ### Platform presets
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { vercel } from '@vite-env/core/presets'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { vercel } from "@vite-env/core/presets";
+import { z } from "zod";
 
 export default defineEnv({
   presets: [vercel],
   server: { DATABASE_URL: z.url() },
   client: { VITE_API_URL: z.url() },
-})
+});
 ```
 
 Available presets: `vercel`, `railway`, `netlify`.

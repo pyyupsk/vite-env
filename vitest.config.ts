@@ -1,20 +1,20 @@
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    root: '.',
-    exclude: ['**/node_modules/**', '**/.worktrees/**'],
+    root: ".",
+    exclude: ["**/node_modules/**", "**/.worktrees/**"],
     coverage: {
-      provider: 'v8',
-      include: ['packages/*/src/**/*.ts'],
+      provider: "v8",
+      include: ["packages/*/src/**/*.ts"],
       exclude: [
-        '**/*.d.ts',
-        '**/*.test.ts',
-        '**/types.ts',
-        'packages/cli/src/**', // CLI commands are thin wrappers; core logic is tested
-        'packages/core/src/index.ts', // re-exports only
+        "**/*.d.ts",
+        "**/*.test.ts",
+        "**/types.ts",
+        "packages/cli/src/**", // CLI commands are thin wrappers; core logic is tested
+        "packages/core/src/index.ts", // re-exports only
       ],
-      reporter: ['text', 'json', 'html'],
+      reporter: ["text", "json", "html"],
       thresholds: {
         lines: 85,
         functions: 85,
@@ -23,4 +23,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

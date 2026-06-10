@@ -1,5 +1,5 @@
-import { defineEnv } from '@vite-env/core'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { z } from "zod";
 
 export default defineEnv({
   server: {
@@ -10,6 +10,6 @@ export default defineEnv({
     VITE_API_URL: z.url(),
     VITE_APP_NAME: z.string().min(1),
     VITE_DEBUG: z.stringbool().default(false),
-    VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+    VITE_LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   },
-})
+});
