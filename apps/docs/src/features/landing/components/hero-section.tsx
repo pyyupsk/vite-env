@@ -4,7 +4,8 @@ import { ArrowRight } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github'
 import { Link } from 'wouter'
 
-const HERO_CODE = `import { defineEnv, z } from "vite-env"
+const HERO_CODE = `import { defineEnv } from "@vite-env/core"
+import { z } from "zod"
 
 export default defineEnv({
   server: {

@@ -9,7 +9,7 @@ const BEFORE = `// manual — no real type safety
 const db = process.env.DATABASE_URL as string
 const port = parseInt(process.env.PORT || "3000")`
 
-const AFTER = `import { env } from "virtual:env"
+const AFTER = `import { env } from "virtual:env/server"
 
 // DATABASE_URL: string (validated url)
 // PORT: number (default 3000)

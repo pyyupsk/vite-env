@@ -6,10 +6,10 @@ const PMS = ['npm', 'pnpm', 'yarn', 'bun'] as const
 type PM = (typeof PMS)[number]
 
 const CMDS: Record<PM, string> = {
-  npm:  'npm install --save-dev vite-env',
-  pnpm: 'pnpm add -D vite-env',
-  yarn: 'yarn add -D vite-env',
-  bun:  'bun add -D vite-env',
+  npm:  'npm install --save-dev @vite-env/core',
+  pnpm: 'pnpm add -D @vite-env/core',
+  yarn: 'yarn add -D @vite-env/core',
+  bun:  'bun add -D @vite-env/core',
 }
 
 export function InstallSection() {
