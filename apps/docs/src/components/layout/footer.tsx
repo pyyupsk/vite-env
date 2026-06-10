@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="border-t border-hairline">
       <div className="container-section flex items-center gap-4 py-6">
         <Link href="/" className="flex items-center gap-1.5 no-underline">
-          <img src="/logo.svg" width={18} height={18} alt="" />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} width={18} height={18} alt="" />
           <span className="font-mono text-xs text-text-faint">vite-env</span>
         </Link>
         <span className="font-mono text-xs text-neutral-700 ml-auto">
