@@ -6,6 +6,7 @@ on:
     paths:
       - 'packages/core/**'
       - 'packages/cli/**'
+      - 'examples/**'
       - vitest.config.ts
       - tsconfig.json
       - bun.lock
@@ -15,6 +16,7 @@ on:
     paths:
       - 'packages/core/**'
       - 'packages/cli/**'
+      - 'examples/**'
       - vitest.config.ts
       - tsconfig.json
       - bun.lock
