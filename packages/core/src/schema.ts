@@ -79,6 +79,8 @@ export function validateEnv(
 
   // Undetected-platform preset vars validate as optional — they only exist on
   // the platform; requiring them would break local dev. User overrides stay strict.
+  // Mutating combinedShape also prevents double-wrapping when two undetected
+  // presets share a key: after the first wrap, the identity check fails.
   for (const preset of def.presets ?? []) {
     if (!preset.detect || preset.detect(rawEnv))
       continue

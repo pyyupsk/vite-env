@@ -4,7 +4,11 @@ import type { z } from 'zod'
 export type EnvDefinition = {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
-  /** Retained from defineEnv for validation-time platform detection. */
+  /**
+   * Retained from defineEnv for validation-time platform detection.
+   * Gating relies on schema reference identity — cloning or serializing
+   * the definition disables it (preset keys become permanently strict).
+   */
   presets?: EnvPreset[]
 }
 

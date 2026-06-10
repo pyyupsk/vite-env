@@ -124,6 +124,18 @@ describe('preset platform detection', () => {
     expect(validateEnv(def, { NETLIFY: 'true' }).success).toBe(false)
   })
 
+  it('two undetected presets sharing a key relax it once without double-wrapping', () => {
+    const shared = z.string().min(1)
+    const first = { server: { SHARED: shared }, detect: () => false }
+    const second = { server: { SHARED: shared }, detect: () => false }
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const def = defineEnv({ presets: [first, second] })
+    warn.mockRestore()
+    expect(validateEnv(def, {}).success).toBe(true)
+    expect(validateEnv(def, { SHARED: 'value' }).success).toBe(true)
+    expect(validateEnv(def, { SHARED: '' }).success).toBe(false)
+  })
+
   it('preset without detect stays strict everywhere', () => {
     const def = defineEnv({ presets: [{ server: { ALWAYS_REQUIRED: z.string() } }] })
     expect(validateEnv(def, {}).success).toBe(false)
