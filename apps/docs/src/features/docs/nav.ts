@@ -30,7 +30,7 @@ export function getPrevNext(
   return {
     prev: idx > 0 ? { slug: sorted[idx - 1].slug, label: sorted[idx - 1].title } : null,
     next:
-      idx < sorted.length - 1
+      idx >= 0 && idx < sorted.length - 1
         ? { slug: sorted[idx + 1].slug, label: sorted[idx + 1].title }
         : null,
   }
