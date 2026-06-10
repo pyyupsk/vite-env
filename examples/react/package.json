@@ -1,0 +1,26 @@
+{
+  "name": "@vite-env/example-react",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vite-env/core": "workspace:*",
+    "react": "catalog:docs",
+    "react-dom": "catalog:docs"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:dev",
+    "@types/react": "catalog:docs",
+    "@types/react-dom": "catalog:docs",
+    "@vitejs/plugin-react": "catalog:docs",
+    "typescript": "catalog:dev",
+    "vite": "catalog:dev",
+    "zod": "catalog:dev"
+  }
+}

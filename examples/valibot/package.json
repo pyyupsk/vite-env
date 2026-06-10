@@ -1,0 +1,21 @@
+{
+  "name": "@vite-env/example-valibot",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vite-env/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:dev",
+    "typescript": "catalog:dev",
+    "valibot": "catalog:examples",
+    "vite": "catalog:dev"
+  }
+}

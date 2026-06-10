@@ -38,12 +38,12 @@ bun test packages/core/src/leak.test.ts
 bun run --filter @vite-env/core build
 ```
 
-### Playground
+### Examples
 
-The `apps/playground/` directory is a working Vite app configured with the plugin. Use it to manually test changes:
+The `examples/` directory contains working Vite apps configured with the plugin. Use them to manually test changes:
 
 ```bash
-bun run --filter @vite-env/playground dev
+bun run --filter @vite-env/example-basic dev
 ```
 
 ## Project Structure
@@ -51,8 +51,8 @@ bun run --filter @vite-env/playground dev
 ```text
 packages/core   → @vite-env/core   Vite plugin, validation, virtual modules, leak detection
 packages/cli    → @vite-env/cli    CLI commands (check, generate, types) — thin wrappers over core
-apps/playground → @vite-env/playground   manual testing app
-apps/demo       → @vite-env/demo         end-to-end demo app
+examples/basic   → @vite-env/example-basic     Zod path example app
+examples/valibot → @vite-env/example-valibot   Standard Schema path example app
 ```
 
 ## Code Conventions

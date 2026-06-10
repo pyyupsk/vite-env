@@ -3,18 +3,24 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "types": [
-      "node"
+    "lib": [
+      "ESNext",
+      "DOM"
     ],
+    "types": [
+      "vite/client"
+    ],
+    "jsx": "react-jsx",
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "exclude": [
-    "apps/docs",
-    "examples"
+  "include": [
+    "src",
+    "env.ts",
+    "vite.config.ts",
+    "vite-env.d.ts"
   ]
 }
