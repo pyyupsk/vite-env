@@ -1,7 +1,6 @@
 {
   "name": "@vite-env/example-preset-railway",
   "type": "module",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "vite build",

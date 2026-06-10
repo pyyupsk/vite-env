@@ -1,8 +1,7 @@
 {
   "name": "@vite-env/docs",
-  "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "private": true,
   "scripts": {
     "build": "velite build && tsc -b && vite build",
     "dev": "vite",
