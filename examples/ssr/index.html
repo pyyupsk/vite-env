@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vite-env — ssr example</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #fff;
+    }
+
+    .card {
+      padding: 1rem;
+      background: #171717;
+      border: 1px solid #262626;
+      border-radius: 0.375rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      color: #34d399;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"><!--ssr-outlet--></div>
+  <script type="module" src="/src/entry-client.ts"></script>
+</body>
+
+</html>

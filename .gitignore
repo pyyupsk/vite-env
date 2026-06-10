@@ -5,7 +5,7 @@
 .eslintcache
 .idea
 .env
-!examples/*/.env
+!examples/**/.env
 .nuxt
 .temp
 .output

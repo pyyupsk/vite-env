@@ -39,7 +39,8 @@
     "packages": [
       "packages/*",
       "apps/*",
-      "examples/*"
+      "examples/*",
+      "examples/presets/*"
     ],
     "catalog": {
       "@standard-schema/spec": "^1.1.0",

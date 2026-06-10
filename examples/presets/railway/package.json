@@ -1,0 +1,20 @@
+{
+  "name": "@vite-env/example-preset-railway",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vite-env/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vite": "catalog:dev",
+    "zod": "catalog:dev"
+  }
+}

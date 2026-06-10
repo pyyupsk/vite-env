@@ -61,6 +61,76 @@
         "zod": "catalog:dev",
       },
     },
+    "examples/presets/netlify": {
+      "name": "@vite-env/example-preset-netlify",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "typescript": "catalog:dev",
+        "vite": "catalog:dev",
+        "zod": "catalog:dev",
+      },
+    },
+    "examples/presets/railway": {
+      "name": "@vite-env/example-preset-railway",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "typescript": "catalog:dev",
+        "vite": "catalog:dev",
+        "zod": "catalog:dev",
+      },
+    },
+    "examples/presets/vercel": {
+      "name": "@vite-env/example-preset-vercel",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "typescript": "catalog:dev",
+        "vite": "catalog:dev",
+        "zod": "catalog:dev",
+      },
+    },
+    "examples/react": {
+      "name": "@vite-env/example-react",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+        "react": "catalog:docs",
+        "react-dom": "catalog:docs",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "@types/react": "catalog:docs",
+        "@types/react-dom": "catalog:docs",
+        "@vitejs/plugin-react": "catalog:docs",
+        "typescript": "catalog:dev",
+        "vite": "catalog:dev",
+        "zod": "catalog:dev",
+      },
+    },
+    "examples/ssr": {
+      "name": "@vite-env/example-ssr",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "typescript": "catalog:dev",
+        "vite": "catalog:dev",
+        "zod": "catalog:dev",
+      },
+    },
     "examples/valibot": {
       "name": "@vite-env/example-valibot",
       "version": "0.0.0",
@@ -532,6 +602,16 @@
     "@vite-env/docs": ["@vite-env/docs@workspace:apps/docs"],
 
     "@vite-env/example-basic": ["@vite-env/example-basic@workspace:examples/basic"],
+
+    "@vite-env/example-preset-netlify": ["@vite-env/example-preset-netlify@workspace:examples/presets/netlify"],
+
+    "@vite-env/example-preset-railway": ["@vite-env/example-preset-railway@workspace:examples/presets/railway"],
+
+    "@vite-env/example-preset-vercel": ["@vite-env/example-preset-vercel@workspace:examples/presets/vercel"],
+
+    "@vite-env/example-react": ["@vite-env/example-react@workspace:examples/react"],
+
+    "@vite-env/example-ssr": ["@vite-env/example-ssr@workspace:examples/ssr"],
 
     "@vite-env/example-valibot": ["@vite-env/example-valibot@workspace:examples/valibot"],
 

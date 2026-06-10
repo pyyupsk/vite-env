@@ -1,0 +1,20 @@
+{
+  "name": "@vite-env/example-ssr",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build && vite build --ssr src/entry-server.ts",
+    "dev": "node server.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vite-env/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vite": "catalog:dev",
+    "zod": "catalog:dev"
+  }
+}
