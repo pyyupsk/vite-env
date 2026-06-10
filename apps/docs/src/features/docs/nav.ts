@@ -28,10 +28,10 @@ export function getPrevNext(
   const sorted = [...docs].sort((a, b) => a.order - b.order)
   const idx = sorted.findIndex((d) => d.slug === currentSlug)
   return {
-    prev: idx > 0 ? { slug: sorted[idx - 1]!.slug, label: sorted[idx - 1]!.title } : null,
+    prev: idx > 0 ? { slug: sorted[idx - 1].slug, label: sorted[idx - 1].title } : null,
     next:
       idx < sorted.length - 1
-        ? { slug: sorted[idx + 1]!.slug, label: sorted[idx + 1]!.title }
+        ? { slug: sorted[idx + 1].slug, label: sorted[idx + 1].title }
         : null,
   }
 }
