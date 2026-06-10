@@ -35,7 +35,7 @@ function warnConflicts(
   }
 }
 
-export function defineEnv<T extends DefineEnvInput>(definition: T): Omit<T, 'presets'> & Pick<EnvDefinition, 'server' | 'client'> {
+export function defineEnv<T extends DefineEnvInput>(definition: T): Omit<T, 'presets'> & Pick<EnvDefinition, 'server' | 'client' | 'presets'> {
   const { presets = [], server, client, ...rest } = definition
   // ...rest intentionally forwarded — T may carry extra keys beyond EnvDefinition
 
@@ -62,17 +62,32 @@ export function defineEnv<T extends DefineEnvInput>(definition: T): Omit<T, 'pre
     result.server = mergedServer
   if (Object.keys(mergedClient).length > 0 || client !== undefined)
     result.client = mergedClient
+  if (presets.length > 0)
+    result.presets = presets
 
-  return result as Omit<T, 'presets'>
+  return result as Omit<T, 'presets'> & Pick<EnvDefinition, 'presets'>
 }
 
 export function validateEnv(
   def: EnvDefinition,
   rawEnv: Record<string, string>,
 ): ValidationResult {
-  const combinedShape = {
+  const combinedShape: Record<string, z.ZodType> = {
     ...def.server,
     ...def.client,
+  } as Record<string, z.ZodType>
+
+  // Undetected-platform preset vars validate as optional — they only exist on
+  // the platform; requiring them would break local dev. User overrides stay strict.
+  for (const preset of def.presets ?? []) {
+    if (!preset.detect || preset.detect(rawEnv))
+      continue
+    for (const side of [preset.server, preset.client]) {
+      for (const [key, presetSchema] of Object.entries(side ?? {})) {
+        if (combinedShape[key] === presetSchema)
+          combinedShape[key] = z.optional(combinedShape[key])
+      }
+    }
   }
 
   const schema = z.object(combinedShape)

@@ -23,4 +23,6 @@ export const vercel = {
     VERCEL_GIT_PULL_REQUEST_ID: z.string().optional(),
     VERCEL_SKEW_PROTECTION_ENABLED: z.enum(['1']).optional(),
   },
+  // Vercel sets VERCEL=1 on builds and under `vercel dev`
+  detect: env => env.VERCEL === '1',
 } satisfies EnvPreset

@@ -21,4 +21,6 @@ export const railway = {
     RAILWAY_TCP_PROXY_PORT: z.coerce.number().int().min(1).max(65535).optional(),
     // PORT excluded: generic name set by many tools independently; handle it in your own server config
   },
+  // Railway always injects the environment id at runtime
+  detect: env => env.RAILWAY_ENVIRONMENT_ID !== undefined,
 } satisfies EnvPreset

@@ -94,7 +94,7 @@ describe('validateEnv', () => {
 })
 
 describe('defineEnv with presets', () => {
-  it('returns merged shape with presets key absent', () => {
+  it('returns merged shape and retains presets for validation-time detection', () => {
     const preset = { server: { PRESET_VAR: z.string() } }
     const result = defineEnv({
       presets: [preset],
@@ -102,7 +102,7 @@ describe('defineEnv with presets', () => {
     })
     expect(result.server).toHaveProperty('PRESET_VAR')
     expect(result.server).toHaveProperty('MY_VAR')
-    expect(result).not.toHaveProperty('presets')
+    expect(result.presets).toEqual([preset])
   })
 
   it('VITE_ prefix check catches non-prefixed key in a preset client field', () => {

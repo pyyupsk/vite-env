@@ -4,6 +4,8 @@ import type { z } from 'zod'
 export type EnvDefinition = {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
+  /** Retained from defineEnv for validation-time platform detection. */
+  presets?: EnvPreset[]
 }
 
 export type StandardEnvDefinition = {
@@ -16,6 +18,12 @@ export type StandardEnvDefinition = {
 export type EnvPreset = {
   server?: z.ZodRawShape
   client?: z.ZodRawShape
+  /**
+   * Returns true when running on the platform that injects these vars.
+   * When false, preset vars validate as optional (user overrides excluded)
+   * so local dev passes without platform-injected vars.
+   */
+  detect?: (env: Record<string, string | undefined>) => boolean
 }
 
 export type AnyEnvDefinition = EnvDefinition | StandardEnvDefinition

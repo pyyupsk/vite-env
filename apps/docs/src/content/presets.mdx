@@ -7,6 +7,8 @@ order: 6
 
 Presets inject well-known platform variables into your schema. Import from `@vite-env/core/presets` and pass in the `presets` array.
 
+Each preset carries a `detect` predicate checking the platform's marker variable (`VERCEL=1`, `RAILWAY_ENVIRONMENT_ID`, `NETLIFY=true`). On the platform, preset vars are validated strictly; everywhere else they're treated as optional — local `vite dev` works without faking platform vars. Keys you override in your own `server`/`client` config are always validated strictly. Generated `vite-env.d.ts` types mark preset vars optional for the same reason — narrow them (or assert) in code that only runs on the platform.
+
 ## Vercel
 
 ```ts

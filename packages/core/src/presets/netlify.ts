@@ -21,4 +21,6 @@ export const netlify = {
     INCOMING_HOOK_TITLE: z.string().optional(),
     INCOMING_HOOK_URL: z.url().optional(),
   },
+  // Netlify sets NETLIFY=true during builds and under `netlify dev`
+  detect: env => env.NETLIFY === 'true',
 } satisfies EnvPreset
