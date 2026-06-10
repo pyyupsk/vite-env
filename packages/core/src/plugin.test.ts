@@ -169,7 +169,7 @@ describe("viteEnv plugin", () => {
       plugin.configureServer(mockServer);
       vi.mocked(loadEnvSources).mockClear();
 
-      changeHandler("/tmp/some-file.ts");
+      changeHandler(path.join(os.tmpdir(), "some-file.ts"));
       expect(loadEnvSources).not.toHaveBeenCalled();
     });
 
