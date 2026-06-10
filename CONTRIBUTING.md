@@ -16,6 +16,20 @@ bun install
 bun run build
 ```
 
+## Branch Model
+
+```
+feat/* fix/* chore/*
+  ↓ PR (squash)
+staging       ← integration branch; all PRs land here first
+  ↓ PR (squash)
+main          ← stable; docs deploy on push
+  ↓ bun run release → v* tag
+npm publish   ← triggered automatically by the v* tag
+```
+
+Always branch from `staging`, not `main`.
+
 ## Development Workflow
 
 ```bash
@@ -68,20 +82,23 @@ examples/valibot → @vite-env/example-valibot   Standard Schema path example ap
 
 ## Submitting a Pull Request
 
-1. Fork the repository and create a branch from `main`.
+1. Fork the repository and create a branch from `staging`.
 2. Make your changes.
 3. Add or update tests as needed — ensure `bun run test` passes.
 4. Run `bun run lint:fix` and `bun run typecheck`.
 5. Commit with a descriptive message.
-6. Open a pull request against `main`.
+6. Open a pull request against `staging`.
+
+CI will run lint, typecheck, and the full test matrix (ubuntu + windows × node 22/24/26). All checks must pass before merge.
 
 ## Release Process (Maintainers)
 
 Releases follow a 4-step flow:
 
-1. Update docs and READMEs for the new version, commit as `docs: ...`
-2. Run `bun run release` — bumpp bumps all package versions, committed as `chore: release vX.Y.Z`
-3. Push — CI publishes to npm automatically
+1. Merge `staging` → `main` via PR once `staging` is stable.
+2. Update docs and READMEs for the new version, commit as `docs: ...`
+3. Run `bun run release` — bumpp bumps all package versions and creates a `vX.Y.Z` tag.
+4. Push the tag — CI publishes to npm automatically.
 
 ## License
 
