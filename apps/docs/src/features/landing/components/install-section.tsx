@@ -2,18 +2,18 @@ import { useState } from 'react'
 import { cn } from '@/lib/cn'
 import { CodeBlock } from '@/components/ui/code-block'
 
-const PMS = ['pnpm', 'npm', 'yarn', 'bun'] as const
+const PMS = ['npm', 'pnpm', 'yarn', 'bun'] as const
 type PM = (typeof PMS)[number]
 
 const CMDS: Record<PM, string> = {
-  pnpm: 'pnpm add -D vite-env',
   npm:  'npm install --save-dev vite-env',
+  pnpm: 'pnpm add -D vite-env',
   yarn: 'yarn add -D vite-env',
   bun:  'bun add -D vite-env',
 }
 
 export function InstallSection() {
-  const [pm, setPm] = useState<PM>('pnpm')
+  const [pm, setPm] = useState<PM>('npm')
 
   return (
     <section className="container-section pb-20">

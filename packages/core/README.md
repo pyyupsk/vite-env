@@ -16,7 +16,7 @@ The `env.ts` layer for Vite — define once, validate everywhere, import with ty
 ## Install
 
 ```bash
-pnpm add @vite-env/core zod
+npm install @vite-env/core zod
 ```
 
 ## Usage
