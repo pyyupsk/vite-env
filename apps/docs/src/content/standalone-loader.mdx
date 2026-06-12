@@ -1,0 +1,88 @@
+---
+title: Standalone loader
+description: Use loadEnv() from @vite-env/core/load to validate env in plain Node/Bun scripts outside of Vite.
+section: Reference
+order: 8
+---
+
+`virtual:env/server` and `virtual:env/client` only resolve inside Vite's module graph. Running a plain script with `bun scripts/seed.ts` or `node scripts/migrate.js` bypasses Vite entirely, so those imports fail.
+
+`@vite-env/core/load` solves this by running the same validation pipeline outside of Vite, returning the same typed result.
+
+## Usage
+
+Pass your existing `env.ts` config directly — no duplicate schema:
+
+```ts
+// scripts/seed.ts
+import { loadEnv } from "@vite-env/core/load";
+import config from "../env";
+
+const { server, client } = await loadEnv(config);
+
+server.DATABASE_URL; // string — fully typed, same schema as virtual:env/server
+client.VITE_API_URL; // string — only VITE_* vars
+```
+
+The same `.env` files, same merge priority, same Zod or Standard Schema validation as the Vite plugin.
+
+## Return value
+
+`loadEnv` returns `{ server, client, all }`:
+
+| Property | Contains                             |
+| -------- | ------------------------------------ |
+| `server` | All validated vars (server + client) |
+| `client` | Only `VITE_*` vars                   |
+| `all`    | Alias for `server`                   |
+
+This mirrors the virtual module shape: `server` ↔ `virtual:env/server`, `client` ↔ `virtual:env/client`.
+
+## Options
+
+```ts
+const env = await loadEnv(config, {
+  mode: "production",  // default: process.env.NODE_ENV ?? "development"
+  envDir: "./",        // default: process.cwd()
+});
+```
+
+| Option   | Default                                 | Description                                       |
+| -------- | --------------------------------------- | ------------------------------------------------- |
+| `mode`   | `process.env.NODE_ENV ?? "development"` | Controls which `.env.[mode]` and `.env.[mode].local` files load |
+| `envDir` | `process.cwd()`                         | Directory to search for `.env` files              |
+
+## Error handling
+
+Validation failure throws with a clear per-field message:
+
+```
+Error: [vite-env] Validation failed:
+  - DATABASE_URL: Invalid url
+  - JWT_SECRET: String must contain at least 32 character(s)
+```
+
+Throw at script startup — same fail-loud behaviour as the Vite plugin on `buildStart`.
+
+## Standard Schema
+
+Works with `defineStandardEnv()` the same way:
+
+```ts
+import { loadEnv } from "@vite-env/core/load";
+import config from "../env"; // defined with defineStandardEnv()
+
+const { server } = await loadEnv(config);
+```
+
+Return type falls back to `Record<string, unknown>` for Standard Schema configs since TypeScript cannot infer output types from Standard Schema validators generically.
+
+## Merge priority
+
+Same as the Vite plugin (highest → lowest):
+
+1. `process.env` — CI secrets always win
+2. `.env.[mode].local`
+3. `.env.[mode]`
+4. `.env.local`
+5. `.env`
