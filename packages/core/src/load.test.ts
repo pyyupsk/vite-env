@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach, type MockInstance } from "vitest";
 import { z } from "zod";
 import { defineEnv } from "./schema";
 import { defineStandardEnv } from "./standard";
@@ -60,6 +60,22 @@ describe("loadEnv (Zod)", () => {
     const { loadEnv } = await import("./load");
     await expect(loadEnv(makeConfig())).rejects.toThrow("[vite-env] Validation failed");
   });
+
+  it("passes mode to viteLoadEnv", async () => {
+    const vite = await import("vite");
+    const spy = vite.loadEnv as unknown as MockInstance;
+    const { loadEnv } = await import("./load");
+    await loadEnv(makeConfig(), { mode: "production" });
+    expect(spy).toHaveBeenCalledWith("production", expect.any(String), "");
+  });
+
+  it("resolves envDir and passes to viteLoadEnv", async () => {
+    const vite = await import("vite");
+    const spy = vite.loadEnv as unknown as MockInstance;
+    const { loadEnv } = await import("./load");
+    await loadEnv(makeConfig(), { envDir: "/custom/dir" });
+    expect(spy).toHaveBeenCalledWith(expect.any(String), "/custom/dir", "");
+  });
 });
 
 describe("loadEnv (Standard Schema)", () => {
@@ -82,5 +98,6 @@ describe("loadEnv (Standard Schema)", () => {
       SECRET_KEY: TEST_ENV.SECRET_KEY,
     });
     expect(result.client).toMatchObject({ VITE_APP_URL: TEST_ENV.VITE_APP_URL });
+    expect(result.all).toBe(result.server);
   });
 });
