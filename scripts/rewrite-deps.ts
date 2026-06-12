@@ -91,6 +91,11 @@ function resolveDepValue(
 }
 
 function rewrite(): void {
+  if (existsSync(backupPath)) {
+    console.error("[rewrite-deps] backup already exists; run restore first");
+    process.exit(1);
+  }
+
   const rootPkg = readJson(resolve(root, "package.json"));
   const catalogMap = buildCatalogMap(rootPkg);
   const workspaceMap = buildWorkspaceMap(rootPkg);
@@ -98,7 +103,7 @@ function rewrite(): void {
   const pkg = readJson(pkgPath);
   writeFileSync(backupPath, JSON.stringify(pkg, null, 2) + "\n");
 
-  for (const field of ["dependencies", "optionalDependencies"] as const) {
+  for (const field of ["dependencies", "optionalDependencies", "peerDependencies"] as const) {
     const deps = pkg[field] as Record<string, string> | undefined;
     if (!deps) continue;
     for (const [name, value] of Object.entries(deps)) {
