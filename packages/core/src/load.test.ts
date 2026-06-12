@@ -7,6 +7,12 @@ vi.mock("vite", () => ({
   loadEnv: vi.fn(() => ({ VITE_APP_URL: "http://localhost:3000" })),
 }));
 
+const TEST_ENV = {
+  DATABASE_URL: "http://db.example.com",
+  SECRET_KEY: "supersecretkey",
+  VITE_APP_URL: "http://localhost:3000",
+} as const;
+
 const makeConfig = () =>
   defineEnv({
     server: {
@@ -18,31 +24,25 @@ const makeConfig = () =>
     },
   });
 
+beforeEach(() => {
+  for (const [k, v] of Object.entries(TEST_ENV)) process.env[k] = v;
+});
+
+afterEach(() => {
+  for (const k of Object.keys(TEST_ENV)) delete process.env[k];
+});
+
 describe("loadEnv (Zod)", () => {
-  beforeEach(() => {
-    process.env["DATABASE_URL"] = "http://db.example.com";
-    process.env["SECRET_KEY"] = "supersecretkey";
-    process.env["VITE_APP_URL"] = "http://localhost:3000";
-  });
-
-  afterEach(() => {
-    delete process.env["DATABASE_URL"];
-    delete process.env["SECRET_KEY"];
-    delete process.env["VITE_APP_URL"];
-  });
-
   it("returns server, client, all namespaces", async () => {
     const { loadEnv } = await import("./load");
     const result = await loadEnv(makeConfig());
 
     expect(result.server).toMatchObject({
-      DATABASE_URL: "http://db.example.com",
-      SECRET_KEY: "supersecretkey",
-      VITE_APP_URL: "http://localhost:3000",
+      DATABASE_URL: TEST_ENV.DATABASE_URL,
+      SECRET_KEY: TEST_ENV.SECRET_KEY,
+      VITE_APP_URL: TEST_ENV.VITE_APP_URL,
     });
-    expect(result.client).toMatchObject({
-      VITE_APP_URL: "http://localhost:3000",
-    });
+    expect(result.client).toMatchObject({ VITE_APP_URL: TEST_ENV.VITE_APP_URL });
     expect(result.all).toBe(result.server);
   });
 
@@ -63,18 +63,6 @@ describe("loadEnv (Zod)", () => {
 });
 
 describe("loadEnv (Standard Schema)", () => {
-  beforeEach(() => {
-    process.env["DATABASE_URL"] = "http://db.example.com";
-    process.env["SECRET_KEY"] = "supersecretkey";
-    process.env["VITE_APP_URL"] = "http://localhost:3000";
-  });
-
-  afterEach(() => {
-    delete process.env["DATABASE_URL"];
-    delete process.env["SECRET_KEY"];
-    delete process.env["VITE_APP_URL"];
-  });
-
   it("returns server, client, all for standard schema config", async () => {
     const { loadEnv } = await import("./load");
     const config = defineStandardEnv({
@@ -90,11 +78,9 @@ describe("loadEnv (Standard Schema)", () => {
     const result = await loadEnv(config);
 
     expect(result.server).toMatchObject({
-      DATABASE_URL: "http://db.example.com",
-      SECRET_KEY: "supersecretkey",
+      DATABASE_URL: TEST_ENV.DATABASE_URL,
+      SECRET_KEY: TEST_ENV.SECRET_KEY,
     });
-    expect(result.client).toMatchObject({
-      VITE_APP_URL: "http://localhost:3000",
-    });
+    expect(result.client).toMatchObject({ VITE_APP_URL: TEST_ENV.VITE_APP_URL });
   });
 });
