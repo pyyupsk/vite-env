@@ -71,6 +71,16 @@
         "default": "./dist/format.cjs"
       }
     },
+    "./load": {
+      "import": {
+        "types": "./dist/load.d.mts",
+        "default": "./dist/load.mjs"
+      },
+      "require": {
+        "types": "./dist/load.d.cts",
+        "default": "./dist/load.cjs"
+      }
+    },
     "./leak": {
       "import": {
         "types": "./dist/leak.d.mts",
