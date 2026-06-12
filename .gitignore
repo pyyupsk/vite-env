@@ -1,5 +1,6 @@
 *.log
 *.tgz
+package.json.bak
 .cache
 .DS_Store
 .eslintcache
