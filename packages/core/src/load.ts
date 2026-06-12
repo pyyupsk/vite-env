@@ -60,19 +60,21 @@ export async function loadEnv(
     const result = await validateStandardEnv(config, rawEnv);
     if (!result.success) throwValidationError(result.errors.map((e) => e.message));
 
+    const server = Object.freeze(result.data);
     const clientKeys = new Set(Object.keys(config.client ?? {}));
-    const client = filterByKeys(result.data, clientKeys);
+    const client = Object.freeze(filterByKeys(server, clientKeys));
 
-    return { server: result.data, client, all: result.data };
+    return { server, client, all: server };
   }
 
   const result = validateEnv(config, rawEnv);
   if (!result.success) throwValidationError(result.errors.map((e) => e.message));
 
+  const server = Object.freeze(result.data);
   const clientKeys = new Set(Object.keys(config.client ?? {}));
-  const client = filterByKeys(result.data, clientKeys);
+  const client = Object.freeze(filterByKeys(server, clientKeys));
 
-  return { server: result.data, client, all: result.data };
+  return { server, client, all: server };
 }
 
 function filterByKeys(data: Record<string, unknown>, keys: Set<string>): Record<string, unknown> {
