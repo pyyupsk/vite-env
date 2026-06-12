@@ -7,6 +7,7 @@ The `env.ts` layer for Vite — define once, validate everywhere, import with ty
 - Typed virtual modules (`virtual:env/client`, `virtual:env/server`)
 - Server/client split with build-time leak detection
 - Runtime access protection — warns or errors when `virtual:env/server` is imported from a client environment
+- Standalone runtime loader — `loadEnv(config)` from `@vite-env/core/load` for scripts outside Vite
 - Auto-coercion via Zod v4 (`z.stringbool()`, `z.coerce.number()`)
 - Standard Schema support — use Valibot, ArkType, or any compliant validator
 - Platform presets — pre-built schemas for Vercel, Railway, and Netlify
@@ -76,6 +77,23 @@ export default defineEnv({
 ```
 
 Available presets: `vercel`, `railway`, `netlify`.
+
+### Standalone runtime loader
+
+Use the same validated env in Node/Bun scripts outside of Vite:
+
+```ts
+// scripts/seed.ts
+import { loadEnv } from "@vite-env/core/load";
+import config from "../env";
+
+const { server, client } = await loadEnv(config);
+
+server.DATABASE_URL; // string
+client.VITE_API_URL; // string
+```
+
+Returns `{ server, client, all }`. Accepts an optional second argument `{ mode?, envDir? }`.
 
 See the [full documentation](https://pyyupsk.github.io/vite-env/) for server/client split details, CLI tools, and more.
 

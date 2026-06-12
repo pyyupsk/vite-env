@@ -15,15 +15,15 @@ declare module "virtual:env/client" {
 
 declare module "virtual:env/server" {
   const env: {
-    readonly NETLIFY: "true";
-    readonly BUILD_ID: string;
-    readonly CONTEXT: "production" | "deploy-preview" | "branch-deploy" | "dev";
-    readonly DEPLOY_ID: string;
-    readonly DEPLOY_URL: string;
-    readonly DEPLOY_PRIME_URL: string;
-    readonly URL: string;
-    readonly BRANCH: string;
-    readonly COMMIT_REF: string;
+    readonly NETLIFY?: "true";
+    readonly BUILD_ID?: string;
+    readonly CONTEXT?: "production" | "deploy-preview" | "branch-deploy" | "dev";
+    readonly DEPLOY_ID?: string;
+    readonly DEPLOY_URL?: string;
+    readonly DEPLOY_PRIME_URL?: string;
+    readonly URL?: string;
+    readonly BRANCH?: string;
+    readonly COMMIT_REF?: string;
     readonly PULL_REQUEST?: "true";
     readonly REVIEW_ID?: string;
     readonly REPOSITORY_URL?: string;

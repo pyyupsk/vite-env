@@ -15,13 +15,13 @@ declare module "virtual:env/client" {
 
 declare module "virtual:env/server" {
   const env: {
-    readonly RAILWAY_ENVIRONMENT_ID: string;
-    readonly RAILWAY_ENVIRONMENT_NAME: string;
-    readonly RAILWAY_SERVICE_ID: string;
-    readonly RAILWAY_SERVICE_NAME: string;
-    readonly RAILWAY_PROJECT_ID: string;
-    readonly RAILWAY_PROJECT_NAME: string;
-    readonly RAILWAY_DEPLOYMENT_ID: string;
+    readonly RAILWAY_ENVIRONMENT_ID?: string;
+    readonly RAILWAY_ENVIRONMENT_NAME?: string;
+    readonly RAILWAY_SERVICE_ID?: string;
+    readonly RAILWAY_SERVICE_NAME?: string;
+    readonly RAILWAY_PROJECT_ID?: string;
+    readonly RAILWAY_PROJECT_NAME?: string;
+    readonly RAILWAY_DEPLOYMENT_ID?: string;
     readonly RAILWAY_REPLICA_ID?: string;
     readonly RAILWAY_GIT_COMMIT_SHA?: string;
     readonly RAILWAY_GIT_BRANCH?: string;
