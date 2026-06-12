@@ -4,9 +4,9 @@ on:
   push:
     branches: [main, staging]
     paths:
-      - "packages/core/**"
-      - "packages/cli/**"
-      - "examples/**"
+      - 'packages/core/**'
+      - 'packages/cli/**'
+      - 'examples/**'
       - vitest.config.ts
       - tsconfig.json
       - bun.lock
@@ -14,9 +14,9 @@ on:
   pull_request:
     branches: [main, staging]
     paths:
-      - "packages/core/**"
-      - "packages/cli/**"
-      - "examples/**"
+      - 'packages/core/**'
+      - 'packages/cli/**'
+      - 'examples/**'
       - vitest.config.ts
       - tsconfig.json
       - bun.lock
