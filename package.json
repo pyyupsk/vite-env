@@ -89,7 +89,7 @@
     "hooks": {
       "pre-commit": {
         "stages": {
-          "**/*": "bunx oxlint --fix {staged_files}"
+          "**/*.{js,cjs,mjs,ts,cts,mts,tsx,jsx}": "bunx oxlint --fix {staged_files}"
         }
       }
     }
