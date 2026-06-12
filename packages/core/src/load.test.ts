@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach, type MockInstance } from "vitest";
 import { z } from "zod";
+import path from "node:path";
 import { defineEnv } from "./schema";
 import { defineStandardEnv } from "./standard";
 
@@ -30,6 +31,7 @@ beforeEach(() => {
 
 afterEach(() => {
   for (const k of Object.keys(TEST_ENV)) delete process.env[k];
+  vi.clearAllMocks();
 });
 
 describe("loadEnv (Zod)", () => {
@@ -66,15 +68,16 @@ describe("loadEnv (Zod)", () => {
     const spy = vite.loadEnv as unknown as MockInstance;
     const { loadEnv } = await import("./load");
     await loadEnv(makeConfig(), { mode: "production" });
-    expect(spy).toHaveBeenCalledWith("production", expect.any(String), "");
+    expect(spy).toHaveBeenLastCalledWith("production", expect.any(String), "");
   });
 
   it("resolves envDir and passes to viteLoadEnv", async () => {
     const vite = await import("vite");
     const spy = vite.loadEnv as unknown as MockInstance;
     const { loadEnv } = await import("./load");
-    await loadEnv(makeConfig(), { envDir: "/custom/dir" });
-    expect(spy).toHaveBeenCalledWith(expect.any(String), "/custom/dir", "");
+    const envDir = "custom/dir";
+    await loadEnv(makeConfig(), { envDir });
+    expect(spy).toHaveBeenLastCalledWith(expect.any(String), path.resolve(envDir), "");
   });
 });
 
