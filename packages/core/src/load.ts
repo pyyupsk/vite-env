@@ -23,8 +23,8 @@ type InferShape<TServer extends ZodShape, TClient extends ZodShape> = {
 };
 
 export async function loadEnv<
-  TServer extends ZodShape = ZodShape,
-  TClient extends ZodShape = ZodShape,
+  TServer extends ZodShape = Record<never, never>,
+  TClient extends ZodShape = Record<never, never>,
 >(
   config: { server?: TServer; client?: TClient; presets?: EnvPreset[] },
   options?: LoadEnvOptions,
