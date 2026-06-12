@@ -1,6 +1,6 @@
 {
   "name": "@vite-env/cli",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "CLI for @vite-env/core — check, generate, types",
   "keywords": [
     "cli",
@@ -45,7 +45,8 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "prepack": "bun run build",
+    "postpack": "bun ../../scripts/rewrite-deps.ts restore",
+    "prepack": "bun run build && bun ../../scripts/rewrite-deps.ts rewrite",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

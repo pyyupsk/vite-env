@@ -11,5 +11,5 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "exclude": ["apps/docs", "examples"]
+  "exclude": ["apps/docs", "examples", "scripts"]
 }
