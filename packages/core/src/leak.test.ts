@@ -83,12 +83,72 @@ describe("detectServerLeak", () => {
     const data = { SECRET: "leaked-secret-value" };
     const bundle = {
       "a.js": { type: "chunk", code: "safe code here" },
-      "b.js": { type: "chunk", code: "has leaked-secret-value inside" },
+      "b.js": { type: "chunk", code: `const x = "leaked-secret-value"` },
     };
 
     const leaks = detectServerLeak(def, data, bundle);
     expect(leaks).toHaveLength(1);
     expect(leaks[0].chunk).toBe("b.js");
+  });
+
+  it("should not flag bare substring match (false positive)", () => {
+    const def = { server: { DB_URL: {} as any } };
+    const data = { DB_URL: "postgres-primary" };
+    const bundle = {
+      "vendor.js": {
+        type: "chunk",
+        // value appears inside a larger string — not a real leak
+        code: `var t="connect-to-postgres-primary-host"`,
+      },
+    };
+
+    expect(detectServerLeak(def, data, bundle)).toHaveLength(0);
+  });
+
+  it("should detect value quoted with single quotes", () => {
+    const def = { server: { SECRET: {} as any } };
+    const data = { SECRET: "single-quoted-secret" };
+    const bundle = {
+      "main.js": { type: "chunk", code: `const x = 'single-quoted-secret'` },
+    };
+
+    const leaks = detectServerLeak(def, data, bundle);
+    expect(leaks).toHaveLength(1);
+    expect(leaks[0].key).toBe("SECRET");
+  });
+
+  it("should detect value quoted with backticks", () => {
+    const def = { server: { SECRET: {} as any } };
+    const data = { SECRET: "backtick-quoted-secret" };
+    const bundle = {
+      "main.js": { type: "chunk", code: "const x = `backtick-quoted-secret`" },
+    };
+
+    const leaks = detectServerLeak(def, data, bundle);
+    expect(leaks).toHaveLength(1);
+    expect(leaks[0].key).toBe("SECRET");
+  });
+
+  it("should not flag mismatched quote delimiters", () => {
+    const def = { server: { SECRET: {} as any } };
+    const data = { SECRET: "mismatched-quote-val" };
+    const bundle = {
+      "main.js": { type: "chunk", code: `var x = 'mismatched-quote-val"` },
+    };
+
+    expect(detectServerLeak(def, data, bundle)).toHaveLength(0);
+  });
+
+  it("should detect value with regex special chars (e.g. URL)", () => {
+    const def = { server: { API_URL: {} as any } };
+    const data = { API_URL: "https://api.example.com/v1" };
+    const bundle = {
+      "main.js": { type: "chunk", code: `fetch("https://api.example.com/v1")` },
+    };
+
+    const leaks = detectServerLeak(def, data, bundle);
+    expect(leaks).toHaveLength(1);
+    expect(leaks[0].key).toBe("API_URL");
   });
 
   it("should handle empty server definition", () => {
