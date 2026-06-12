@@ -1,0 +1,18 @@
+{
+  "name": "@vite-env/example-node-script",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "bun scripts/seed.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vite-env/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vite": "catalog:dev",
+    "zod": "catalog:dev"
+  }
+}

@@ -17,6 +17,7 @@ What [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is for Next.js, but built
 - **Server/client split** — server secrets never reach the browser bundle
 - **Build-time leak detection** — fails the build if server values appear in client chunks
 - **Runtime access protection** — Vite 8 Environment API guards `virtual:env/server` imports from client environments (`'warn'`, `'error'`, or `'stub'` mode)
+- **Standalone runtime loader** — `loadEnv(config)` from `@vite-env/core/load` for scripts, DB seeds, and migrations outside Vite
 - **Auto-coercion** — `z.stringbool()`, `z.coerce.number()` just work
 - **Auto `.d.ts` generation** — no more manual `vite-env.d.ts` maintenance
 - **Auto `.env.example`** — `npx vite-env generate` from your schema
@@ -149,6 +150,33 @@ ViteEnv({
   onClientAccessOfServerModule: "warn", // 'warn' | 'error' | 'stub' — default changes to 'error' in 1.0.0
 });
 ```
+
+## Standalone Runtime Loader
+
+Use the same validated env in plain Node/Bun scripts — no Vite required. Pass your existing `env.ts` config directly:
+
+```ts
+// scripts/seed.ts
+import { loadEnv } from "@vite-env/core/load";
+import config from "../env";
+
+const { server, client } = await loadEnv(config);
+
+server.DATABASE_URL; // string — fully typed, same schema as virtual:env/server
+client.VITE_API_URL; // string — only client vars
+```
+
+`loadEnv` reads `.env` files and `process.env` with the same merge priority as the Vite plugin, then validates against your schema. Throws with a clear message on failure.
+
+```ts
+// optional
+const env = await loadEnv(config, {
+  mode: "production", // default: process.env.NODE_ENV ?? "development"
+  envDir: "./", // default: cwd
+});
+```
+
+Returns `{ server, client, all }` — mirrors the virtual module shape.
 
 ## Platform Presets
 

@@ -54,6 +54,18 @@
         "zod": "catalog:dev",
       },
     },
+    "examples/node-script": {
+      "name": "@vite-env/example-node-script",
+      "dependencies": {
+        "@vite-env/core": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/node": "catalog:dev",
+        "typescript": "catalog:dev",
+        "vite": "catalog:dev",
+        "zod": "catalog:dev",
+      },
+    },
     "examples/presets/netlify": {
       "name": "@vite-env/example-preset-netlify",
       "dependencies": {
@@ -574,6 +586,8 @@
     "@vite-env/docs": ["@vite-env/docs@workspace:apps/docs"],
 
     "@vite-env/example-basic": ["@vite-env/example-basic@workspace:examples/basic"],
+
+    "@vite-env/example-node-script": ["@vite-env/example-node-script@workspace:examples/node-script"],
 
     "@vite-env/example-preset-netlify": ["@vite-env/example-preset-netlify@workspace:examples/presets/netlify"],
 
