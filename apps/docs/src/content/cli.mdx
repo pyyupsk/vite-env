@@ -2,7 +2,7 @@
 title: CLI reference
 description: check, generate, and types subcommands for @vite-env/cli.
 section: CLI
-order: 8
+order: 9
 ---
 
 The `@vite-env/cli` package provides three subcommands for use outside the Vite build pipeline.
@@ -22,17 +22,19 @@ vite-env check
 vite-env check --config ./env.ts --mode production
 ```
 
-| Flag | Default | Description |
-|---|---|---|
-| `--config` | `env.ts` | Path to env definition file |
-| `--mode` | `development` | Vite mode (affects which `.env.[mode]` files are loaded) |
+| Flag       | Default       | Description                                              |
+| ---------- | ------------- | -------------------------------------------------------- |
+| `--config` | `env.ts`      | Path to env definition file                              |
+| `--mode`   | `development` | Vite mode (affects which `.env.[mode]` files are loaded) |
 
 Output on success:
+
 ```
 ✔ 5 environment variables valid
 ```
 
 Output on failure:
+
 ```
 ✖ Environment validation failed:
   DATABASE_URL: Invalid url
@@ -48,10 +50,10 @@ vite-env generate
 vite-env generate --config ./env.ts --output .env.example
 ```
 
-| Flag | Default | Description |
-|---|---|---|
-| `--config` | `env.ts` | Path to env definition file |
-| `--output` | `.env.example` | Output path |
+| Flag       | Default        | Description                 |
+| ---------- | -------------- | --------------------------- |
+| `--config` | `env.ts`       | Path to env definition file |
+| `--output` | `.env.example` | Output path                 |
 
 Example output:
 
@@ -79,8 +81,8 @@ vite-env types
 vite-env types --config ./env.ts
 ```
 
-| Flag | Default | Description |
-|---|---|---|
+| Flag       | Default  | Description                 |
+| ---------- | -------- | --------------------------- |
 | `--config` | `env.ts` | Path to env definition file |
 
 Writes `vite-env.d.ts` to the current working directory. The plugin also writes this file automatically on every `buildStart`, so manual invocation is only needed outside a Vite workflow.

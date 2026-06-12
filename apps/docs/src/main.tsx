@@ -1,27 +1,27 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { Router, Route, Switch, Redirect } from 'wouter'
-import { LandingPage } from './features/landing'
-import { DocsLayout } from './features/docs/layout'
-import './styles/index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { Router, Route, Switch, Redirect } from "wouter";
+import { LandingPage } from "./features/landing";
+import { DocsLayout } from "./features/docs/layout";
+import "./styles/index.css";
 
-const _spa = new URLSearchParams(globalThis.location.search)
-const _spaPath = _spa.get('p')
+const _spa = new URLSearchParams(globalThis.location.search);
+const _spaPath = _spa.get("p");
 if (_spaPath) {
-  const _spaQuery = _spa.get('q')
+  const _spaQuery = _spa.get("q");
   globalThis.history.replaceState(
     null,
-    '',
-    import.meta.env.BASE_URL.replace(/\/$/, '') +
-    _spaPath +
-    (_spaQuery ? '?' + _spaQuery : '') +
-    globalThis.location.hash,
-  )
+    "",
+    import.meta.env.BASE_URL.replace(/\/$/, "") +
+      _spaPath +
+      (_spaQuery ? "?" + _spaQuery : "") +
+      globalThis.location.hash,
+  );
 }
 
-const routerBase = import.meta.env.BASE_URL.replace(/\/$/, '')
+const routerBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Router base={routerBase}>
       <Switch>
@@ -33,4 +33,4 @@ createRoot(document.getElementById('root')!).render(
       </Switch>
     </Router>
   </StrictMode>,
-)
+);

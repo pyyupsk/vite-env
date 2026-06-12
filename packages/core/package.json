@@ -1,28 +1,35 @@
 {
   "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
   "name": "@vite-env/core",
-  "type": "module",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "description": "The env.ts layer for Vite — define once, validate everywhere, import with types",
-  "license": "MIT",
+  "keywords": [
+    "dotenv",
+    "env",
+    "environment-variables",
+    "rolldown",
+    "standard-schema",
+    "typescript",
+    "validation",
+    "vite",
+    "vite-plugin",
+    "zod"
+  ],
   "homepage": "https://github.com/pyyupsk/vite-env#readme",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pyyupsk/vite-env.git",
     "directory": "packages/core"
   },
-  "keywords": [
-    "vite",
-    "vite-plugin",
-    "environment-variables",
-    "env",
-    "typescript",
-    "zod",
-    "validation",
-    "rolldown",
-    "dotenv",
-    "standard-schema"
+  "files": [
+    "README.md",
+    "dist"
   ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
       "import": {
@@ -62,6 +69,16 @@
       "require": {
         "types": "./dist/format.d.cts",
         "default": "./dist/format.cjs"
+      }
+    },
+    "./load": {
+      "import": {
+        "types": "./dist/load.d.mts",
+        "default": "./dist/load.mjs"
+      },
+      "require": {
+        "types": "./dist/load.d.cts",
+        "default": "./dist/load.cjs"
       }
     },
     "./leak": {
@@ -116,31 +133,12 @@
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.cts",
-  "files": [
-    "README.md",
-    "dist"
-  ],
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
     "prepack": "bun run build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
-  },
-  "peerDependencies": {
-    "vite": ">=8.0.0",
-    "zod": "^4.0.0"
-  },
-  "peerDependenciesMeta": {
-    "zod": {
-      "optional": true
-    }
   },
   "dependencies": {
     "@standard-schema/spec": "catalog:",
@@ -154,5 +152,17 @@
     "vite": "catalog:dev",
     "vitest": "catalog:dev",
     "zod": "catalog:dev"
+  },
+  "peerDependencies": {
+    "vite": ">=8.0.0",
+    "zod": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

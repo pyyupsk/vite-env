@@ -1,9 +1,9 @@
-import type { AnyEnvDefinition } from './types'
+import type { AnyEnvDefinition } from "./types";
 
 type LeakReport = {
-  key: string
-  chunk: string
-}
+  key: string;
+  chunk: string;
+};
 
 /**
  * Scans all client-destined chunks for literal values of server-only vars.
@@ -16,41 +16,37 @@ type LeakReport = {
 export function detectServerLeak(
   def: AnyEnvDefinition,
   data: Record<string, unknown>,
-  bundle: Record<string, { type: string, code?: string }>,
+  bundle: Record<string, { type: string; code?: string }>,
   onSkipped?: (keys: string[]) => void,
 ): LeakReport[] {
-  const serverKeys = new Set(Object.keys(def.server ?? {}))
+  const serverKeys = new Set(Object.keys(def.server ?? {}));
 
   const shortSecrets = Object.entries(data).filter(
     (entry): entry is [string, string] =>
-      serverKeys.has(entry[0])
-      && typeof entry[1] === 'string'
-      && entry[1].length < 8,
-  )
+      serverKeys.has(entry[0]) && typeof entry[1] === "string" && entry[1].length < 8,
+  );
 
   if (shortSecrets.length > 0 && onSkipped) {
-    onSkipped(shortSecrets.map(([k]) => k))
+    onSkipped(shortSecrets.map(([k]) => k));
   }
 
   const serverSecrets = Object.entries(data).filter(
     (entry): entry is [string, string] =>
-      serverKeys.has(entry[0])
-      && typeof entry[1] === 'string'
-      && entry[1].length >= 8,
-  )
+      serverKeys.has(entry[0]) && typeof entry[1] === "string" && entry[1].length >= 8,
+  );
 
   const chunks = Object.entries(bundle).filter(
-    ([, chunk]) => chunk.type === 'chunk' && !!chunk.code,
-  )
+    ([, chunk]) => chunk.type === "chunk" && !!chunk.code,
+  );
 
-  const leaks: LeakReport[] = []
+  const leaks: LeakReport[] = [];
   for (const [key, value] of serverSecrets) {
     for (const [chunkName, chunk] of chunks) {
       if (chunk.code!.includes(value)) {
-        leaks.push({ key, chunk: chunkName })
+        leaks.push({ key, chunk: chunkName });
       }
     }
   }
 
-  return leaks
+  return leaks;
 }

@@ -1,4 +1,4 @@
-import { env } from 'virtual:env/server'
+import { env } from "virtual:env/server";
 
 export function render(): string {
   return `
@@ -7,5 +7,5 @@ export function render(): string {
     <div class="card">SSR_GREETING = ${JSON.stringify(env.SSR_GREETING)}</div>
     <div class="card">DATABASE_URL host = ${new URL(env.DATABASE_URL).host} (secret stays on the server)</div>
     <div class="card" id="client-card">waiting for client…</div>
-  `
+  `;
 }

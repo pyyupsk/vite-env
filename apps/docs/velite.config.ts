@@ -1,9 +1,9 @@
-import { defineConfig, defineCollection, s } from 'velite'
-import rehypeSlug from 'rehype-slug'
+import { defineConfig, defineCollection, s } from "velite";
+import rehypeSlug from "rehype-slug";
 
 const docs = defineCollection({
-  name: 'Doc',
-  pattern: '**/*.mdx',
+  name: "Doc",
+  pattern: "**/*.mdx",
   schema: s.object({
     title: s.string(),
     description: s.string().optional(),
@@ -13,15 +13,15 @@ const docs = defineCollection({
     toc: s.toc(),
     body: s.mdx({ gfm: true, rehypePlugins: [rehypeSlug] }),
   }),
-})
+});
 
 export default defineConfig({
-  root: './src/content',
+  root: "./src/content",
   output: {
-    data: './.velite',
-    assets: './public/static',
-    base: '/static/',
+    data: "./.velite",
+    assets: "./public/static",
+    base: "/static/",
     clean: true,
   },
   collections: { docs },
-})
+});

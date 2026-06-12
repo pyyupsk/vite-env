@@ -1,11 +1,11 @@
-import { Link } from "wouter"
+import { Link } from "wouter";
 
 const LINKS = [
-  { label: 'Docs', href: '/docs' },
-  { label: 'GitHub', href: 'https://github.com/pyyupsk/vite-env', external: true },
-  { label: 'npm', href: 'https://www.npmjs.com/package/@vite-env/core', external: true },
-  { label: 'Changelog', href: 'https://github.com/pyyupsk/vite-env/releases', external: true },
-]
+  { label: "Docs", href: "/docs" },
+  { label: "GitHub", href: "https://github.com/pyyupsk/vite-env", external: true },
+  { label: "npm", href: "https://www.npmjs.com/package/@vite-env/core", external: true },
+  { label: "Changelog", href: "https://github.com/pyyupsk/vite-env/releases", external: true },
+];
 
 export function Footer() {
   return (
@@ -43,5 +43,5 @@ export function Footer() {
         </nav>
       </div>
     </footer>
-  )
+  );
 }

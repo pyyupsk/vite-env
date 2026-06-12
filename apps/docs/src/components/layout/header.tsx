@@ -1,28 +1,32 @@
-import { buttonVariants } from '@/components/ui/button/variants'
-import { ArrowRight } from 'lucide-react'
-import { GithubIcon } from '@/components/icons/github'
-import { cn } from '@/lib/cn'
-import { Link } from 'wouter'
-import { useMemo, useEffect, useState } from 'react'
+import { buttonVariants } from "@/components/ui/button/variants";
+import { ArrowRight } from "lucide-react";
+import { GithubIcon } from "@/components/icons/github";
+import { cn } from "@/lib/cn";
+import { Link } from "wouter";
+import { useMemo, useEffect, useState } from "react";
 
 const NAV_LINKS = [
-  { label: 'Docs', href: '/docs', external: false },
-  { label: 'Examples', href: 'https://github.com/pyyupsk/vite-env/tree/main/examples', external: true },
-  { label: 'Changelog', href: 'https://github.com/pyyupsk/vite-env/releases', external: true },
-]
+  { label: "Docs", href: "/docs", external: false },
+  {
+    label: "Examples",
+    href: "https://github.com/pyyupsk/vite-env/tree/main/examples",
+    external: true,
+  },
+  { label: "Changelog", href: "https://github.com/pyyupsk/vite-env/releases", external: true },
+];
 
 export function Header({ location }: Readonly<{ location?: string }>) {
   const [scrolled, setScrolled] = useState(false);
 
   const isDocs = useMemo(() => location?.startsWith("/docs"), [location]);
-  const isHome = !location || location === '/';
+  const isHome = !location || location === "/";
 
   useEffect(() => {
     if (!isHome) return;
     const onScroll = () => setScrolled(window.scrollY > 0);
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
 
   const transparent = isHome && !scrolled;
@@ -30,11 +34,11 @@ export function Header({ location }: Readonly<{ location?: string }>) {
   return (
     <header
       className={cn(
-        'top-0 z-100 h-14 border-b transition-colors duration-200',
-        isHome ? 'fixed w-full' : 'sticky',
+        "top-0 z-100 h-14 border-b transition-colors duration-200",
+        isHome ? "fixed w-full" : "sticky",
         transparent
-          ? 'border-transparent backdrop-blur-none bg-transparent'
-          : 'border-hairline backdrop-blur-md bg-neutral-950/85',
+          ? "border-transparent backdrop-blur-none bg-transparent"
+          : "border-hairline backdrop-blur-md bg-neutral-950/85",
       )}
     >
       <div className={cn("flex items-center h-full", isDocs ? "px-4" : "container-section")}>
@@ -67,7 +71,7 @@ export function Header({ location }: Readonly<{ location?: string }>) {
               >
                 {label}
               </Link>
-            )
+            ),
           )}
         </nav>
 
@@ -76,14 +80,14 @@ export function Header({ location }: Readonly<{ location?: string }>) {
             href="https://github.com/pyyupsk/vite-env"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'no-underline')}
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "no-underline")}
           >
             <GithubIcon size={15} />
             GitHub
           </a>
           <Link
             href="/docs"
-            className={cn(buttonVariants({ variant: 'primary', size: 'sm' }), 'no-underline')}
+            className={cn(buttonVariants({ variant: "primary", size: "sm" }), "no-underline")}
           >
             Get started
             <ArrowRight size={13} strokeWidth={1.5} />
@@ -91,5 +95,5 @@ export function Header({ location }: Readonly<{ location?: string }>) {
         </div>
       </div>
     </header>
-  )
+  );
 }

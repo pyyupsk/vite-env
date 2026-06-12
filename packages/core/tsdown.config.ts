@@ -1,22 +1,23 @@
-import { defineConfig } from 'tsdown'
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: [
-    'src/index.ts',
-    'src/config.ts',
-    'src/plugin.ts',
-    'src/schema.ts',
-    'src/standard.ts',
-    'src/format.ts',
-    'src/dts.ts',
-    'src/leak.ts',
-    'src/presets/index.ts',
+    "src/index.ts",
+    "src/config.ts",
+    "src/plugin.ts",
+    "src/schema.ts",
+    "src/standard.ts",
+    "src/format.ts",
+    "src/dts.ts",
+    "src/leak.ts",
+    "src/load.ts",
+    "src/presets/index.ts",
   ],
-  format: ['esm', 'cjs'],
+  format: ["esm", "cjs"],
   dts: true,
   clean: true,
   sourcemap: true,
   deps: {
-    neverBundle: ['jiti', 'vite', 'zod', '@standard-schema/spec'],
+    neverBundle: ["jiti", "vite", "zod", "@standard-schema/spec"],
   },
-})
+});

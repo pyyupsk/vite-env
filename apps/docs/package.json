@@ -1,11 +1,11 @@
 {
   "name": "@vite-env/docs",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "velite build && tsc -b && vite build",
     "dev": "vite",
-    "lint": "eslint .",
+    "lint": "oxlint .",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,20 +21,15 @@
     "wouter": "catalog:docs"
   },
   "devDependencies": {
-    "@eslint/js": "catalog:dev",
     "@tailwindcss/vite": "catalog:docs",
     "@types/node": "catalog:dev",
     "@types/react": "catalog:docs",
     "@types/react-dom": "catalog:docs",
     "@vitejs/plugin-react": "catalog:docs",
+    "oxlint": "catalog:dev",
     "rehype-slug": "catalog:docs",
-    "velite": "catalog:docs",
-    "eslint": "catalog:dev",
-    "eslint-plugin-react-hooks": "catalog:docs",
-    "eslint-plugin-react-refresh": "catalog:docs",
-    "globals": "catalog:dev",
     "typescript": "catalog:dev",
-    "typescript-eslint": "catalog:dev",
+    "velite": "catalog:docs",
     "vite": "catalog:dev"
   }
 }

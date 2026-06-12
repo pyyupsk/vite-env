@@ -17,6 +17,7 @@ What [`@t3-oss/env`](https://github.com/t3-oss/t3-env) is for Next.js, but built
 - **Server/client split** — server secrets never reach the browser bundle
 - **Build-time leak detection** — fails the build if server values appear in client chunks
 - **Runtime access protection** — Vite 8 Environment API guards `virtual:env/server` imports from client environments (`'warn'`, `'error'`, or `'stub'` mode)
+- **Standalone runtime loader** — `loadEnv(config)` from `@vite-env/core/load` for scripts, DB seeds, and migrations outside Vite
 - **Auto-coercion** — `z.stringbool()`, `z.coerce.number()` just work
 - **Auto `.d.ts` generation** — no more manual `vite-env.d.ts` maintenance
 - **Auto `.env.example`** — `npx vite-env generate` from your schema
@@ -44,8 +45,8 @@ npm install -D @vite-env/cli # optional — for check/generate/types commands
 ### 1. Define your schema — `env.ts`
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { z } from "zod";
 
 export default defineEnv({
   server: {
@@ -58,43 +59,41 @@ export default defineEnv({
     VITE_API_URL: z.url(),
     VITE_APP_NAME: z.string().min(1),
     VITE_DARK_MODE: z.stringbool().default(false),
-    VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-    VITE_NODE_ENV: z
-      .enum(['development', 'test', 'production'])
-      .default('development'),
+    VITE_LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+    VITE_NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   },
-})
+});
 ```
 
 ### 2. Add the plugin — `vite.config.ts`
 
 ```ts
-import ViteEnv from '@vite-env/core/plugin'
-import { defineConfig } from 'vite'
+import ViteEnv from "@vite-env/core/plugin";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [ViteEnv()],
-})
+});
 ```
 
 ### 3. Use typed env in your app
 
 ```ts
 // Client code — only client vars available
-import { env } from 'virtual:env/client'
+import { env } from "virtual:env/client";
 
-env.VITE_API_URL // string
-env.VITE_DARK_MODE // boolean (not "true")
-env.VITE_NODE_ENV // 'development' | 'test' | 'production'
+env.VITE_API_URL; // string
+env.VITE_DARK_MODE; // boolean (not "true")
+env.VITE_NODE_ENV; // 'development' | 'test' | 'production'
 ```
 
 ```ts
 // Server/SSR code — all vars available
-import { env } from 'virtual:env/server'
+import { env } from "virtual:env/server";
 
-env.DATABASE_URL // string
-env.JWT_SECRET // string
-env.VITE_API_URL // string (client vars also available server-side)
+env.DATABASE_URL; // string
+env.JWT_SECRET; // string
+env.VITE_API_URL; // string (client vars also available server-side)
 ```
 
 ## How it works
@@ -114,8 +113,8 @@ env.VITE_API_URL // string (client vars also available server-side)
 Use any Standard Schema-compliant validator instead of Zod:
 
 ```ts
-import { defineStandardEnv } from '@vite-env/core'
-import * as v from 'valibot'
+import { defineStandardEnv } from "@vite-env/core";
+import * as v from "valibot";
 
 export default defineStandardEnv({
   server: {
@@ -124,7 +123,7 @@ export default defineStandardEnv({
   client: {
     VITE_API_URL: v.pipe(v.string(), v.url()),
   },
-})
+});
 ```
 
 Same plugin, same virtual modules, same leak detection. Zod is optional when using `defineStandardEnv()`.
@@ -146,20 +145,47 @@ npx vite-env types
 
 ```ts
 ViteEnv({
-  configFile: './env.ts', // path to env definition file
-  serverEnvironments: ['ssr'], // Vite 8 environments allowed to import virtual:env/server
-  onClientAccessOfServerModule: 'warn', // 'warn' | 'error' | 'stub' — default changes to 'error' in 1.0.0
-})
+  configFile: "./env.ts", // path to env definition file
+  serverEnvironments: ["ssr"], // Vite 8 environments allowed to import virtual:env/server
+  onClientAccessOfServerModule: "warn", // 'warn' | 'error' | 'stub' — default changes to 'error' in 1.0.0
+});
 ```
+
+## Standalone Runtime Loader
+
+Use the same validated env in plain Node/Bun scripts — no Vite required. Pass your existing `env.ts` config directly:
+
+```ts
+// scripts/seed.ts
+import { loadEnv } from "@vite-env/core/load";
+import config from "../env";
+
+const { server, client } = await loadEnv(config);
+
+server.DATABASE_URL; // string — fully typed, same schema as virtual:env/server
+client.VITE_API_URL; // string — only client vars
+```
+
+`loadEnv` reads `.env` files and `process.env` with the same merge priority as the Vite plugin, then validates against your schema. Throws with a clear message on failure.
+
+```ts
+// optional
+const env = await loadEnv(config, {
+  mode: "production", // default: process.env.NODE_ENV ?? "development"
+  envDir: "./", // default: cwd
+});
+```
+
+Returns `{ server, client, all }` — mirrors the virtual module shape.
 
 ## Platform Presets
 
 Pre-built schemas for common deployment platforms — Vercel, Railway, and Netlify:
 
 ```ts
-import { defineEnv } from '@vite-env/core'
-import { vercel } from '@vite-env/core/presets'
-import { z } from 'zod'
+import { defineEnv } from "@vite-env/core";
+import { vercel } from "@vite-env/core/presets";
+import { z } from "zod";
 
 export default defineEnv({
   presets: [vercel],
@@ -169,7 +195,7 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.url(),
   },
-})
+});
 ```
 
 Available presets: `vercel`, `railway`, `netlify`. Your definitions always take precedence over preset values.

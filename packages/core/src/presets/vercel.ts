@@ -1,11 +1,11 @@
-import type { EnvPreset } from '../types'
-import { z } from 'zod'
+import type { EnvPreset } from "../types";
+import { z } from "zod";
 
 export const vercel = {
   server: {
     // Set to '1' by Vercel to indicate a Vercel environment
-    VERCEL: z.enum(['1']),
-    VERCEL_ENV: z.enum(['production', 'preview', 'development']),
+    VERCEL: z.enum(["1"]),
+    VERCEL_ENV: z.enum(["production", "preview", "development"]),
     // Bare hostname (e.g. myapp-abc123.vercel.app) — no scheme, z.url() would reject it
     VERCEL_URL: z.string().min(1),
     VERCEL_BRANCH_URL: z.string().min(1).optional(),
@@ -21,8 +21,8 @@ export const vercel = {
     VERCEL_GIT_COMMIT_MESSAGE: z.string().optional(),
     VERCEL_GIT_COMMIT_AUTHOR_LOGIN: z.string().optional(),
     VERCEL_GIT_PULL_REQUEST_ID: z.string().optional(),
-    VERCEL_SKEW_PROTECTION_ENABLED: z.enum(['1']).optional(),
+    VERCEL_SKEW_PROTECTION_ENABLED: z.enum(["1"]).optional(),
   },
   // Vercel sets VERCEL=1 on builds and under `vercel dev`
-  detect: env => env.VERCEL === '1',
-} satisfies EnvPreset
+  detect: (env) => env.VERCEL === "1",
+} satisfies EnvPreset;

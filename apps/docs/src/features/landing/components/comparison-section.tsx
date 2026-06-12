@@ -1,5 +1,5 @@
-import { CodeBlock } from '@/components/ui/code-block'
-import { Check, X } from 'lucide-react'
+import { CodeBlock } from "@/components/ui/code-block";
+import { Check, X } from "lucide-react";
 
 const BEFORE = `// manual — no real type safety
 
@@ -7,7 +7,7 @@ const BEFORE = `// manual — no real type safety
 // PORT:         string | undefined
 
 const db = process.env.DATABASE_URL as string
-const port = parseInt(process.env.PORT || "3000")`
+const port = parseInt(process.env.PORT || "3000")`;
 
 const AFTER = `import { env } from "virtual:env/server"
 
@@ -15,7 +15,7 @@ const AFTER = `import { env } from "virtual:env/server"
 // PORT: number (default 3000)
 
 const db = env.DATABASE_URL   // ✓ typed
-const port = env.PORT         // ✓ number`
+const port = env.PORT         // ✓ number`;
 
 export function ComparisonSection() {
   return (
@@ -36,9 +36,7 @@ export function ComparisonSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-content-2xl mx-auto">
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <span
-                className="w-5 h-5 rounded-full inline-flex items-center justify-center text-red-400 shrink-0 bg-danger-soft"
-              >
+              <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-red-400 shrink-0 bg-danger-soft">
                 <X size={11} strokeWidth={2} />
               </span>
               <span className="font-mono text-xs text-red-400">before</span>
@@ -48,9 +46,7 @@ export function ComparisonSection() {
 
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <span
-                className="w-5 h-5 rounded-full inline-flex items-center justify-center text-success shrink-0 bg-success-soft"
-              >
+              <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-success shrink-0 bg-success-soft">
                 <Check size={11} strokeWidth={2} />
               </span>
               <span className="font-mono text-xs text-success">after</span>
@@ -60,5 +56,5 @@ export function ComparisonSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

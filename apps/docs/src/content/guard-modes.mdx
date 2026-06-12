@@ -9,8 +9,8 @@ Guard modes control what the plugin does when an environment not listed in `serv
 
 ```ts
 ViteEnv({
-  onClientAccessOfServerModule: 'warn', // default — changes to 'error' in 1.0
-})
+  onClientAccessOfServerModule: "warn", // default — changes to 'error' in 1.0
+});
 ```
 
 ## warn
@@ -35,11 +35,11 @@ The server module is replaced with a stub that throws at runtime:
 ```ts
 // What the 'client' environment receives when mode is 'stub'
 throw new Error(
-  '[vite-env] virtual:env/server was imported in the "client" environment. '
-  + 'This module is server-only and was replaced with a stub. '
-  + 'To allow this environment: add it to serverEnvironments. '
-  + 'To suppress this stub: ensure this import never executes in the "client" environment.'
-)
+  '[vite-env] virtual:env/server was imported in the "client" environment. ' +
+    "This module is server-only and was replaced with a stub. " +
+    "To allow this environment: add it to serverEnvironments. " +
+    'To suppress this stub: ensure this import never executes in the "client" environment.',
+);
 ```
 
 Use `stub` for testing environments (Vitest jsdom) or isomorphic files where the import exists but the server code path is never actually reached.

@@ -1,0 +1,32 @@
+{
+  "$schema": "../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../.oxlintrc.json"],
+  "plugins": ["typescript", "import", "vitest"],
+  "rules": {
+    "no-unused-vars": "off",
+    "typescript/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "typescript/consistent-type-imports": "error",
+    "import/no-commonjs": "error",
+    "import/no-self-import": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "typescript/no-empty-function": "off",
+        "typescript/no-explicit-any": "off",
+        "no-control-regex": "off",
+        "vitest/no-disabled-tests": "warn",
+        "vitest/no-focused-tests": "error",
+        "vitest/expect-expect": "off",
+        "vitest/require-mock-type-parameters": "off"
+      }
+    }
+  ]
+}

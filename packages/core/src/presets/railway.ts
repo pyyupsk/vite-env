@@ -1,5 +1,5 @@
-import type { EnvPreset } from '../types'
-import { z } from 'zod'
+import type { EnvPreset } from "../types";
+import { z } from "zod";
 
 export const railway = {
   server: {
@@ -22,5 +22,5 @@ export const railway = {
     // PORT excluded: generic name set by many tools independently; handle it in your own server config
   },
   // Railway always injects the environment id at runtime
-  detect: env => !!env.RAILWAY_ENVIRONMENT_ID,
-} satisfies EnvPreset
+  detect: (env) => !!env.RAILWAY_ENVIRONMENT_ID,
+} satisfies EnvPreset;

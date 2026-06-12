@@ -1,19 +1,26 @@
-import { useState } from 'react'
-import { cn } from '@/lib/cn'
-import { CodeBlock } from '@/components/ui/code-block'
+import { useState, type CSSProperties } from "react";
+import { cn } from "@/lib/cn";
+import { CodeBlock } from "@/components/ui/code-block";
 
-const PMS = ['npm', 'pnpm', 'yarn', 'bun'] as const
-type PM = (typeof PMS)[number]
+const PMS = ["npm", "pnpm", "yarn", "bun"] as const;
+
+const tabWrapStyle: CSSProperties = {
+  background: "var(--color-surface-inset)",
+  border: "1px solid var(--color-border-subtle)",
+};
+type PM = (typeof PMS)[number];
 
 const CMDS: Record<PM, string> = {
-  npm:  'npm install --save-dev @vite-env/core',
-  pnpm: 'pnpm add -D @vite-env/core',
-  yarn: 'yarn add -D @vite-env/core',
-  bun:  'bun add -D @vite-env/core',
-}
+  npm: "npm install --save-dev @vite-env/core",
+  pnpm: "pnpm add -D @vite-env/core",
+  yarn: "yarn add -D @vite-env/core",
+  bun: "bun add -D @vite-env/core",
+};
 
 export function InstallSection() {
-  const [pm, setPm] = useState<PM>('npm')
+  const [pm, setPm] = useState<PM>("npm");
+
+  const handlePmClick = (p: PM) => () => setPm(p);
 
   return (
     <section className="container-section pb-20">
@@ -22,19 +29,16 @@ export function InstallSection() {
           // install
         </span>
 
-        <div
-          className="flex gap-0.5 w-fit p-0.5 rounded-md mb-2.5"
-          style={{ background: 'var(--color-surface-inset)', border: '1px solid var(--color-border-subtle)' }}
-        >
+        <div className="flex gap-0.5 w-fit p-0.5 rounded-md mb-2.5" style={tabWrapStyle}>
           {PMS.map((p) => (
             <button
               key={p}
-              onClick={() => setPm(p)}
+              onClick={handlePmClick(p)}
               className={cn(
-                'px-3.5 py-1 rounded-sm text-xs font-mono transition-colors duration-fast cursor-pointer border-0',
+                "px-3.5 py-1 rounded-sm text-xs font-mono transition-colors duration-fast cursor-pointer border-0",
                 pm === p
-                  ? 'bg-surface-raised text-text-strong shadow-inset-top'
-                  : 'bg-transparent text-text-subtle hover:text-text-body',
+                  ? "bg-surface-raised text-text-strong shadow-inset-top"
+                  : "bg-transparent text-text-subtle hover:text-text-body",
               )}
             >
               {p}
@@ -48,13 +52,13 @@ export function InstallSection() {
         </CodeBlock>
 
         <p className="mt-5 text-xs font-mono text-text-faint leading-relaxed">
-          {'Then add '}
+          {"Then add "}
           <span className="text-accent-text">viteEnv()</span>
-          {' to your '}
+          {" to your "}
           <span className="text-text-subtle">vite.config.ts</span>
-          {' plugins array.'}
+          {" plugins array."}
         </p>
       </div>
     </section>
-  )
+  );
 }
