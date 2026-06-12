@@ -6,12 +6,9 @@ type LeakReport = {
 };
 
 /**
- * Scans all client-destined chunks for literal values of server-only vars.
- * Fires in generateBundle() — Rolldown sequential hook, safe.
- *
- * Strategy: for each server-only key, check if its actual runtime value
- * appears as a literal string in any output chunk's source code.
- * Short/common values (< 8 chars) are skipped to avoid false positives.
+ * Scans client-destined chunks for server-only var values appearing as quoted
+ * string literals. Bare substring matches are ignored — only quoted literals
+ * indicate a real bundler-inlined leak. Values < 8 chars are skipped.
  */
 export function detectServerLeak(
   def: AnyEnvDefinition,
@@ -41,8 +38,10 @@ export function detectServerLeak(
 
   const leaks: LeakReport[] = [];
   for (const [key, value] of serverSecrets) {
+    const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+    const pattern = new RegExp(`(["'\`])${escaped}\\1`);
     for (const [chunkName, chunk] of chunks) {
-      if (chunk.code!.includes(value)) {
+      if (pattern.test(chunk.code!)) {
         leaks.push({ key, chunk: chunkName });
       }
     }
