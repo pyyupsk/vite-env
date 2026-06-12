@@ -63,7 +63,7 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
     "prepare": "nit install",
-    "release": "bumpp -r -t false",
+    "release": "bumpp -r",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest run --watch",
