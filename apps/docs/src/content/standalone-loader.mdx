@@ -77,6 +77,10 @@ const { server } = await loadEnv(config);
 
 Return type falls back to `Record<string, unknown>` for Standard Schema configs since TypeScript cannot infer output types from Standard Schema validators generically.
 
+## Requirements
+
+Requires **Vite ≥ 8.0.0** as a peer dependency. `@vite-env/core/load` uses Vite's `loadEnv` utility internally to read `.env` files — Vite must be installed even when running plain Node/Bun scripts.
+
 ## Merge priority
 
 Same as the Vite plugin (highest → lowest):
