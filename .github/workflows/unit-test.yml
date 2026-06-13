@@ -14,15 +14,6 @@ on:
       - .github/workflows/release-please.yml
   pull_request:
     branches: [main, staging]
-    paths:
-      - 'packages/core/**'
-      - 'packages/cli/**'
-      - 'examples/**'
-      - vitest.config.ts
-      - tsconfig.json
-      - bun.lock
-      - .github/workflows/unit-test.yml
-      - .github/workflows/release-please.yml
 
 permissions: {}
 
