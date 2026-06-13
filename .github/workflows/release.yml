@@ -31,9 +31,12 @@ jobs:
 
       - run: bun run build
 
-      - run: bunx changelogithub
+      - name: Update release notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bunx changelogithub --output /tmp/release-notes.md
+          gh release edit "${{ github.ref_name }}" --notes-file /tmp/release-notes.md
 
       - name: Publish packages to npm
         env:

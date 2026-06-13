@@ -18,7 +18,7 @@ bun run build
 
 ## Branch Model
 
-```
+```text
 feat/* fix/* chore/*
   ↓ PR (squash)
 staging       ← integration branch; all PRs land here first
@@ -93,12 +93,12 @@ CI will run lint, typecheck, and the full test matrix (ubuntu + windows × node 
 
 ## Release Process (Maintainers)
 
-Releases follow a 4-step flow:
+Releases are automated via Release Please. The flow:
 
 1. Merge `staging` → `main` via PR once `staging` is stable.
-2. Update docs and READMEs for the new version, commit as `docs: ...`
-3. Run `bun run release` — bumpp bumps all package versions and creates a `vX.Y.Z` tag.
-4. Push the tag — CI publishes to npm automatically.
+2. Release Please automatically opens a version bump PR on `main` (updates `package.json` versions based on conventional commits).
+3. Review and merge the Release Please PR — it pushes a `vX.Y.Z` tag automatically.
+4. The tag triggers CI: changelogithub generates release notes and packages are published to npm.
 
 ## License
 

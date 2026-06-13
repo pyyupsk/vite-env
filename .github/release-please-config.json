@@ -2,7 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "release-type": "node",
   "include-v-in-tag": true,
-  "skip-github-release": true,
   "separate-pull-requests": false,
   "packages": {
     "packages/core": {
