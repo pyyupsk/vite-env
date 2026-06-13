@@ -47,7 +47,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          for pkg in packages/core packages/cli; do
-            tarball=$(cd "$pkg" && bun pm pack --quiet | tr -d '\n')
-            npm publish "$pkg/$tarball" --access public --provenance
-          done
+          CORE_VERSION=$(node -p "require('./packages/core/package.json').version")
+
+          # Pack and publish core
+          core_tarball=$(cd packages/core && bun pm pack --quiet | tr -d '\n')
+          npm publish "packages/core/$core_tarball" --access public --provenance
+
+          # bun pm pack resolves workspace:* to the last npm-published version, not
+          # the current workspace version, patch it explicitly before packing cli
+          sed -i "s|\"workspace:\*\"|\"^${CORE_VERSION}\"|" packages/cli/package.json
+          cli_tarball=$(cd packages/cli && bun pm pack --quiet | tr -d '\n')
+          npm publish "packages/cli/$cli_tarball" --access public --provenance
+          git checkout packages/cli/package.json
