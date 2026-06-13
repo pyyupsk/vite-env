@@ -48,6 +48,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for pkg in packages/core packages/cli; do
-            tarball=$(cd "$pkg" && bun pm pack --quiet)
+            tarball=$(cd "$pkg" && bun pm pack --quiet | tr -d '\n')
             npm publish "$pkg/$tarball" --access public --provenance
           done
