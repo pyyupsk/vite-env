@@ -5,10 +5,13 @@
   "separate-pull-requests": false,
   "packages": {
     "packages/core": {
-      "package-name": "@vite-env/core"
+      "package-name": "@vite-env/core",
+      "tag-separator": null,
+      "component": ""
     },
     "packages/cli": {
-      "package-name": "@vite-env/cli"
+      "package-name": "@vite-env/cli",
+      "skip-github-release": true
     }
   }
 }
