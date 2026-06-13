@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/pyyupsk/vite-env/compare/cli-v0.6.3...cli-v0.6.4) (2026-06-13)
+
+
+### Bug Fixes
+
+* **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
+
 ## [0.6.3](https://github.com/pyyupsk/vite-env/compare/cli-v0.6.2...cli-v0.6.3) (2026-06-14)
 
 ### Bug Fixes
