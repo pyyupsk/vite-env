@@ -35,8 +35,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bunx changelogithub --output /tmp/release-notes.md
-          gh release edit "${{ github.ref_name }}" --notes-file /tmp/release-notes.md
+          PREV_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]' | grep -v "^${{ github.ref_name }}$" | head -1)
+          bunx changelogithub --from "$PREV_TAG" --output /tmp/release-notes.md
+          if gh release view "${{ github.ref_name }}" &>/dev/null; then
+            gh release edit "${{ github.ref_name }}" --notes-file /tmp/release-notes.md
+          else
+            gh release create "${{ github.ref_name }}" --notes-file /tmp/release-notes.md --title "${{ github.ref_name }}"
+          fi
 
       - name: Publish packages to npm
         env:
