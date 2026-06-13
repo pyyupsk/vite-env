@@ -42,15 +42,15 @@ This mirrors the virtual module shape: `server` ↔ `virtual:env/server`, `clien
 
 ```ts
 const env = await loadEnv(config, {
-  mode: "production",  // default: process.env.NODE_ENV ?? "development"
-  envDir: "./",        // default: process.cwd()
+  mode: "production", // default: process.env.NODE_ENV ?? "development"
+  envDir: "./", // default: process.cwd()
 });
 ```
 
-| Option   | Default                                 | Description                                       |
-| -------- | --------------------------------------- | ------------------------------------------------- |
+| Option   | Default                                 | Description                                                     |
+| -------- | --------------------------------------- | --------------------------------------------------------------- |
 | `mode`   | `process.env.NODE_ENV ?? "development"` | Controls which `.env.[mode]` and `.env.[mode].local` files load |
-| `envDir` | `process.cwd()`                         | Directory to search for `.env` files              |
+| `envDir` | `process.cwd()`                         | Directory to search for `.env` files                            |
 
 ## Error handling
 

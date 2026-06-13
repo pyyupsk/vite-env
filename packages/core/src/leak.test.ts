@@ -36,9 +36,7 @@ describe("detectServerLeak", () => {
 
   it("should skip values shorter than 8 chars", () => {
     const def = serverDef("SHORT");
-    expect(detectServerLeak(def, { SHORT: "abc" }, singleChunk('const x = "abc"'))).toHaveLength(
-      0,
-    );
+    expect(detectServerLeak(def, { SHORT: "abc" }, singleChunk('const x = "abc"'))).toHaveLength(0);
   });
 
   it("should skip non-string values", () => {
