@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/pyyupsk/vite-env/compare/core-v0.6.2...core-v0.6.3) (2026-06-14)
+
+### Bug Fixes
+
+- resolve workspace:\* to current core version before packing cli ([#61](https://github.com/pyyupsk/vite-env/issues/61)) ([e03923e](https://github.com/pyyupsk/vite-env/commit/e03923e))
+- pass --tag to gh release create ([#59](https://github.com/pyyupsk/vite-env/issues/59)) ([1896956](https://github.com/pyyupsk/vite-env/commit/1896956))
+
 ## [0.6.2](https://github.com/pyyupsk/vite-env/compare/core-v0.6.1...core-v0.6.2) (2026-06-13)
 
 ### Bug Fixes
