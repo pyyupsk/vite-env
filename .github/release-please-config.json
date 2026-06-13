@@ -3,6 +3,7 @@
   "release-type": "node",
   "include-v-in-tag": true,
   "separate-pull-requests": false,
+  "bootstrap-sha": "07784a34e5f3a244bf101aa2c9b2c98e6a0228a2",
   "packages": {
     "packages/core": {
       "package-name": "@vite-env/core",
