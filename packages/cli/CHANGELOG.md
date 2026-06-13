@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.3](https://github.com/pyyupsk/vite-env/compare/cli-v0.6.2...cli-v0.6.3) (2026-06-14)
+
+### Bug Fixes
+
+- resolve workspace:\* to current core version before packing cli ([#61](https://github.com/pyyupsk/vite-env/issues/61)) ([e03923e](https://github.com/pyyupsk/vite-env/commit/e03923e))
+
 ## [0.6.2](https://github.com/pyyupsk/vite-env/compare/cli-v0.6.1...cli-v0.6.2) (2026-06-13)
 
 ### Bug Fixes
