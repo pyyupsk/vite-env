@@ -45,8 +45,6 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "postpack": "bun ../../scripts/rewrite-deps.ts restore",
-    "prepack": "bun run build && bun ../../scripts/rewrite-deps.ts rewrite",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
