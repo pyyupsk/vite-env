@@ -11,6 +11,7 @@ on:
       - tsconfig.json
       - bun.lock
       - .github/workflows/unit-test.yml
+      - .github/workflows/release-please.yml
   pull_request:
     branches: [main, staging]
     paths:
@@ -21,6 +22,7 @@ on:
       - tsconfig.json
       - bun.lock
       - .github/workflows/unit-test.yml
+      - .github/workflows/release-please.yml
 
 permissions: {}
 
