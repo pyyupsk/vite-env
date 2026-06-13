@@ -7,7 +7,6 @@
     "dotenv",
     "env",
     "environment-variables",
-    "rolldown",
     "standard-schema",
     "typescript",
     "validation",
@@ -136,8 +135,6 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "postpack": "bun ../../scripts/rewrite-deps.ts restore",
-    "prepack": "bun run build && bun ../../scripts/rewrite-deps.ts rewrite",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -165,5 +162,20 @@
   },
   "engines": {
     "node": ">=20.19.0"
+  },
+  "compatiblePackages": {
+    "schemaVersion": 1,
+    "vite": {
+      "type": "compatible",
+      "versions": ">=8.0.0"
+    },
+    "rollup": {
+      "type": "incompatible",
+      "reason": "Uses Vite-specific hooks (configResolved, configureServer) and APIs (ResolvedConfig, Environment API) not available in standalone Rollup."
+    },
+    "rolldown": {
+      "type": "incompatible",
+      "reason": "Uses Vite-specific hooks (configResolved, configureServer) and APIs (ResolvedConfig, Environment API) not available in standalone Rolldown."
+    }
   }
 }
