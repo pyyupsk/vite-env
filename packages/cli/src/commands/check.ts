@@ -1,8 +1,7 @@
-import type { EnvDefinition } from "@vite-env/core";
+import type { AnyEnvDefinition } from "@vite-env/core";
 import path from "node:path";
 import process from "node:process";
-import { formatZodError } from "@vite-env/core/format";
-import { validateEnv } from "@vite-env/core/schema";
+import { isStandardEnvDefinition } from "@vite-env/core/standard";
 import { defineCommand } from "citty";
 import consola from "consola";
 import { loadEnv } from "vite";
@@ -33,30 +32,47 @@ export const checkCommand = defineCommand({
     const root = process.cwd();
     const configPath = path.resolve(root, args.config);
 
-    let def: EnvDefinition;
+    let def: AnyEnvDefinition;
     try {
       const { loadEnvConfig } = await import("@vite-env/core/config");
       def = await loadEnvConfig(configPath);
     } catch (e) {
       consola.error(
         `Could not load env definition file at: ${configPath}\n` +
-          `  Create an env.ts file and export default defineEnv({ ... })`,
+          `  Create an env.ts file and export default defineEnv({ ... }) or defineStandardEnv({ ... })`,
       );
       if (e instanceof Error) consola.error(e.message);
       process.exit(1);
     }
 
     const rawEnv = loadCliEnv(args.mode, root);
-    const result = validateEnv(def, rawEnv);
 
-    if (result.success) {
-      const count = Object.keys(result.data).length;
-      consola.success(`${count} environment variables valid`);
-      process.exit(0);
+    if (isStandardEnvDefinition(def)) {
+      const { validateStandardEnv } = await import("@vite-env/core/standard");
+      const { formatStandardSchemaError } = await import("@vite-env/core/format");
+      const result = await validateStandardEnv(def, rawEnv);
+      if (result.success) {
+        const count = Object.keys(result.data).length;
+        consola.success(`${count} environment variables valid`);
+        process.exit(0);
+      } else {
+        consola.error("Environment validation failed:");
+        consola.log(formatStandardSchemaError(result.errors));
+        process.exit(1);
+      }
     } else {
-      consola.error("Environment validation failed:");
-      consola.log(formatZodError(result.errors));
-      process.exit(1);
+      const { validateEnv } = await import("@vite-env/core/schema");
+      const { formatZodError } = await import("@vite-env/core/format");
+      const result = validateEnv(def, rawEnv);
+      if (result.success) {
+        const count = Object.keys(result.data).length;
+        consola.success(`${count} environment variables valid`);
+        process.exit(0);
+      } else {
+        consola.error("Environment validation failed:");
+        consola.log(formatZodError(result.errors));
+        process.exit(1);
+      }
     }
   },
 });
