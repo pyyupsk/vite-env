@@ -47,32 +47,33 @@ export const checkCommand = defineCommand({
 
     const rawEnv = loadCliEnv(args.mode, root);
 
+    let success: boolean;
+    let count = 0;
+    let errorMsg = "";
+
     if (isStandardEnvDefinition(def)) {
       const { validateStandardEnv } = await import("@vite-env/core/standard");
       const { formatStandardSchemaError } = await import("@vite-env/core/format");
       const result = await validateStandardEnv(def, rawEnv);
-      if (result.success) {
-        const count = Object.keys(result.data).length;
-        consola.success(`${count} environment variables valid`);
-        process.exit(0);
-      } else {
-        consola.error("Environment validation failed:");
-        consola.log(formatStandardSchemaError(result.errors));
-        process.exit(1);
-      }
+      success = result.success;
+      if (result.success) count = Object.keys(result.data).length;
+      else errorMsg = formatStandardSchemaError(result.errors);
     } else {
       const { validateEnv } = await import("@vite-env/core/schema");
       const { formatZodError } = await import("@vite-env/core/format");
       const result = validateEnv(def, rawEnv);
-      if (result.success) {
-        const count = Object.keys(result.data).length;
-        consola.success(`${count} environment variables valid`);
-        process.exit(0);
-      } else {
-        consola.error("Environment validation failed:");
-        consola.log(formatZodError(result.errors));
-        process.exit(1);
-      }
+      success = result.success;
+      if (result.success) count = Object.keys(result.data).length;
+      else errorMsg = formatZodError(result.errors);
+    }
+
+    if (success) {
+      consola.success(`${count} environment variables valid`);
+      process.exit(0);
+    } else {
+      consola.error("Environment validation failed:");
+      consola.log(errorMsg);
+      process.exit(1);
     }
   },
 });
