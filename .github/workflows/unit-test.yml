@@ -14,7 +14,6 @@ on:
       - .github/workflows/release-please.yml
   pull_request:
     branches: [main, staging]
-      - .github/workflows/release-please.yml
 
 permissions: {}
 
