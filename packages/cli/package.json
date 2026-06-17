@@ -1,6 +1,6 @@
 {
   "name": "@vite-env/cli",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "CLI for @vite-env/core — check, generate, types",
   "keywords": [
     "cli",
