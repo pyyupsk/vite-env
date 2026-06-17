@@ -117,4 +117,47 @@ describe("detectServerLeak", () => {
       detectServerLeak(def, { VITE_X: "some-value-here" }, singleChunk("some-value-here")),
     ).toHaveLength(0);
   });
+
+  it("should skip pure vendor chunks (all modules from node_modules)", () => {
+    const def = serverDef("DB_URL");
+    const bundle = {
+      "vendor.js": {
+        type: "chunk",
+        code: `const x = "postgresql://localhost:5432/mydb"`,
+        moduleIds: ["/project/node_modules/pg/lib/client.js", "/project/node_modules/pg/index.js"],
+      },
+    };
+    expect(
+      detectServerLeak(def, { DB_URL: "postgresql://localhost:5432/mydb" }, bundle),
+    ).toHaveLength(0);
+  });
+
+  it("should scan mixed chunks (user + vendor modules)", () => {
+    const def = serverDef("API_SECRET");
+    const bundle = {
+      "main.js": {
+        type: "chunk",
+        code: `const s = "secret-api-key-value"`,
+        moduleIds: [
+          "/project/src/app.ts",
+          "/project/node_modules/some-lib/index.js",
+        ],
+      },
+    };
+    const leaks = detectServerLeak(def, { API_SECRET: "secret-api-key-value" }, bundle);
+    expect(leaks).toHaveLength(1);
+    expect(leaks[0].chunk).toBe("main.js");
+  });
+
+  it("should scan chunks with no moduleIds (legacy/external chunks)", () => {
+    const def = serverDef("TOKEN");
+    const bundle = {
+      "entry.js": {
+        type: "chunk",
+        code: `const t = "leaked-token-value"`,
+      },
+    };
+    const leaks = detectServerLeak(def, { TOKEN: "leaked-token-value" }, bundle);
+    expect(leaks).toHaveLength(1);
+  });
 });

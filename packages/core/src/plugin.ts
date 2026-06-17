@@ -72,6 +72,10 @@ async function validateAndFormat(
   return { data: result.data };
 }
 
+function getEnvConsumer(ctx: Rollup.PluginContext): string | undefined {
+  return (ctx.environment as unknown as { config?: { consumer?: string } })?.config?.consumer;
+}
+
 export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let resolvedConfig: ResolvedConfig;
   let envDefinition: AnyEnvDefinition;
@@ -135,8 +139,10 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       if (source === "virtual:env/client") return "\0virtual:env/client";
       if (source === "virtual:env/server") {
         const envName = this.environment?.name ?? "client";
-        const result = checkServerModuleAccess(envName, serverEnvs, guardMode, importer);
-        if (!result.allowed) serverModuleGuardFails.push(result);
+        if (getEnvConsumer(this) !== "server") {
+          const result = checkServerModuleAccess(envName, serverEnvs, guardMode, importer);
+          if (!result.allowed) serverModuleGuardFails.push(result);
+        }
         return "\0virtual:env/server";
       }
     },
@@ -145,10 +151,8 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       if (id === "\0virtual:env/client") return buildClientModule(envDefinition, lastValidated);
       if (id === "\0virtual:env/server") {
         const envName = this.environment?.name ?? "client";
-        // Filter to fails from this environment only — other envs may have recorded fails for their own loads
         const envFails = serverModuleGuardFails.filter((f) => f.envName === envName);
         if (envFails.length > 0) {
-          // warn once per load cycle using the last recorded fail; unique importers are written to the log file
           const latest = envFails.at(-1)!;
           if (latest.mode === "error") throw new Error(formatHardError(latest));
           if (latest.mode === "stub") return buildServerStubModule(envName);
@@ -168,21 +172,14 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     },
 
     generateBundle(this: Rollup.PluginContext, _options, bundle) {
-      if (resolvedConfig.build.ssr) return;
-
       const envName = this.environment?.name ?? "client";
-      if (serverEnvs.includes(envName)) return;
+      if (resolvedConfig.build.ssr || serverEnvs.includes(envName) || getEnvConsumer(this) === "server") return;
 
-      const leaks = detectServerLeak(
-        envDefinition,
-        lastValidated,
-        bundle as Record<string, { type: string; code?: string }>,
-        (keys) => {
-          resolvedConfig.logger.warn(
-            `  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Leak detection skipped ${keys.length} server variable(s) with values shorter than 8 chars: ${keys.join(", ")}`,
-          );
-        },
-      );
+      const leaks = detectServerLeak(envDefinition, lastValidated, bundle, (keys) => {
+        resolvedConfig.logger.warn(
+          `  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Leak detection skipped ${keys.length} server variable(s) with values shorter than 8 chars: ${keys.join(", ")}`,
+        );
+      });
 
       if (leaks.length > 0) {
         const details = leaks.map((l) => `  ✗ ${l.key} found in ${l.chunk}`).join("\n");

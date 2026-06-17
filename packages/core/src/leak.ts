@@ -5,15 +5,30 @@ type LeakReport = {
   chunk: string;
 };
 
+type BundleChunk = {
+  type: string;
+  code?: string;
+  moduleIds?: string[];
+};
+
+const NODE_MODULES_RE = /[\\/]node_modules[\\/]/;
+
+function isVendorChunk(chunk: BundleChunk): boolean {
+  const ids = chunk.moduleIds ?? [];
+  return ids.length > 0 && ids.every((id) => NODE_MODULES_RE.test(id));
+}
+
 /**
  * Scans client-destined chunks for server-only var values appearing as quoted
  * string literals. Bare substring matches are ignored — only quoted literals
  * indicate a real bundler-inlined leak. Values < 8 chars are skipped.
+ * Pure vendor chunks (all modules from node_modules) are excluded to avoid
+ * false positives from libraries that happen to contain the same string values.
  */
 export function detectServerLeak(
   def: AnyEnvDefinition,
   data: Record<string, unknown>,
-  bundle: Record<string, { type: string; code?: string }>,
+  bundle: Record<string, BundleChunk>,
   onSkipped?: (keys: string[]) => void,
 ): LeakReport[] {
   const serverKeys = new Set(Object.keys(def.server ?? {}));
@@ -33,7 +48,7 @@ export function detectServerLeak(
   );
 
   const chunks = Object.entries(bundle).filter(
-    ([, chunk]) => chunk.type === "chunk" && !!chunk.code,
+    ([, chunk]) => chunk.type === "chunk" && !!chunk.code && !isVendorChunk(chunk),
   );
 
   const leaks: LeakReport[] = [];
