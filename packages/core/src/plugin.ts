@@ -72,6 +72,10 @@ async function validateAndFormat(
   return { data: result.data };
 }
 
+function getEnvConsumer(ctx: Rollup.PluginContext): string | undefined {
+  return (ctx.environment as unknown as { config?: { consumer?: string } })?.config?.consumer;
+}
+
 export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let resolvedConfig: ResolvedConfig;
   let envDefinition: AnyEnvDefinition;
@@ -81,10 +85,6 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
 
   const serverEnvs = options.serverEnvironments ?? ["ssr"];
   const guardMode = options.onClientAccessOfServerModule ?? "warn";
-
-  function getEnvConsumer(ctx: Rollup.PluginContext): string | undefined {
-    return (ctx.environment as unknown as { config?: { consumer?: string } })?.config?.consumer;
-  }
 
   return {
     name: "vite-env",
