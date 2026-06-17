@@ -82,6 +82,10 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   const serverEnvs = options.serverEnvironments ?? ["ssr"];
   const guardMode = options.onClientAccessOfServerModule ?? "warn";
 
+  function getEnvConsumer(ctx: Rollup.PluginContext): string | undefined {
+    return (ctx.environment as unknown as { config?: { consumer?: string } })?.config?.consumer;
+  }
+
   return {
     name: "vite-env",
     enforce: "pre",
@@ -135,9 +139,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       if (source === "virtual:env/client") return "\0virtual:env/client";
       if (source === "virtual:env/server") {
         const envName = this.environment?.name ?? "client";
-        const envConsumer = (this.environment as unknown as { config?: { consumer?: string } })
-          ?.config?.consumer;
-        if (envConsumer !== "server") {
+        if (getEnvConsumer(this) !== "server") {
           const result = checkServerModuleAccess(envName, serverEnvs, guardMode, importer);
           if (!result.allowed) serverModuleGuardFails.push(result);
         }
@@ -170,14 +172,8 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     },
 
     generateBundle(this: Rollup.PluginContext, _options, bundle) {
-      if (resolvedConfig.build.ssr) return;
-
       const envName = this.environment?.name ?? "client";
-      if (serverEnvs.includes(envName)) return;
-
-      const envConsumer = (this.environment as unknown as { config?: { consumer?: string } })
-        ?.config?.consumer;
-      if (envConsumer === "server") return;
+      if (resolvedConfig.build.ssr || serverEnvs.includes(envName) || getEnvConsumer(this) === "server") return;
 
       const leaks = detectServerLeak(envDefinition, lastValidated, bundle, (keys) => {
         resolvedConfig.logger.warn(
