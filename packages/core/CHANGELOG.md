@@ -2,11 +2,10 @@
 
 ## [0.6.4](https://github.com/pyyupsk/vite-env/compare/core-v0.6.3...core-v0.6.4) (2026-06-17)
 
-
 ### Bug Fixes
 
-* **core:** skip leak detection and import guard for server-consumer environments ([#69](https://github.com/pyyupsk/vite-env/issues/69)) ([469d0e9](https://github.com/pyyupsk/vite-env/commit/469d0e9f9a9c4eaaa1769cd0b0a145a2417a1624))
-* **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
+- **core:** skip leak detection and import guard for server-consumer environments ([#69](https://github.com/pyyupsk/vite-env/issues/69)) ([469d0e9](https://github.com/pyyupsk/vite-env/commit/469d0e9f9a9c4eaaa1769cd0b0a145a2417a1624))
+- **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
 
 ## [0.6.3](https://github.com/pyyupsk/vite-env/compare/core-v0.6.2...core-v0.6.3) (2026-06-14)
 
