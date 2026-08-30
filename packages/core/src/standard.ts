@@ -34,8 +34,10 @@ export function defineStandardEnv<T extends StandardEnvInput>(
   const hasExplicitClientPrefix = "clientPrefix" in definition;
   const prefixes = normalizeClientPrefix(clientPrefix);
 
-  if (rest.client) {
-    for (const key of Object.keys(rest.client)) {
+  const shouldValidateNow =
+    hasExplicitClientPrefix || (rest.client && Object.keys(rest.client).length > 0);
+  if (shouldValidateNow) {
+    for (const key of Object.keys(rest.client ?? {})) {
       if (!prefixes.some((p) => key.startsWith(p))) {
         throw new Error(buildPrefixErrorMessage(key, prefixes));
       }

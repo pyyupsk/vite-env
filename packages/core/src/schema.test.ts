@@ -11,12 +11,12 @@ describe("defineEnv", () => {
     expect(defineEnv(def)).toEqual(def);
   });
 
-  it("should throw when client key lacks VITE_ prefix", () => {
+  it("should defer validation when no explicit clientPrefix (uses Vite config fallback)", () => {
     expect(() =>
       defineEnv({
         client: { API_URL: z.string() },
       }),
-    ).toThrow('[vite-env] Client env var "API_URL" must be prefixed with VITE_');
+    ).not.toThrow();
   });
 
   it("should allow server keys without VITE_ prefix", () => {
@@ -169,11 +169,11 @@ describe("defineEnv with custom clientPrefix", () => {
     expect(def.clientPrefix).toBeUndefined();
   });
 
-  it("should throw with default VITE_ prefix when key lacks VITE_", () => {
+  it("should defer validation at definition time (uses Vite config fallback at runtime)", () => {
     expect(() =>
       defineEnv({
         client: { API_URL: z.string() },
       }),
-    ).toThrow('[vite-env] Client env var "API_URL" must be prefixed with VITE_');
+    ).not.toThrow();
   });
 });

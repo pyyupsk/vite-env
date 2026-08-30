@@ -71,11 +71,21 @@ export function defineEnv<T extends DefineEnvInput>(
     client,
   );
 
+  // Check if presets have client keys (they enforce default VITE_ prefix)
+  const presetsHaveClientKeys = presets.some((p) => p.client && Object.keys(p.client).length > 0);
+
   warnConflicts(presets, new Set(Object.keys(server ?? {})), new Set(Object.keys(client ?? {})));
 
-  for (const key of Object.keys(mergedClient)) {
-    if (!prefixes.some((p) => key.startsWith(p))) {
-      throw new Error(buildPrefixErrorMessage(key, prefixes));
+  // Validate prefix at definition time if:
+  // - Explicit clientPrefix provided (validate against that prefix)
+  // - OR presets have client keys (validate against default VITE_ prefix)
+  // Otherwise defer ALL validation to runtime (plugin applies Vite config fallback first)
+  const shouldValidateNow = hasExplicitClientPrefix || presetsHaveClientKeys;
+  if (shouldValidateNow) {
+    for (const key of Object.keys(mergedClient)) {
+      if (!prefixes.some((p) => key.startsWith(p))) {
+        throw new Error(buildPrefixErrorMessage(key, prefixes));
+      }
     }
   }
 
