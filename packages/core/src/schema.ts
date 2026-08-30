@@ -57,7 +57,7 @@ export function defineEnv<T extends DefineEnvInput>(
   const { presets = [], server, client, clientPrefix, ...rest } = definition;
   // ...rest intentionally forwarded — T may carry extra keys beyond EnvDefinition
 
-  const hasExplicitClientPrefix = "clientPrefix" in definition;
+  const hasExplicitClientPrefix = definition.clientPrefix !== undefined;
   const prefixes = normalizeClientPrefix(clientPrefix);
 
   const mergedServer: z.ZodRawShape = Object.assign(

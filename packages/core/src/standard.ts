@@ -31,7 +31,7 @@ export function defineStandardEnv<T extends StandardEnvInput>(
   definition: T,
 ): DefineStandardEnvResult<T> {
   const { clientPrefix, ...rest } = definition;
-  const hasExplicitClientPrefix = "clientPrefix" in definition;
+  const hasExplicitClientPrefix = definition.clientPrefix !== undefined;
   const prefixes = normalizeClientPrefix(clientPrefix);
 
   const shouldValidateNow =

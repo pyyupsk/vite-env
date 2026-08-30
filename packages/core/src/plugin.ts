@@ -104,11 +104,6 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
           { cause: e },
         );
       }
-
-      if (!("clientPrefix" in envDefinition) && config.envPrefix) {
-        const vitePrefix = Array.isArray(config.envPrefix) ? config.envPrefix : [config.envPrefix];
-        (envDefinition as Record<string, unknown>).clientPrefix = vitePrefix;
-      }
     },
 
     async buildStart() {
