@@ -62,6 +62,58 @@ describe("defineStandardEnv", () => {
   });
 });
 
+describe("defineStandardEnv with custom clientPrefix", () => {
+  it("should accept custom string prefix", () => {
+    const def = defineStandardEnv({
+      clientPrefix: "PUBLIC_",
+      client: { PUBLIC_API_URL: stringSchema() },
+    });
+    expect(def.clientPrefix).toEqual(["PUBLIC_"]);
+  });
+
+  it("should accept custom array prefix", () => {
+    const def = defineStandardEnv({
+      clientPrefix: ["PUBLIC_", "APP_"],
+      client: { PUBLIC_API_URL: stringSchema(), APP_NAME: stringSchema() },
+    });
+    expect(def.clientPrefix).toEqual(["PUBLIC_", "APP_"]);
+  });
+
+  it("should throw when client key lacks custom prefix (string)", () => {
+    expect(() =>
+      defineStandardEnv({
+        clientPrefix: "PUBLIC_",
+        client: { API_URL: stringSchema() },
+      }),
+    ).toThrow("must be prefixed with PUBLIC_");
+  });
+
+  it("should throw when client key lacks custom prefix (array)", () => {
+    expect(() =>
+      defineStandardEnv({
+        clientPrefix: ["PUBLIC_", "APP_"],
+        client: { MY_KEY: stringSchema() },
+      }),
+    ).toThrow("must be prefixed with PUBLIC_ or APP_");
+  });
+
+  it("should allow server keys without prefix", () => {
+    expect(() =>
+      defineStandardEnv({
+        clientPrefix: "PUBLIC_",
+        server: { DATABASE_URL: urlSchema() },
+      }),
+    ).not.toThrow();
+  });
+
+  it("should not include clientPrefix in result when not explicitly specified", () => {
+    const def = defineStandardEnv({
+      client: { VITE_API_URL: stringSchema() },
+    });
+    expect(def.clientPrefix).toBeUndefined();
+  });
+});
+
 describe("isStandardEnvDefinition", () => {
   it("should return true for standard definitions", () => {
     const def = defineStandardEnv({ client: { VITE_X: stringSchema() } });

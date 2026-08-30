@@ -3,7 +3,21 @@ import { z } from "zod";
 
 type DefineEnvInput = {
   presets?: EnvPreset[];
+  clientPrefix?: string | string[];
 } & EnvDefinition;
+
+function normalizeClientPrefix(prefix?: string | string[]): string[] {
+  if (!prefix) return ["VITE_"];
+  return Array.isArray(prefix) ? prefix : [prefix];
+}
+
+function buildPrefixErrorMessage(key: string, prefixes: string[]): string {
+  const prefixList = prefixes.join(" or ");
+  return (
+    `[vite-env] Client env var "${key}" must be prefixed with ${prefixList}.\n` +
+    `  Rename it to "${prefixes[0]}${key}" or move it to "server" if it's secret.`
+  );
+}
 
 function warnSideConflicts(
   keys: string[],
@@ -39,9 +53,12 @@ function warnConflicts(
 
 export function defineEnv<T extends DefineEnvInput>(
   definition: T,
-): Omit<T, "presets"> & Pick<EnvDefinition, "server" | "client" | "presets"> {
-  const { presets = [], server, client, ...rest } = definition;
+): Omit<T, "presets"> & Pick<EnvDefinition, "server" | "client" | "presets" | "clientPrefix"> {
+  const { presets = [], server, client, clientPrefix, ...rest } = definition;
   // ...rest intentionally forwarded — T may carry extra keys beyond EnvDefinition
+
+  const hasExplicitClientPrefix = "clientPrefix" in definition;
+  const prefixes = normalizeClientPrefix(clientPrefix);
 
   const mergedServer: z.ZodRawShape = Object.assign(
     {},
@@ -57,11 +74,8 @@ export function defineEnv<T extends DefineEnvInput>(
   warnConflicts(presets, new Set(Object.keys(server ?? {})), new Set(Object.keys(client ?? {})));
 
   for (const key of Object.keys(mergedClient)) {
-    if (!key.startsWith("VITE_")) {
-      throw new Error(
-        `[vite-env] Client env var "${key}" must be prefixed with VITE_.\n` +
-          `  Rename it to "VITE_${key}" or move it to "server" if it's secret.`,
-      );
+    if (!prefixes.some((p) => key.startsWith(p))) {
+      throw new Error(buildPrefixErrorMessage(key, prefixes));
     }
   }
 
@@ -69,6 +83,7 @@ export function defineEnv<T extends DefineEnvInput>(
   if (Object.keys(mergedServer).length > 0 || server !== undefined) result.server = mergedServer;
   if (Object.keys(mergedClient).length > 0 || client !== undefined) result.client = mergedClient;
   if (presets.length > 0) result.presets = presets;
+  if (hasExplicitClientPrefix) result.clientPrefix = prefixes;
 
   return result as Omit<T, "presets"> & Pick<EnvDefinition, "presets">;
 }
