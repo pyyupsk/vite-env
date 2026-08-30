@@ -5,21 +5,50 @@ import type {
   StandardValidationResult,
 } from "./types";
 
-export function defineStandardEnv<T extends Omit<StandardEnvDefinition, "_standard">>(
+function normalizeClientPrefix(prefix?: string | string[]): string[] {
+  if (!prefix) return ["VITE_"];
+  return Array.isArray(prefix) ? prefix : [prefix];
+}
+
+function buildPrefixErrorMessage(key: string, prefixes: string[]): string {
+  const prefixList = prefixes.join(" or ");
+  return (
+    `[vite-env] Client env var "${key}" must be prefixed with ${prefixList}.\n` +
+    `  Rename it to "${prefixes[0]}${key}" or move it to "server" if it's secret.`
+  );
+}
+
+type StandardEnvInput = Omit<StandardEnvDefinition, "_standard"> & {
+  clientPrefix?: string | string[];
+};
+
+type DefineStandardEnvResult<T extends StandardEnvInput> = T & {
+  readonly _standard: true;
+  clientPrefix: T extends { clientPrefix: infer P } ? P : undefined;
+};
+
+export function defineStandardEnv<T extends StandardEnvInput>(
   definition: T,
-): T & { readonly _standard: true } {
-  if (definition.client) {
-    for (const key of Object.keys(definition.client)) {
-      if (!key.startsWith("VITE_")) {
-        throw new Error(
-          `[vite-env] Client env var "${key}" must be prefixed with VITE_.\n` +
-            `  Rename it to "VITE_${key}" or move it to "server" if it's secret.`,
-        );
+): DefineStandardEnvResult<T> {
+  const { clientPrefix, ...rest } = definition;
+  const hasExplicitClientPrefix = "clientPrefix" in definition;
+  const prefixes = normalizeClientPrefix(clientPrefix);
+
+  const shouldValidateNow =
+    hasExplicitClientPrefix || (rest.client && Object.keys(rest.client).length > 0);
+  if (shouldValidateNow) {
+    for (const key of Object.keys(rest.client ?? {})) {
+      if (!prefixes.some((p) => key.startsWith(p))) {
+        throw new Error(buildPrefixErrorMessage(key, prefixes));
       }
     }
   }
 
-  return { ...definition, _standard: true as const };
+  const result = { ...rest, _standard: true as const };
+  if (hasExplicitClientPrefix) {
+    (result as Record<string, unknown>).clientPrefix = prefixes;
+  }
+  return result as DefineStandardEnvResult<T>;
 }
 
 export function isStandardEnvDefinition(def: unknown): def is StandardEnvDefinition {

@@ -104,6 +104,11 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
           { cause: e },
         );
       }
+
+      if (!("clientPrefix" in envDefinition) && config.envPrefix) {
+        const vitePrefix = Array.isArray(config.envPrefix) ? config.envPrefix : [config.envPrefix];
+        (envDefinition as Record<string, unknown>).clientPrefix = vitePrefix;
+      }
     },
 
     async buildStart() {
@@ -173,7 +178,12 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
 
     generateBundle(this: Rollup.PluginContext, _options, bundle) {
       const envName = this.environment?.name ?? "client";
-      if (resolvedConfig.build.ssr || serverEnvs.includes(envName) || getEnvConsumer(this) === "server") return;
+      if (
+        resolvedConfig.build.ssr ||
+        serverEnvs.includes(envName) ||
+        getEnvConsumer(this) === "server"
+      )
+        return;
 
       const leaks = detectServerLeak(envDefinition, lastValidated, bundle, (keys) => {
         resolvedConfig.logger.warn(

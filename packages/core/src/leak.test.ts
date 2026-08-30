@@ -138,10 +138,7 @@ describe("detectServerLeak", () => {
       "main.js": {
         type: "chunk",
         code: `const s = "secret-api-key-value"`,
-        moduleIds: [
-          "/project/src/app.ts",
-          "/project/node_modules/some-lib/index.js",
-        ],
+        moduleIds: ["/project/src/app.ts", "/project/node_modules/some-lib/index.js"],
       },
     };
     const leaks = detectServerLeak(def, { API_SECRET: "secret-api-key-value" }, bundle);

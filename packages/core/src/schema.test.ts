@@ -11,12 +11,12 @@ describe("defineEnv", () => {
     expect(defineEnv(def)).toEqual(def);
   });
 
-  it("should throw when client key lacks VITE_ prefix", () => {
+  it("should defer validation when no explicit clientPrefix (uses Vite config fallback)", () => {
     expect(() =>
       defineEnv({
         client: { API_URL: z.string() },
       }),
-    ).toThrow('[vite-env] Client env var "API_URL" must be prefixed with VITE_');
+    ).not.toThrow();
   });
 
   it("should allow server keys without VITE_ prefix", () => {
@@ -115,5 +115,65 @@ describe("defineEnv with presets", () => {
         presets: [{ client: { NO_PREFIX: z.string() } }],
       }),
     ).toThrow('[vite-env] Client env var "NO_PREFIX" must be prefixed with VITE_');
+  });
+});
+
+describe("defineEnv with custom clientPrefix", () => {
+  it("should accept custom string prefix", () => {
+    const def = defineEnv({
+      clientPrefix: "PUBLIC_",
+      client: { PUBLIC_API_URL: z.string() },
+    });
+    expect(def.clientPrefix).toEqual(["PUBLIC_"]);
+  });
+
+  it("should accept custom array prefix", () => {
+    const def = defineEnv({
+      clientPrefix: ["PUBLIC_", "APP_"],
+      client: { PUBLIC_API_URL: z.string(), APP_NAME: z.string() },
+    });
+    expect(def.clientPrefix).toEqual(["PUBLIC_", "APP_"]);
+  });
+
+  it("should throw when client key lacks custom prefix (string)", () => {
+    expect(() =>
+      defineEnv({
+        clientPrefix: "PUBLIC_",
+        client: { API_URL: z.string() },
+      }),
+    ).toThrow('[vite-env] Client env var "API_URL" must be prefixed with PUBLIC_');
+  });
+
+  it("should throw when client key lacks custom prefix (array)", () => {
+    expect(() =>
+      defineEnv({
+        clientPrefix: ["PUBLIC_", "APP_"],
+        client: { MY_KEY: z.string() },
+      }),
+    ).toThrow('[vite-env] Client env var "MY_KEY" must be prefixed with PUBLIC_ or APP_');
+  });
+
+  it("should allow server keys without prefix", () => {
+    expect(() =>
+      defineEnv({
+        clientPrefix: "PUBLIC_",
+        server: { DATABASE_URL: z.string() },
+      }),
+    ).not.toThrow();
+  });
+
+  it("should not include clientPrefix in result when not explicitly specified", () => {
+    const def = defineEnv({
+      client: { VITE_API_URL: z.string() },
+    });
+    expect(def.clientPrefix).toBeUndefined();
+  });
+
+  it("should defer validation at definition time (uses Vite config fallback at runtime)", () => {
+    expect(() =>
+      defineEnv({
+        client: { API_URL: z.string() },
+      }),
+    ).not.toThrow();
   });
 });
