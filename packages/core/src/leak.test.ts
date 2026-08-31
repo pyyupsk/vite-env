@@ -157,4 +157,71 @@ describe("detectServerLeak", () => {
     const leaks = detectServerLeak(def, { TOKEN: "leaked-token-value" }, bundle);
     expect(leaks).toHaveLength(1);
   });
+
+  describe("template literals", () => {
+    it("should detect server value in template literal quasi", () => {
+      const def = serverDef("SECRET");
+      const bundle = singleChunk("const x = `super-secret-value-here`");
+      const leaks = detectServerLeak(def, { SECRET: "super-secret-value-here" }, bundle);
+      expect(leaks).toHaveLength(1);
+      expect(leaks[0].key).toBe("SECRET");
+    });
+
+    it("should detect server value in template literal with expressions", () => {
+      const def = serverDef("SECRET");
+      const bundle = singleChunk('const x = "prefix-super-secret-value-here"');
+      const leaks = detectServerLeak(def, { SECRET: "super-secret-value-here" }, bundle);
+      expect(leaks).toHaveLength(1);
+    });
+  });
+
+  describe("concatenation", () => {
+    it("should detect server value at end of concatenated string", () => {
+      const def = serverDef("SECRET");
+      const bundle = singleChunk('const x = "prefix-super-secret-value-here"');
+      const leaks = detectServerLeak(def, { SECRET: "super-secret-value-here" }, bundle);
+      expect(leaks).toHaveLength(1);
+    });
+
+    it("should detect server value at start of concatenated string", () => {
+      const def = serverDef("SECRET");
+      const bundle = singleChunk('const x = "super-secret-value-here-suffix"');
+      const leaks = detectServerLeak(def, { SECRET: "super-secret-value-here" }, bundle);
+      expect(leaks).toHaveLength(1);
+    });
+
+    it("should not detect server value in middle of string (false positive)", () => {
+      const def = serverDef("DB_URL");
+      const bundle = singleChunk('var t="connect-to-postgres-primary-host"');
+      expect(detectServerLeak(def, { DB_URL: "postgres-primary" }, bundle)).toHaveLength(0);
+    });
+  });
+
+  describe("encoded values", () => {
+    it("should detect base64 encoded server value", () => {
+      const def = serverDef("SECRET");
+      const secret = "super-secret-value";
+      const encoded = Buffer.from(secret).toString("base64");
+      const bundle = singleChunk(`const x = "${encoded}"`);
+      const leaks = detectServerLeak(def, { SECRET: secret }, bundle);
+      expect(leaks).toHaveLength(1);
+      expect(leaks[0].key).toBe("SECRET");
+    });
+
+    it("should detect hex encoded server value", () => {
+      const def = serverDef("SECRET");
+      const secret = "super-secret-value";
+      const encoded = Buffer.from(secret).toString("hex");
+      const bundle = singleChunk(`const x = "${encoded}"`);
+      const leaks = detectServerLeak(def, { SECRET: secret }, bundle);
+      expect(leaks).toHaveLength(1);
+      expect(leaks[0].key).toBe("SECRET");
+    });
+
+    it("should not attempt decode for short literals", () => {
+      const def = serverDef("SECRET");
+      const bundle = singleChunk('const x = "abc"');
+      expect(detectServerLeak(def, { SECRET: "abc" }, bundle)).toHaveLength(0);
+    });
+  });
 });
