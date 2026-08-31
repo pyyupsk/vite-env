@@ -24,12 +24,15 @@ export type ViteEnvOptions = {
   /**
    * Vite 8 environment names that are allowed to import virtual:env/server.
    * Use this to allow edge runtimes (Cloudflare Workers → 'workerd', Deno Deploy → 'deno',
-   * Vercel/Netlify Edge → 'edge'). Default falls back to `['ssr', 'workerd', 'deno', 'edge']`.
+   * Vercel/Netlify Edge → 'edge'). When left empty, detection relies on
+   * `environment.config.consumer` (Vite 8+ built-in: 'server' for known runtimes).
    *
    * Detection fallback chain:
-   *  1. `environment.name` (Vite 8+ built-in: 'workerd', 'deno', 'edge')
+   *  1. `environment.config.consumer` (Vite 8+ built-in: 'server' for known runtimes)
    *  2. `ssr.config.experimental.environments` (custom runtime configs)
-   *  3. Default: `['ssr', 'workerd', 'deno', 'edge']`
+   *  3. Default: `['ssr']`
+   *
+   * Name-based matching is preserved when explicitly provided via this option.
    *
    * @default automatically detected from Vite environment
    */
@@ -90,7 +93,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let serverModuleGuardFails: GuardFail[] = [];
   let didSetExitCode = false;
 
-  const serverEnvs = options.serverEnvironments ?? ["ssr", "workerd", "deno", "edge"];
+  const serverEnvs = options.serverEnvironments ?? ["ssr"];
   const guardMode = options.onClientAccessOfServerModule ?? "warn";
 
   return {
