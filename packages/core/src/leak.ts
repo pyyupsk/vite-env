@@ -101,6 +101,86 @@ function matchesServerValue(literal: string, serverVal: string): boolean {
   return false;
 }
 
+function evaluateLiteral(node: { type: string; value?: unknown }): string | null {
+  if (node.type === "Literal" && typeof node.value === "string") {
+    return node.value;
+  }
+  return null;
+}
+
+function evaluateTemplateElement(node: {
+  type: string;
+  value?: { cooked?: string | null };
+}): string | null {
+  if (node.type === "TemplateElement") {
+    if (node.value && typeof node.value.cooked === "string") {
+      return node.value.cooked;
+    }
+  }
+  return null;
+}
+
+function evaluateBinaryExpression(node: {
+  type: string;
+  operator?: string;
+  left?: Expression;
+  right?: Expression;
+}): string | null {
+  if (node.type === "BinaryExpression" && node.operator === "+") {
+    const left = evaluateNodeToString(node.left!);
+    const right = evaluateNodeToString(node.right!);
+    if (left !== null && right !== null) {
+      return left + right;
+    }
+  }
+  return null;
+}
+
+function evaluateTemplateLiteral(node: {
+  type: string;
+  quasis?: Array<{ value?: { cooked?: string | null } }>;
+  expressions?: Expression[];
+}): string | null {
+  if (node.type !== "TemplateLiteral") return null;
+
+  const quasis = node.quasis;
+  const expressions = node.expressions;
+
+  if (!quasis || quasis.length === 0) return null;
+
+  if (!expressions || expressions.length === 0) {
+    return quasis[0].value?.cooked ?? null;
+  }
+
+  const exprValues = expressions.map((e) => evaluateNodeToString(e));
+  if (exprValues.some((v): v is null => v === null)) return null;
+
+  let result = quasis[0].value?.cooked ?? "";
+  for (let i = 0; i < exprValues.length; i++) {
+    result += exprValues[i]! + (quasis[i + 1]?.value?.cooked ?? "");
+  }
+  return result;
+}
+
+function evaluateNodeToString(node: unknown): string | null {
+  if (!node || typeof node !== "object") return null;
+  const n = node as Record<string, unknown> & { type: string };
+
+  const literal = evaluateLiteral(n);
+  if (literal !== null) return literal;
+
+  const templateElement = evaluateTemplateElement(n);
+  if (templateElement !== null) return templateElement;
+
+  const binaryExpr = evaluateBinaryExpression(n);
+  if (binaryExpr !== null) return binaryExpr;
+
+  const templateLiteral = evaluateTemplateLiteral(n);
+  if (templateLiteral !== null) return templateLiteral;
+
+  return null;
+}
+
 /**
  * Collect all string-like values from the AST.
  * Handles string literals, template literals, and statically evaluable concatenations.
@@ -108,69 +188,23 @@ function matchesServerValue(literal: string, serverVal: string): boolean {
 function collectStringValues(node: Program): string[] {
   const values: string[] = [];
 
-  function evaluateToString(node: unknown): string | null {
-    if (!node || typeof node !== "object") return null;
-    const n = node as Record<string, unknown> & { type: string };
-
-    if (n.type === "Literal" && typeof n.value === "string") {
-      return n.value;
-    }
-
-    if (n.type === "TemplateLiteral") {
-      const tpl = n as unknown as TemplateLiteral;
-      const quasis = tpl.quasis;
-      const expressions = tpl.expressions;
-      if (!quasis || quasis.length === 0) return null;
-      if (expressions && expressions.length > 0) {
-        const exprValues = expressions.map((e) => evaluateToString(e as Expression));
-        if (exprValues.some((v): v is null => v === null)) return null;
-        let result = quasis[0].value?.cooked ?? "";
-        for (let i = 0; i < exprValues.length; i++) {
-          result += exprValues[i]! + (quasis[i + 1]?.value?.cooked ?? "");
-        }
-        return result;
-      }
-      return quasis[0].value?.cooked ?? null;
-    }
-
-    if (n.type === "BinaryExpression" && n.operator === "+") {
-      const bin = n as unknown as BinaryExpression;
-      const left = evaluateToString(bin.left);
-      const right = evaluateToString(bin.right);
-      if (left !== null && right !== null) {
-        return left + right;
-      }
-    }
-
-    if (n.type === "TemplateElement") {
-      const el = n as unknown as TemplateElement;
-      if (el.value && typeof el.value.cooked === "string") {
-        return el.value.cooked;
-      }
-    }
-
-    return null;
-  }
-
   const visitor = new Visitor({
     Literal(n) {
-      if (n.type === "Literal" && typeof n.value === "string") {
-        values.push(n.value);
-      }
+      const evaluated = evaluateLiteral(n);
+      if (evaluated !== null) values.push(evaluated);
     },
     TemplateElement(n: TemplateElement) {
-      if (n.value && typeof n.value.cooked === "string") {
-        values.push(n.value.cooked);
-      }
+      const evaluated = evaluateTemplateElement(n);
+      if (evaluated !== null) values.push(evaluated);
     },
     BinaryExpression(n: BinaryExpression) {
       if (n.operator === "+") {
-        const evaluated = evaluateToString(n);
+        const evaluated = evaluateBinaryExpression(n);
         if (evaluated !== null) values.push(evaluated);
       }
     },
     TemplateLiteral(n: TemplateLiteral) {
-      const evaluated = evaluateToString(n);
+      const evaluated = evaluateTemplateLiteral(n);
       if (evaluated !== null) values.push(evaluated);
     },
   });
