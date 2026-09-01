@@ -145,6 +145,7 @@
   "devDependencies": {
     "@types/node": "catalog:dev",
     "@vitest/coverage-v8": "catalog:dev",
+    "oxc-parser": "catalog:",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev",
     "vite": "catalog:dev",

@@ -10,7 +10,8 @@
     ],
     "catalog": {
       "@standard-schema/spec": "^1.1.0",
-      "jiti": "^2.6.1"
+      "jiti": "^2.6.1",
+      "oxc-parser": "^0.147.0"
     },
     "catalogs": {
       "cli": {

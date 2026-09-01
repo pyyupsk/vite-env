@@ -18,6 +18,6 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   deps: {
-    neverBundle: ["jiti", "vite", "zod", "@standard-schema/spec"],
+    neverBundle: ["jiti", "vite", "zod", "@standard-schema/spec", "oxc-parser"],
   },
 });
