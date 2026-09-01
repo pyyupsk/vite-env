@@ -1,6 +1,13 @@
 import type { EnvDefinition, EnvPreset, ValidationResult } from "./types";
 import { z } from "zod";
 
+const DETECT_CACHE_LIMIT = 32;
+
+const detectCache = new WeakMap<
+  (env: Record<string, string | undefined>) => boolean,
+  Map<string, boolean>
+>();
+
 type DefineEnvInput = {
   presets?: EnvPreset[];
   clientPrefix?: string | string[];
@@ -98,25 +105,59 @@ export function defineEnv<T extends DefineEnvInput>(
   return result as Omit<T, "presets"> & Pick<EnvDefinition, "presets">;
 }
 
+function getCachedDetect(
+  detectFn: (env: Record<string, string | undefined>) => boolean,
+  rawEnv: Record<string, string>,
+): boolean {
+  const envKey = JSON.stringify(rawEnv);
+  let innerCache = detectCache.get(detectFn);
+  if (!innerCache) {
+    innerCache = new Map();
+    detectCache.set(detectFn, innerCache);
+  }
+  let detected = innerCache.get(envKey);
+  if (detected === undefined) {
+    detected = detectFn(rawEnv);
+    if (innerCache.size >= DETECT_CACHE_LIMIT) {
+      innerCache.clear();
+    }
+    innerCache.set(envKey, detected);
+  }
+  return detected;
+}
+
+function applyOptionalPresetKeys(
+  combinedShape: Record<string, z.ZodType>,
+  preset: EnvPreset,
+): void {
+  for (const side of [preset.server, preset.client]) {
+    for (const [key, presetSchema] of Object.entries(side ?? {})) {
+      if (combinedShape[key] === presetSchema) {
+        combinedShape[key] = z.optional(combinedShape[key]);
+      }
+    }
+  }
+}
+
+function processPresets(
+  combinedShape: Record<string, z.ZodType>,
+  presets: EnvPreset[],
+  rawEnv: Record<string, string>,
+): void {
+  for (const preset of presets) {
+    if (!preset.detect) continue;
+    if (getCachedDetect(preset.detect, rawEnv)) continue;
+    applyOptionalPresetKeys(combinedShape, preset);
+  }
+}
+
 export function validateEnv(def: EnvDefinition, rawEnv: Record<string, string>): ValidationResult {
   const combinedShape: Record<string, z.ZodType> = {
     ...def.server,
     ...def.client,
   } as Record<string, z.ZodType>;
 
-  // Undetected-platform preset vars validate as optional — they only exist on
-  // the platform; requiring them would break local dev. User overrides stay strict.
-  // Mutating combinedShape also prevents double-wrapping when two undetected
-  // presets share a key: after the first wrap, the identity check fails.
-  for (const preset of def.presets ?? []) {
-    if (!preset.detect || preset.detect(rawEnv)) continue;
-    for (const side of [preset.server, preset.client]) {
-      for (const [key, presetSchema] of Object.entries(side ?? {})) {
-        if (combinedShape[key] === presetSchema)
-          combinedShape[key] = z.optional(combinedShape[key]);
-      }
-    }
-  }
+  processPresets(combinedShape, def.presets ?? [], rawEnv);
 
   const schema = z.object(combinedShape);
   const result = schema.safeParse(rawEnv);
@@ -124,7 +165,6 @@ export function validateEnv(def: EnvDefinition, rawEnv: Record<string, string>):
   if (result.success) {
     return { success: true, data: result.data, errors: [] as const };
   }
-
   return {
     success: false,
     data: null,
