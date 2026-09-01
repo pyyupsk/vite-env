@@ -23,8 +23,18 @@ export type ViteEnvOptions = {
 
   /**
    * Vite 8 environment names that are allowed to import virtual:env/server.
-   * Use this to allow edge runtimes (Cloudflare Workers → 'workerd', Deno Deploy → 'ssr').
-   * @default ['ssr']
+   * Use this to allow edge runtimes (Cloudflare Workers → 'workerd', Deno Deploy → 'deno',
+   * Vercel/Netlify Edge → 'edge'). When left empty, detection relies on
+   * `environment.config.consumer` (Vite 8+ built-in: 'server' for known runtimes).
+   *
+   * Detection fallback chain:
+   *  1. `environment.config.consumer` (Vite 8+ built-in: 'server' for known runtimes)
+   *  2. `ssr.config.experimental.environments` (custom runtime configs)
+   *  3. Default: `['ssr']`
+   *
+   * Name-based matching is preserved when explicitly provided via this option.
+   *
+   * @default automatically detected from Vite environment
    */
   serverEnvironments?: string[];
 
