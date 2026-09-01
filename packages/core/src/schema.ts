@@ -1,7 +1,9 @@
 import type { EnvDefinition, EnvPreset, ValidationResult } from "./types";
 import { z } from "zod";
 
-const detectCache = new Map<
+const DETECT_CACHE_LIMIT = 32;
+
+const detectCache = new WeakMap<
   (env: Record<string, string | undefined>) => boolean,
   Map<string, boolean>
 >();
@@ -116,6 +118,9 @@ function getCachedDetect(
   let detected = innerCache.get(envKey);
   if (detected === undefined) {
     detected = detectFn(rawEnv);
+    if (innerCache.size >= DETECT_CACHE_LIMIT) {
+      innerCache.clear();
+    }
     innerCache.set(envKey, detected);
   }
   return detected;
