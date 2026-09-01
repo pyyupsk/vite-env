@@ -1,6 +1,12 @@
 import type { AnyEnvDefinition } from "./types";
 import { parseSync, Visitor } from "oxc-parser";
-import type { Program } from "@oxc-project/types";
+import type {
+  Program,
+  BinaryExpression,
+  TemplateLiteral,
+  TemplateElement,
+  Expression,
+} from "@oxc-project/types";
 
 type LeakReport = {
   key: string;
@@ -86,7 +92,8 @@ function matchesServerValue(literal: string, serverVal: string): boolean {
   }
 
   if (literal.length < 8) return false;
-  if (!couldBeEncoded(literal.length, serverVal.length)) return false;
+  const serverValByteLen = Buffer.byteLength(serverVal, "utf8");
+  if (!couldBeEncoded(literal.length, serverValByteLen)) return false;
 
   if (tryBase64Decode(literal, serverVal)) return true;
   if (tryHexDecode(literal, serverVal)) return true;
@@ -96,10 +103,54 @@ function matchesServerValue(literal: string, serverVal: string): boolean {
 
 /**
  * Collect all string-like values from the AST.
- * Handles string literals and template literal parts.
+ * Handles string literals, template literals, and statically evaluable concatenations.
  */
 function collectStringValues(node: Program): string[] {
   const values: string[] = [];
+
+  function evaluateToString(node: unknown): string | null {
+    if (!node || typeof node !== "object") return null;
+    const n = node as Record<string, unknown> & { type: string };
+
+    if (n.type === "Literal" && typeof n.value === "string") {
+      return n.value;
+    }
+
+    if (n.type === "TemplateLiteral") {
+      const tpl = n as unknown as TemplateLiteral;
+      const quasis = tpl.quasis;
+      const expressions = tpl.expressions;
+      if (!quasis || quasis.length === 0) return null;
+      if (expressions && expressions.length > 0) {
+        const exprValues = expressions.map((e) => evaluateToString(e as Expression));
+        if (exprValues.some((v): v is null => v === null)) return null;
+        let result = quasis[0].value?.cooked ?? "";
+        for (let i = 0; i < exprValues.length; i++) {
+          result += exprValues[i]! + (quasis[i + 1]?.value?.cooked ?? "");
+        }
+        return result;
+      }
+      return quasis[0].value?.cooked ?? null;
+    }
+
+    if (n.type === "BinaryExpression" && n.operator === "+") {
+      const bin = n as unknown as BinaryExpression;
+      const left = evaluateToString(bin.left);
+      const right = evaluateToString(bin.right);
+      if (left !== null && right !== null) {
+        return left + right;
+      }
+    }
+
+    if (n.type === "TemplateElement") {
+      const el = n as unknown as TemplateElement;
+      if (el.value && typeof el.value.cooked === "string") {
+        return el.value.cooked;
+      }
+    }
+
+    return null;
+  }
 
   const visitor = new Visitor({
     Literal(n) {
@@ -107,10 +158,20 @@ function collectStringValues(node: Program): string[] {
         values.push(n.value);
       }
     },
-    TemplateElement(n) {
+    TemplateElement(n: TemplateElement) {
       if (n.value && typeof n.value.cooked === "string") {
         values.push(n.value.cooked);
       }
+    },
+    BinaryExpression(n: BinaryExpression) {
+      if (n.operator === "+") {
+        const evaluated = evaluateToString(n);
+        if (evaluated !== null) values.push(evaluated);
+      }
+    },
+    TemplateLiteral(n: TemplateLiteral) {
+      const evaluated = evaluateToString(n);
+      if (evaluated !== null) values.push(evaluated);
     },
   });
 
@@ -163,6 +224,7 @@ export function detectServerLeak(
     let parsed: Program;
     try {
       const result = parseSync(chunkName, chunk.code!, { astType: "js" });
+      if (result.errors.length > 0) continue;
       parsed = result.program;
     } catch {
       continue;
