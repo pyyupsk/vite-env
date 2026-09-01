@@ -1,6 +1,11 @@
 import type { EnvDefinition, EnvPreset, ValidationResult } from "./types";
 import { z } from "zod";
 
+const detectCache = new Map<
+  (env: Record<string, string | undefined>) => boolean,
+  Map<string, boolean>
+>();
+
 type DefineEnvInput = {
   presets?: EnvPreset[];
   clientPrefix?: string | string[];
@@ -109,7 +114,19 @@ export function validateEnv(def: EnvDefinition, rawEnv: Record<string, string>):
   // Mutating combinedShape also prevents double-wrapping when two undetected
   // presets share a key: after the first wrap, the identity check fails.
   for (const preset of def.presets ?? []) {
-    if (!preset.detect || preset.detect(rawEnv)) continue;
+    if (!preset.detect) continue;
+    const envKey = JSON.stringify(rawEnv);
+    let innerCache = detectCache.get(preset.detect);
+    if (!innerCache) {
+      innerCache = new Map();
+      detectCache.set(preset.detect, innerCache);
+    }
+    let detected = innerCache.get(envKey);
+    if (detected === undefined) {
+      detected = preset.detect(rawEnv);
+      innerCache.set(envKey, detected);
+    }
+    if (detected) continue;
     for (const side of [preset.server, preset.client]) {
       for (const [key, presetSchema] of Object.entries(side ?? {})) {
         if (combinedShape[key] === presetSchema)
