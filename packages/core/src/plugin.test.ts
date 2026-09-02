@@ -79,8 +79,8 @@ describe("viteEnv plugin", () => {
   it("should load env definition from config file", async () => {
     writeEnvFile(tmpDir);
     const plugin = ViteEnv({ configFile: "env.mjs" }) as any;
-    // Should not throw
     await plugin.configResolved(createMockConfig(tmpDir));
+    expect(plugin.resolveId("virtual:env/client")).toBe("\0virtual:env/client");
   });
 
   it("should validate env and generate dts on buildStart", async () => {
