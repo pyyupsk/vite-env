@@ -2,21 +2,19 @@
 
 ## [0.7.0](https://github.com/pyyupsk/vite-env/compare/core-v0.6.4...core-v0.7.0) (2026-09-01)
 
-
 ### Features
 
-* add custom envPrefix support (issue [#72](https://github.com/pyyupsk/vite-env/issues/72)) ([#73](https://github.com/pyyupsk/vite-env/issues/73)) ([21e7046](https://github.com/pyyupsk/vite-env/commit/21e7046fe3d49dd812a8fe6b9f08064171c43f95))
-* change default server environments detection to use environment.config.consumer ([#75](https://github.com/pyyupsk/vite-env/issues/75)) ([9053373](https://github.com/pyyupsk/vite-env/commit/9053373a821e9701e4a8a3f2c39423ca47e8dcf2))
-* **core:** add per-process caching for preset detect functions ([#78](https://github.com/pyyupsk/vite-env/issues/78)) ([d5224b7](https://github.com/pyyupsk/vite-env/commit/d5224b7f620fd63f9e330f0b8dc1061b9579ea6d))
-* **core:** export validateEnv, validateStandardEnv, ValidationResult from main entry point ([#77](https://github.com/pyyupsk/vite-env/issues/77)) ([aac9922](https://github.com/pyyupsk/vite-env/commit/aac99225f3c95af60147996f1005359305d1d425))
-* **leak:** rewrite leak detection with oxc-parser AST ([#76](https://github.com/pyyupsk/vite-env/issues/76)) ([9a4d1cb](https://github.com/pyyupsk/vite-env/commit/9a4d1cb751bb3619a3eed46e2f88abb54fe83cfa))
-
+- add custom envPrefix support (issue [#72](https://github.com/pyyupsk/vite-env/issues/72)) ([#73](https://github.com/pyyupsk/vite-env/issues/73)) ([21e7046](https://github.com/pyyupsk/vite-env/commit/21e7046fe3d49dd812a8fe6b9f08064171c43f95))
+- change default server environments detection to use environment.config.consumer ([#75](https://github.com/pyyupsk/vite-env/issues/75)) ([9053373](https://github.com/pyyupsk/vite-env/commit/9053373a821e9701e4a8a3f2c39423ca47e8dcf2))
+- **core:** add per-process caching for preset detect functions ([#78](https://github.com/pyyupsk/vite-env/issues/78)) ([d5224b7](https://github.com/pyyupsk/vite-env/commit/d5224b7f620fd63f9e330f0b8dc1061b9579ea6d))
+- **core:** export validateEnv, validateStandardEnv, ValidationResult from main entry point ([#77](https://github.com/pyyupsk/vite-env/issues/77)) ([aac9922](https://github.com/pyyupsk/vite-env/commit/aac99225f3c95af60147996f1005359305d1d425))
+- **leak:** rewrite leak detection with oxc-parser AST ([#76](https://github.com/pyyupsk/vite-env/issues/76)) ([9a4d1cb](https://github.com/pyyupsk/vite-env/commit/9a4d1cb751bb3619a3eed46e2f88abb54fe83cfa))
 
 ### Bug Fixes
 
-* **core:** skip leak detection and import guard for server-consumer environments ([#69](https://github.com/pyyupsk/vite-env/issues/69)) ([469d0e9](https://github.com/pyyupsk/vite-env/commit/469d0e9f9a9c4eaaa1769cd0b0a145a2417a1624))
-* custom envPrefix handling ([#74](https://github.com/pyyupsk/vite-env/issues/74)) ([72f1838](https://github.com/pyyupsk/vite-env/commit/72f1838e109aaaaf96cf5d8e31fd1b5cab3edc88))
-* **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
+- **core:** skip leak detection and import guard for server-consumer environments ([#69](https://github.com/pyyupsk/vite-env/issues/69)) ([469d0e9](https://github.com/pyyupsk/vite-env/commit/469d0e9f9a9c4eaaa1769cd0b0a145a2417a1624))
+- custom envPrefix handling ([#74](https://github.com/pyyupsk/vite-env/issues/74)) ([72f1838](https://github.com/pyyupsk/vite-env/commit/72f1838e109aaaaf96cf5d8e31fd1b5cab3edc88))
+- **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
 
 ## [0.6.4](https://github.com/pyyupsk/vite-env/compare/core-v0.6.3...core-v0.6.4) (2026-06-17)
 
