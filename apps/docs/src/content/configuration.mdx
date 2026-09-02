@@ -12,7 +12,7 @@ import ViteEnv from '@vite-env/core/plugin'
 
 ViteEnv({
   configFile?: string               // default: 'env.ts'
-  serverEnvironments?: string[]     // default: ['ssr']
+  serverEnvironments?: string[]     // default: auto-detected
   onClientAccessOfServerModule?:    // default: 'warn'
     'warn' | 'error' | 'stub'
 })
@@ -20,13 +20,18 @@ ViteEnv({
 
 **`configFile`** — path to the env definition file, resolved from the project root.
 
-**`serverEnvironments`** — Vite environment names allowed to import `virtual:env/server`. Add edge runtimes here: `'workerd'` for Cloudflare Workers, `'ssr'` is already included by default.
+**`serverEnvironments`** — Vite environment names allowed to import `virtual:env/server`. When left empty (the default), detection relies on `environment.config.consumer` — Vite 8+ built-in detection that identifies `'server'` for known runtimes (Node, Deno, Bun, edge runtimes like `'workerd'` and `'deno'`). Name-based matching is preserved when you explicitly provide a list. Add edge runtimes here if you need to override the auto-detection.
+
+Detection fallback chain:
+1. `environment.config.consumer` (Vite 8+ built-in: `'server'` for known runtimes)
+2. `ssr.config.experimental.environments` (custom runtime configs)
+3. Default: `['ssr']`
 
 **`onClientAccessOfServerModule`** — behavior when a disallowed environment imports the server module. See [Guard modes](/docs/guard-modes).
 
 ## defineEnv()
 
-Accepts `server`, `client`, and an optional `presets` array. Returns the merged schema.
+Accepts `server`, `client`, an optional `presets` array, and an optional `clientPrefix`. Returns the merged schema.
 
 ```ts
 import { defineEnv } from "@vite-env/core";
@@ -45,14 +50,48 @@ export default defineEnv({
 });
 ```
 
-**Client keys must be prefixed with `VITE_`** — this is enforced at startup and throws synchronously if violated.
+**Client keys must be prefixed with `VITE_`** by default — this is enforced at startup and throws synchronously if violated. Use `clientPrefix` to override this requirement.
+
+### clientPrefix
+
+Override the prefix requirement for client keys. Accepts a single prefix or an array of prefixes.
+
+```ts
+import { defineEnv } from "@vite-env/core";
+import { z } from "zod";
+
+export default defineEnv({
+  clientPrefix: "APP_",  // client keys must start with APP_
+  server: {
+    DATABASE_URL: z.string().url(),
+  },
+  client: {
+    APP_API_URL: z.string().url(),
+    APP_TITLE: z.string().default("My App"),
+  },
+});
+```
+
+Multiple prefixes are also supported:
+
+```ts
+export default defineEnv({
+  clientPrefix: ["NEXT_PUBLIC_", "PUBLIC_"],
+  client: {
+    NEXT_PUBLIC_API_URL: z.string().url(),
+    PUBLIC_SITE_NAME: z.string(),
+  },
+});
+```
+
+If `clientPrefix` is set, it takes precedence over Vite's `envPrefix` config. When `clientPrefix` is not set, the default `VITE_` prefix is validated at runtime (after Vite config resolution), allowing Vite's `envPrefix` option to apply first.
 
 ## Server / client split
 
-| Block    | Keys                    | Available in              |
-| -------- | ----------------------- | ------------------------- |
-| `server` | Any name                | `virtual:env/server` only |
-| `client` | Must start with `VITE_` | Both modules              |
+| Block    | Keys                             | Available in              |
+| -------- | -------------------------------- | ------------------------- |
+| `server` | Any name                         | `virtual:env/server` only |
+| `client` | Must start with prefix (default `VITE_`) | Both modules              |
 
 ## Presets
 

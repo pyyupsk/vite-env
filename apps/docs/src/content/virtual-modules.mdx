@@ -82,8 +82,10 @@ export default defineConfig({
 });
 ```
 
-For edge runtimes not named `'ssr'`, add them to `serverEnvironments`:
+For edge runtimes not detected automatically, add them to `serverEnvironments`:
 
 ```ts
 ViteEnv({ serverEnvironments: ["ssr", "workerd"] });
 ```
+
+If you use a custom client prefix via `clientPrefix` in your schema, the `virtual:env/client` module still contains only the keys matching that prefix — the prefix rule is not changed, just the prefix value itself.
