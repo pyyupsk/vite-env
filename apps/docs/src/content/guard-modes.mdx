@@ -13,6 +13,8 @@ ViteEnv({
 });
 ```
 
+Environments with `consumer === 'server'` (detected via Vite 8+'s `environment.config.consumer`) are automatically allowed to import `virtual:env/server` and are not subject to guard mode checks or leak detection.
+
 ## warn
 
 Default in 0.x. The server module is still served but a warning is printed and `vite-env-warnings.log` is written to the project root. The build succeeds but **exits with code 1** — useful for catching violations in CI without breaking an existing codebase.
