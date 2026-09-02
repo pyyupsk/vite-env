@@ -10,8 +10,8 @@
     ],
     "catalog": {
       "@standard-schema/spec": "^1.1.0",
-      "jiti": "^2.6.1",
-      "oxc-parser": "^0.147.0"
+      "jiti": "^2.7.0",
+      "oxc-parser": "^0.148.0"
     },
     "catalogs": {
       "cli": {
@@ -20,37 +20,37 @@
       },
       "dev": {
         "@pyyupsk/nit": "^0.3.0",
-        "@types/bun": "latest",
-        "@types/node": "^25.9.2",
-        "@vitest/coverage-v8": "^4.1.8",
-        "oxfmt": "latest",
-        "oxlint": "latest",
-        "tsdown": "^0.21.7",
-        "typescript": "^6.0.3",
-        "vite": "^8.0.8",
-        "vitest": "^4.1.8",
-        "zod": "^4.3.6"
+        "@types/bun": "^1.4.0",
+        "@types/node": "^26.4.1",
+        "@vitest/coverage-v8": "^4.1.11",
+        "oxfmt": "^0.66.0",
+        "oxlint": "^1.81.0",
+        "tsdown": "^0.22.14",
+        "typescript": "^7.0.2",
+        "vite": "^8.2.2",
+        "vitest": "^4.1.11",
+        "zod": "^4.5.4"
       },
       "docs": {
-        "@fontsource-variable/geist": "^5.2.9",
-        "@fontsource-variable/geist-mono": "^5.2.8",
-        "@tailwindcss/vite": "^4.1.11",
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^6.0.1",
+        "@fontsource-variable/geist": "^5.3.0",
+        "@fontsource-variable/geist-mono": "^5.3.0",
+        "@tailwindcss/vite": "^4.3.3",
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.5",
+        "@vitejs/plugin-react": "^6.1.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
-        "lucide-react": "^1.17.0",
-        "react": "^19.2.6",
-        "react-dom": "^19.2.6",
+        "lucide-react": "^1.39.0",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
         "rehype-slug": "^6.0.0",
-        "shiki": "^4.2.0",
+        "shiki": "^4.4.3",
         "tailwind-merge": "^3.6.0",
-        "velite": "^0.3.1",
-        "wouter": "^3.3.0"
+        "velite": "^0.4.0",
+        "wouter": "^3.10.0"
       },
       "examples": {
-        "valibot": "^1.3.1"
+        "valibot": "^1.4.2"
       }
     }
   },
