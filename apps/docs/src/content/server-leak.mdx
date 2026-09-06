@@ -20,6 +20,7 @@ During `generateBundle`, vite-env scans every client-bound output chunk for serv
 This catches leaks that guard mode misses — for example, a value passed through a prop chain or inlined by the bundler's constant folding.
 
 The detection includes:
+
 - Literal strings in quotes (`"my-secret"`, `'my-secret'`, `` `my-secret` ``)
 - String concatenation (`"prefix" + env.SECRET`)
 - Template literals with expressions (`` `key=${SECRET}` ``)
