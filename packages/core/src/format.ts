@@ -1,31 +1,13 @@
-import type { core } from "zod";
 import type { GuardFail } from "./guard";
-import type { StandardValidationIssue } from "./types";
+import type { ValidationError } from "./types";
 
-export function formatZodError(issues: core.$ZodIssue[]): string {
-  return issues
-    .map((issue) => {
-      const path = issue.path.length > 0 ? issue.path.join(".") : "(root)";
-      return `  \x1B[31m✗\x1B[0m ${path.padEnd(28)} ${issue.message}`;
-    })
-    .join("\n");
+function formatPath(path: readonly (string | number)[]): string {
+  return path.length > 0 ? path.join(".") : "(root)";
 }
 
-export function formatStandardSchemaError(issues: StandardValidationIssue[]): string {
+export function formatZodError(issues: ValidationError[]): string {
   return issues
-    .map((issue) => {
-      const path =
-        issue.path.length > 0
-          ? issue.path
-              .map((seg) =>
-                typeof seg === "object" && seg !== null && "key" in seg
-                  ? String(seg.key)
-                  : String(seg),
-              )
-              .join(".")
-          : "(root)";
-      return `  \x1B[31m✗\x1B[0m ${path.padEnd(28)} ${issue.message}`;
-    })
+    .map((issue) => `  \x1B[31m✗\x1B[0m ${formatPath(issue.path).padEnd(28)} ${issue.message}`)
     .join("\n");
 }
 
@@ -106,9 +88,9 @@ export function formatHardError(fail: GuardFail): string {
     `[vite-env] virtual:env/server is not available in the "${fail.envName}" environment.`,
     ``,
     `  Server-only modules cannot be imported from client code.`,
-    `  Add this environment to serverEnvironments if intentional:`,
+    `  Add this environment to allowedServerEnvironments if intentional:`,
     ``,
-    `    ViteEnv({ serverEnvironments: ['ssr', '${fail.envName}'] })`,
+    `    ViteEnv({ allowedServerEnvironments: ['ssr', '${fail.envName}'] })`,
     ``,
     `  Or change enforcement:`,
     ``,

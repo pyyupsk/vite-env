@@ -1,4 +1,4 @@
-import type { EnvDefinition, EnvPreset, ValidationResult } from "./types";
+import type { EnvDefinition, EnvPreset, ValidationError, ValidationResult } from "./types";
 import { z } from "zod";
 
 const DETECT_CACHE_LIMIT = 32;
@@ -9,9 +9,11 @@ const detectCache = new WeakMap<
 >();
 
 type DefineEnvInput = {
+  server?: EnvDefinition["server"]; // nosonar
+  client?: EnvDefinition["client"]; // nosonar
   presets?: EnvPreset[];
   clientPrefix?: string | string[];
-} & EnvDefinition;
+};
 
 function normalizeClientPrefix(prefix?: string | string[]): string[] {
   if (!prefix) return ["VITE_"];
@@ -58,11 +60,20 @@ function warnConflicts(
   }
 }
 
-export function defineEnv<T extends DefineEnvInput>(
-  definition: T,
-): Omit<T, "presets"> & Pick<EnvDefinition, "server" | "client" | "presets" | "clientPrefix"> {
-  const { presets = [], server, client, clientPrefix, ...rest } = definition;
-  // ...rest intentionally forwarded — T may carry extra keys beyond EnvDefinition
+export function defineEnv(
+  definition: DefineEnvInput,
+): EnvDefinition & { presets?: EnvPreset[]; clientPrefix?: string[] } {
+  const { presets = [], server, client, clientPrefix } = definition;
+
+  const allowedKeys = new Set(["server", "client", "presets", "clientPrefix"]);
+  const unknownKeys = Object.keys(definition).filter((k) => !allowedKeys.has(k));
+  if (unknownKeys.length > 0) {
+    throw new Error(
+      `[vite-env] Unknown keys in defineEnv(): ${unknownKeys.join(", ")}.\n` +
+        `  Only "server", "client", "presets", and "clientPrefix" are allowed.\n` +
+        `  Move extra keys to a separate config file or use "presets" for shared configuration.`,
+    );
+  }
 
   const hasExplicitClientPrefix = definition.clientPrefix !== undefined;
   const prefixes = normalizeClientPrefix(clientPrefix);
@@ -96,13 +107,13 @@ export function defineEnv<T extends DefineEnvInput>(
     }
   }
 
-  const result: Record<string, unknown> = { ...rest };
+  const result: EnvDefinition & { presets?: EnvPreset[]; clientPrefix?: string[] } = {};
   if (Object.keys(mergedServer).length > 0 || server !== undefined) result.server = mergedServer;
   if (Object.keys(mergedClient).length > 0 || client !== undefined) result.client = mergedClient;
   if (presets.length > 0) result.presets = presets;
   if (hasExplicitClientPrefix) result.clientPrefix = prefixes;
 
-  return result as Omit<T, "presets"> & Pick<EnvDefinition, "presets">;
+  return result;
 }
 
 function getCachedDetect(
@@ -151,6 +162,21 @@ function processPresets(
   }
 }
 
+function zodPathToPath(zodPath: readonly PropertyKey[]): (string | number)[] {
+  return zodPath.map((p) => {
+    if (typeof p === "symbol") return String(p);
+    return p;
+  });
+}
+
+export function zodIssuesToValidationErrors(issues: z.core.$ZodIssue[]): ValidationError[] {
+  return issues.map((issue) => ({
+    message: issue.message,
+    path: zodPathToPath(issue.path),
+    code: issue.code,
+  }));
+}
+
 export function validateEnv(def: EnvDefinition, rawEnv: Record<string, string>): ValidationResult {
   const combinedShape: Record<string, z.ZodType> = {
     ...def.server,
@@ -168,6 +194,6 @@ export function validateEnv(def: EnvDefinition, rawEnv: Record<string, string>):
   return {
     success: false,
     data: null,
-    errors: result.error.issues,
+    errors: zodIssuesToValidationErrors(result.error.issues),
   };
 }

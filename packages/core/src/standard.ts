@@ -1,9 +1,5 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type {
-  StandardEnvDefinition,
-  StandardValidationIssue,
-  StandardValidationResult,
-} from "./types";
+import type { StandardEnvDefinition, StandardValidationResult, ValidationError } from "./types";
 
 function normalizeClientPrefix(prefix?: string | string[]): string[] {
   if (!prefix) return ["VITE_"];
@@ -69,7 +65,7 @@ export async function validateStandardEnv(
     ...def.client,
   };
 
-  const errors: StandardValidationIssue[] = [];
+  const errors: ValidationError[] = [];
   const data: Record<string, unknown> = {};
 
   for (const [key, schema] of Object.entries(combinedShape)) {
@@ -79,7 +75,12 @@ export async function validateStandardEnv(
       for (const issue of result.issues) {
         errors.push({
           message: issue.message,
-          path: [key, ...(issue.path ?? [])],
+          path: [
+            key,
+            ...(issue.path?.map((seg) =>
+              typeof seg === "object" && seg !== null && "key" in seg ? seg.key : String(seg),
+            ) ?? []),
+          ] as (string | number)[],
         });
       }
     } else {

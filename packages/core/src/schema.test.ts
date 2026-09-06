@@ -30,6 +30,25 @@ describe("defineEnv", () => {
   it("should handle empty definition", () => {
     expect(defineEnv({})).toEqual({});
   });
+
+  it("should reject unknown keys", () => {
+    expect(() =>
+      defineEnv({
+        server: { DB_URL: z.string() },
+        customKey: "value",
+      } as any),
+    ).toThrow("[vite-env] Unknown keys in defineEnv(): customKey");
+  });
+
+  it("should reject multiple unknown keys", () => {
+    expect(() =>
+      defineEnv({
+        server: { DB_URL: z.string() },
+        customKey1: "value1",
+        customKey2: "value2",
+      } as any),
+    ).toThrow("[vite-env] Unknown keys in defineEnv(): customKey1, customKey2");
+  });
 });
 
 describe("validateEnv", () => {

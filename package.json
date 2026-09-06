@@ -23,6 +23,7 @@
         "@types/bun": "^1.4.0",
         "@types/node": "^26.4.1",
         "@vitest/coverage-v8": "^4.1.11",
+        "jscodeshift": "^17.1.2",
         "oxfmt": "^0.66.0",
         "oxlint": "^1.81.0",
         "tsdown": "^0.22.14",

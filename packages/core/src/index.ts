@@ -1,6 +1,6 @@
 export { defineEnv } from "./schema";
 export { defineStandardEnv } from "./standard";
-export { validateEnv } from "./schema";
+export { validateEnv, zodIssuesToValidationErrors } from "./schema";
 export { validateStandardEnv } from "./standard";
 export type {
   AnyEnvDefinition,
@@ -9,5 +9,6 @@ export type {
   InferClientEnv,
   InferServerEnv,
   StandardEnvDefinition,
+  ValidationError,
   ValidationResult,
 } from "./types";
