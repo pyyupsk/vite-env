@@ -93,25 +93,61 @@ describe("buildServerModule", () => {
   });
 
   describe("serverRuntime: process-env", () => {
-    it("should emit process.env reads for all keys", () => {
+    it("should inline validated values (same as build-time)", () => {
       const def = {
         server: { DATABASE_URL: {} as any, JWT_SECRET: {} as any },
         client: { VITE_API_URL: {} as any },
       };
       const data = {
-        DATABASE_URL: "postgresql://placeholder",
-        JWT_SECRET: "build-time-secret",
-        VITE_API_URL: "https://api.example.com",
+        DATABASE_URL: "postgresql://validated",
+        JWT_SECRET: "validated-secret",
+        VITE_API_URL: "https://api.validated.com",
       };
 
       const result = buildServerModule(def, data, "process-env");
 
-      expect(result.code).toContain("DATABASE_URL: process.env.DATABASE_URL");
-      expect(result.code).toContain("JWT_SECRET: process.env.JWT_SECRET");
-      expect(result.code).toContain("VITE_API_URL: process.env.VITE_API_URL");
-      expect(result.code).not.toContain("postgresql://placeholder");
-      expect(result.code).not.toContain("build-time-secret");
-      expect(result.code).not.toContain("https://api.example.com");
+      expect(result.code).toContain("postgresql://validated");
+      expect(result.code).toContain("validated-secret");
+      expect(result.code).toContain("https://api.validated.com");
+      expect(result.code).not.toContain("process.env");
+    });
+
+    it("should handle non-identifier keys with bracket notation", () => {
+      const def = {
+        server: { "LOG-LEVEL": {} as any, API_KEY: {} as any },
+        client: { "VITE_APP-NAME": {} as any },
+      };
+      const data = {
+        "LOG-LEVEL": "debug",
+        API_KEY: "secret",
+        "VITE_APP-NAME": "my-app",
+      };
+
+      const result = buildServerModule(def, data, "process-env");
+
+      expect(result.code).toContain('"LOG-LEVEL": "debug"');
+      expect(result.code).toContain('"API_KEY": "secret"');
+      expect(result.code).toContain('"VITE_APP-NAME": "my-app"');
+      expect(result.code).not.toContain("process.env");
+    });
+
+    it("should use validated defaults/transformations from schema", () => {
+      const def = {
+        server: {
+          PORT: { _def: { defaultValue: () => 3000 } } as any,
+          NODE_ENV: { _def: { defaultValue: () => "production" } } as any,
+        },
+      };
+      const data = {
+        PORT: 3000,
+        NODE_ENV: "production",
+      };
+
+      const result = buildServerModule(def, data, "process-env");
+
+      expect(result.code).toContain("3000");
+      expect(result.code).toContain("production");
+      expect(result.code).not.toContain("process.env");
     });
 
     it("should handle empty definition", () => {
@@ -129,7 +165,7 @@ describe("buildServerModule", () => {
 
       const result = buildServerModule(def, { SHARED_KEY: "value" }, "process-env");
 
-      const matches = result.code.match(/SHARED_KEY: process\.env\.SHARED_KEY/g);
+      const matches = result.code.match(/"SHARED_KEY": "value"/g);
       expect(matches).toHaveLength(1);
     });
   });
