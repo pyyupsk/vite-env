@@ -140,12 +140,13 @@
   },
   "dependencies": {
     "@standard-schema/spec": "catalog:",
-    "jiti": "catalog:"
+    "jiti": "catalog:",
+    "oxc-parser": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:dev",
     "@vitest/coverage-v8": "catalog:dev",
-    "oxc-parser": "catalog:",
+    "jscodeshift": "catalog:dev",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev",
     "vite": "catalog:dev",
@@ -176,7 +177,7 @@
     },
     "rolldown": {
       "type": "incompatible",
-      "reason": "Uses Vite-specific hooks (configResolved, configureServer) and APIs (ResolvedConfig, Environment API) not available in standalone Rolldown."
+      "reason": "Uses Vite-specific hooks (configResolved, configureServer) and APIs (ResolvedConfig, Environment API). Rolldown support is experimental and may not work with all features."
     }
   }
 }

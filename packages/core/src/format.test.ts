@@ -4,7 +4,6 @@ import {
   formatGuardLogEntry,
   formatGuardWarning,
   formatHardError,
-  formatStandardSchemaError,
   formatZodError,
   IMPORTER_MAX_LEN,
   truncateImporter,
@@ -72,9 +71,9 @@ describe("formatZodError", () => {
   });
 });
 
-describe("formatStandardSchemaError", () => {
+describe("formatZodError", () => {
   it("should format issues with key paths", () => {
-    const result = formatStandardSchemaError([
+    const result = formatZodError([
       { message: "Invalid URL", path: ["DATABASE_URL"] },
       { message: "Required", path: ["VITE_KEY"] },
     ]);
@@ -85,15 +84,13 @@ describe("formatStandardSchemaError", () => {
   });
 
   it("should handle empty path", () => {
-    const result = formatStandardSchemaError([{ message: "Unknown error", path: [] }]);
+    const result = formatZodError([{ message: "Unknown error", path: [] }]);
     expect(result).toContain("(root)");
     expect(result).toContain("Unknown error");
   });
 
-  it("should handle PathSegment objects in path", () => {
-    const result = formatStandardSchemaError([
-      { message: "Bad value", path: ["DB_URL", { key: "host" }] },
-    ]);
+  it("should handle nested path segments", () => {
+    const result = formatZodError([{ message: "Bad value", path: ["DB_URL", "host"] }]);
     expect(result).toContain("DB_URL.host");
     expect(result).toContain("Bad value");
   });
@@ -158,10 +155,10 @@ describe("formatGuardWarning", () => {
 });
 
 describe("formatHardError", () => {
-  it("includes env name, serverEnvironments hint, stub hint, and importer", () => {
+  it("includes env name, allowedServerEnvironments hint, stub hint, and importer", () => {
     const out = formatHardError(clientFail);
     expect(out).toContain('"client"');
-    expect(out).toContain("serverEnvironments");
+    expect(out).toContain("allowedServerEnvironments");
     expect(out).toContain("onClientAccessOfServerModule: 'stub'");
     expect(out).toContain("Imported from: src/lib/config.ts");
   });

@@ -6,7 +6,7 @@ import path from "node:path";
 import process from "node:process";
 import { loadEnvConfig } from "./config";
 import { generateStandardDts } from "./dts";
-import { formatGuardWarning, formatHardError, formatStandardSchemaError } from "./format";
+import { formatGuardWarning, formatHardError } from "./format";
 import { buildServerStubModule, checkServerModuleAccess } from "./guard";
 import { detectServerLeak } from "./leak";
 import { writeWarningsLog } from "./log";
@@ -16,8 +16,8 @@ import { buildClientModule, buildServerModule, type ServerRuntimeMode } from "./
 
 export type ViteEnvOptions = {
   /**
-   * Path to env definition file.
-   * @default './env.ts' (resolved from project root)
+   * Path to env definition file (required).
+   * Example: './env.ts' resolved from project root.
    */
   configFile?: string;
 
@@ -36,22 +36,26 @@ export type ViteEnvOptions = {
    *
    * @default automatically detected from Vite environment
    */
+  allowedServerEnvironments?: string[];
+
+  /**
+   * @deprecated Use `allowedServerEnvironments` instead. Will be removed in 1.0.0.
+   */
   serverEnvironments?: string[];
 
   /**
    * Behavior when virtual:env/server is imported from a disallowed environment.
    *
-   * - 'warn'  — Deprecation warning printed to terminal + vite-env-warnings.log written.
-   *             Build succeeds but exits with code 1. Default in 0.x releases.
-   *             The default will change to 'error' in 1.0.0.
+   * - 'error' — Hard build error. No artifacts emitted. Default.
    *
-   * - 'error' — Hard build error. No artifacts emitted.
+   * - 'warn'  — Deprecation warning printed to terminal + vite-env-warnings.log written.
+   *             Build succeeds but exits with code 1.
    *
    * - 'stub'  — Returns a module that throws at runtime if the import executes.
    *             Use for testing environments (Vitest jsdom) or framework isomorphic files
    *             where the import exists but the code path is never reached in a server context.
    *
-   * @default 'warn'
+   * @default 'error'
    */
   onClientAccessOfServerModule?: "error" | "stub" | "warn";
 
@@ -81,16 +85,16 @@ async function validateAndFormat(
   def: AnyEnvDefinition,
   rawEnv: Record<string, string>,
 ): Promise<{ data: Record<string, unknown> } | { error: string }> {
+  const { formatZodError } = await import("./format");
   if (isStandardEnvDefinition(def)) {
     const result = await validateStandardEnv(def, rawEnv);
     if (!result.success) {
-      return { error: formatStandardSchemaError(result.errors) };
+      return { error: formatZodError(result.errors) };
     }
     return { data: result.data };
   }
 
   const { validateEnv } = await import("./schema");
-  const { formatZodError } = await import("./format");
   const result = validateEnv(def, rawEnv);
   if (!result.success) {
     return { error: formatZodError(result.errors) };
@@ -109,8 +113,15 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let serverModuleGuardFails: GuardFail[] = [];
   let didSetExitCode = false;
 
-  const serverEnvs = options.serverEnvironments ?? ["ssr"];
-  const guardMode = options.onClientAccessOfServerModule ?? "warn";
+  const serverEnvs = options.allowedServerEnvironments ??
+    options.serverEnvironments /* nosonar */ ?? ["ssr"];
+  if (options.serverEnvironments) /* nosonar */ {
+    console.warn(
+      "[vite-env] serverEnvironments is deprecated. Use allowedServerEnvironments instead. " +
+        "This option will be removed in 1.0.0.",
+    );
+  }
+  const guardMode = options.onClientAccessOfServerModule ?? "error";
   const serverRuntime: ServerRuntimeMode = options.serverRuntime ?? "build-time";
 
   return {
@@ -120,7 +131,13 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     async configResolved(config) {
       resolvedConfig = config;
 
-      const configPath = path.resolve(config.root, options.configFile ?? "env.ts");
+      if (!options.configFile) {
+        throw new Error(
+          "[vite-env] configFile is required. Set configFile: './env.ts' or use Vite's envDir.",
+        );
+      }
+
+      const configPath = path.resolve(config.root, options.configFile);
 
       try {
         envDefinition = await loadEnvConfig(configPath);

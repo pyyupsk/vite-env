@@ -40,16 +40,15 @@ export const checkCommand = defineCommand({
     let count = 0;
     let errorMsg = "";
 
+    const { formatZodError } = await import("@vite-env/core/format");
     if (isStandardEnvDefinition(def)) {
       const { validateStandardEnv } = await import("@vite-env/core/standard");
-      const { formatStandardSchemaError } = await import("@vite-env/core/format");
       const result = await validateStandardEnv(def, rawEnv);
       success = result.success;
       if (result.success) count = Object.keys(result.data).length;
-      else errorMsg = formatStandardSchemaError(result.errors);
+      else errorMsg = formatZodError(result.errors);
     } else {
       const { validateEnv } = await import("@vite-env/core/schema");
-      const { formatZodError } = await import("@vite-env/core/format");
       const result = validateEnv(def, rawEnv);
       success = result.success;
       if (result.success) count = Object.keys(result.data).length;

@@ -34,7 +34,7 @@ export function buildServerStubModule(envName: string): { code: string; moduleTy
 throw new Error(
   '[vite-env] virtual:env/server was imported in the "${envName}" environment. ' +
   'This module is server-only and was replaced with a stub. ' +
-  'To allow this environment: add it to serverEnvironments. ' +
+  'To allow this environment: add it to allowedServerEnvironments. ' +
   'To suppress this stub: ensure this import never executes in the "${envName}" environment.'
 );`,
   };
