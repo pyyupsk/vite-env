@@ -457,3 +457,84 @@ describe("guard integration", () => {
     expect(mockConfig.logger.warn).not.toHaveBeenCalled();
   });
 });
+
+describe("serverRuntime option", () => {
+  let tmpDir: string;
+
+  async function setupPlugin(
+    options: { serverRuntime?: "build-time" | "process-env" } = {},
+  ): Promise<{ plugin: ReturnType<typeof ViteEnv>; config: ReturnType<typeof createMockConfig> }> {
+    vi.clearAllMocks();
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "vite-env-runtime-"));
+
+    const filePath = path.join(tmpDir, "env.mjs");
+    fs.writeFileSync(
+      filePath,
+      "export default { client: { VITE_API_URL: {} }, server: { DATABASE_URL: {}, JWT_SECRET: {} } }\n",
+    );
+
+    const { loadEnvSources } = await import("./sources");
+    vi.mocked(loadEnvSources).mockResolvedValue({
+      DATABASE_URL: "postgresql://test",
+      JWT_SECRET: "secret-secret-secret-secret",
+      VITE_API_URL: "https://api.test",
+    });
+
+    const { isStandardEnvDefinition } = await import("./standard");
+    vi.mocked(isStandardEnvDefinition).mockReturnValue(true);
+    const { validateStandardEnv } = await import("./standard");
+    vi.mocked(validateStandardEnv).mockResolvedValue({
+      success: true,
+      data: {
+        DATABASE_URL: "postgresql://test",
+        JWT_SECRET: "secret",
+        VITE_API_URL: "https://api.test",
+      },
+      errors: [],
+    });
+
+    const p = ViteEnv({
+      configFile: "env.mjs",
+      serverRuntime: options.serverRuntime ?? "process-env",
+    });
+    const cfg = createMockConfig(tmpDir);
+    await (p as any).configResolved(cfg);
+    await (p as any).buildStart();
+    return { plugin: p, config: cfg };
+  }
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    vi.mocked(isStandardEnvDefinition).mockReturnValue(false);
+    vi.mocked(validateStandardEnv).mockResolvedValue({
+      success: true,
+      data: { VITE_X: "val" },
+      errors: [],
+    });
+  });
+
+  it("should inline validated values when serverRuntime is process-env", async () => {
+    const { plugin } = await setupPlugin();
+    const mod = (plugin as any).load("\0virtual:env/server");
+    expect(mod.code).toContain("postgresql://test");
+    expect(mod.code).toContain("secret");
+    expect(mod.code).toContain("https://api.test");
+    expect(mod.code).not.toContain("process.env");
+  });
+
+  it("should include both server and client keys in process-env mode", async () => {
+    const { plugin } = await setupPlugin();
+    const mod = (plugin as any).load("\0virtual:env/server");
+    expect(mod.code).toContain("DATABASE_URL");
+    expect(mod.code).toContain("JWT_SECRET");
+    expect(mod.code).toContain("VITE_API_URL");
+    expect(mod.code).not.toContain("process.env");
+  });
+
+  it("should default to build-time inlining when serverRuntime not specified", async () => {
+    const { plugin } = await setupPlugin({ serverRuntime: "build-time" });
+    const mod = (plugin as any).load("\0virtual:env/server");
+    expect(mod.code).toContain("Object.freeze");
+    expect(mod.code).not.toContain("process.env.");
+  });
+});

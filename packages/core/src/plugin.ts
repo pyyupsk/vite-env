@@ -12,7 +12,7 @@ import { detectServerLeak } from "./leak";
 import { writeWarningsLog } from "./log";
 import { loadEnvSources } from "./sources";
 import { isStandardEnvDefinition, validateStandardEnv } from "./standard";
-import { buildClientModule, buildServerModule } from "./virtual";
+import { buildClientModule, buildServerModule, type ServerRuntimeMode } from "./virtual";
 
 export type ViteEnvOptions = {
   /**
@@ -54,6 +54,22 @@ export type ViteEnvOptions = {
    * @default 'warn'
    */
   onClientAccessOfServerModule?: "error" | "stub" | "warn";
+
+  /**
+   * Controls how virtual:env/server gets its values.
+   *
+   * - 'build-time' (default) — Validates at build time and inlines values as a frozen object.
+   *   The bundle contains actual strings. Use for traditional deployments where env is
+   *   known at build time.
+   *
+   * - 'process-env' — Emits code that reads from process.env at runtime.
+   *   Build-time validation still runs (for type generation and schema checking), but the
+   *   generated module references process.env.KEY so container/runtime env vars take effect.
+   *   No secrets are baked into the image layer.
+   *
+   * @default 'build-time'
+   */
+  serverRuntime?: "build-time" | "process-env";
 };
 
 /**
@@ -95,6 +111,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
 
   const serverEnvs = options.serverEnvironments ?? ["ssr"];
   const guardMode = options.onClientAccessOfServerModule ?? "warn";
+  const serverRuntime: ServerRuntimeMode = options.serverRuntime ?? "build-time";
 
   return {
     name: "vite-env",
@@ -168,7 +185,7 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
           if (latest.mode === "stub") return buildServerStubModule(envName);
           resolvedConfig.logger.warn(`\n${formatGuardWarning(latest)}`);
         }
-        return buildServerModule(envDefinition, lastValidated);
+        return buildServerModule(envDefinition, lastValidated, serverRuntime);
       }
     },
 
