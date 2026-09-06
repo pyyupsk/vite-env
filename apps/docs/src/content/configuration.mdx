@@ -23,6 +23,7 @@ ViteEnv({
 **`serverEnvironments`** — Vite environment names allowed to import `virtual:env/server`. When left empty (the default), detection relies on `environment.config.consumer` — Vite 8+ built-in detection that identifies `'server'` for known runtimes (Node, Deno, Bun, edge runtimes like `'workerd'` and `'deno'`). Name-based matching is preserved when you explicitly provide a list. Add edge runtimes here if you need to override the auto-detection.
 
 Detection fallback chain:
+
 1. `environment.config.consumer` (Vite 8+ built-in: `'server'` for known runtimes)
 2. `ssr.config.experimental.environments` (custom runtime configs)
 3. Default: `['ssr']`
@@ -61,7 +62,7 @@ import { defineEnv } from "@vite-env/core";
 import { z } from "zod";
 
 export default defineEnv({
-  clientPrefix: "APP_",  // client keys must start with APP_
+  clientPrefix: "APP_", // client keys must start with APP_
   server: {
     DATABASE_URL: z.string().url(),
   },
@@ -88,9 +89,9 @@ If `clientPrefix` is set, it takes precedence over Vite's `envPrefix` config. Wh
 
 ## Server / client split
 
-| Block    | Keys                             | Available in              |
-| -------- | -------------------------------- | ------------------------- |
-| `server` | Any name                         | `virtual:env/server` only |
+| Block    | Keys                                     | Available in              |
+| -------- | ---------------------------------------- | ------------------------- |
+| `server` | Any name                                 | `virtual:env/server` only |
 | `client` | Must start with prefix (default `VITE_`) | Both modules              |
 
 ## Presets
