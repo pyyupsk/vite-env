@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0](https://github.com/pyyupsk/vite-env/compare/core-v0.7.0...corev1.0.0) (2026-09-06)
+## [0.8.0](https://github.com/pyyupsk/vite-env/compare/core-v0.7.0...core-v0.8.0) (2026-09-06)
 
 
 ### ⚠ BREAKING CHANGES

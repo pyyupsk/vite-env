@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0](https://github.com/pyyupsk/vite-env/compare/cli-v0.7.0...cli-v1.0.0) (2026-09-06)
+## [0.8.0](https://github.com/pyyupsk/vite-env/compare/cli-v0.7.0...cli-v0.8.0) (2026-09-06)
 
 
 ### ⚠ BREAKING CHANGES
