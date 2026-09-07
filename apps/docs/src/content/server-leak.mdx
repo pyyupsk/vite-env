@@ -26,7 +26,7 @@ The detection includes:
 - Template literals with expressions (`` `key=${SECRET}` ``)
 - Base64 and hex encoded representations of server values
 
-Leak detection runs **only on client builds** — skipped when `build.ssr` is true, the current environment is listed in `serverEnvironments`, or the environment's `consumer` is `'server'` (Vite 8+ environments with `environment.config.consumer === 'server'`).
+Leak detection runs **only on client builds** — skipped when `build.ssr` is true, the current environment is listed in `allowedServerEnvironments`, or the environment's `consumer` is `'server'` (Vite 8+ environments with `environment.config.consumer === 'server'`).
 
 ## False positives
 

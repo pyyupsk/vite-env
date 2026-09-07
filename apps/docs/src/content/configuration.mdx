@@ -11,16 +11,16 @@ order: 2
 import ViteEnv from '@vite-env/core/plugin'
 
 ViteEnv({
-  configFile?: string               // default: 'env.ts'
-  serverEnvironments?: string[]     // default: auto-detected
-  onClientAccessOfServerModule?:    // default: 'warn'
+  configFile: string                // required — no default
+  allowedServerEnvironments?: string[] // default: auto-detected
+  onClientAccessOfServerModule?:    // default: 'error'
     'warn' | 'error' | 'stub'
 })
 ```
 
-**`configFile`** — path to the env definition file, resolved from the project root.
+**`configFile`** — path to the env definition file, resolved from the project root. Required as of 0.8.0 — the plugin throws if omitted.
 
-**`serverEnvironments`** — Vite environment names allowed to import `virtual:env/server`. When left empty (the default), detection relies on `environment.config.consumer` — Vite 8+ built-in detection that identifies `'server'` for known runtimes (Node, Deno, Bun, edge runtimes like `'workerd'` and `'deno'`). Name-based matching is preserved when you explicitly provide a list. Add edge runtimes here if you need to override the auto-detection.
+**`allowedServerEnvironments`** — Vite environment names allowed to import `virtual:env/server`. When left empty (the default), detection relies on `environment.config.consumer` — Vite 8+ built-in detection that identifies `'server'` for known runtimes (Node, Deno, Bun, edge runtimes like `'workerd'` and `'deno'`). Name-based matching is preserved when you explicitly provide a list. Add edge runtimes here if you need to override the auto-detection. Renamed from `serverEnvironments` in 0.8.0 — the old name still works but logs a deprecation warning and will be removed in 1.0.0.
 
 Detection fallback chain:
 
