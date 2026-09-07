@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.1](https://github.com/pyyupsk/vite-env/compare/corev0.8.0...corev0.8.1) (2026-09-07)
+
+### Fixes
+
+- update stale `serverEnvironments` reference in warnings log to `allowedServerEnvironments` ([#91](https://github.com/pyyupsk/vite-env/pull/91))
+
+### Docs
+
+- add 0.8.0 migration guide, move `migration.mdx`, and fix stale API references ([#89](https://github.com/pyyupsk/vite-env/pull/89))
+
 ## [0.8.0](https://github.com/pyyupsk/vite-env/compare/core-v0.7.0...core-v0.8.0) (2026-09-06)
 
 ### ⚠ BREAKING CHANGES
