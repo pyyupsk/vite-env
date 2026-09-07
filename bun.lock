@@ -145,7 +145,7 @@
     },
     "packages/cli": {
       "name": "@vite-env/cli",
-      "version": "0.7.0",
+      "version": "1.0.0",
       "bin": {
         "vite-env": "./dist/index.mjs",
       },
@@ -167,16 +167,16 @@
     },
     "packages/core": {
       "name": "@vite-env/core",
-      "version": "0.7.0",
+      "version": "1.0.0",
       "dependencies": {
         "@standard-schema/spec": "catalog:",
         "jiti": "catalog:",
+        "oxc-parser": "catalog:",
       },
       "devDependencies": {
         "@types/node": "catalog:dev",
         "@vitest/coverage-v8": "catalog:dev",
         "jscodeshift": "catalog:dev",
-        "oxc-parser": "catalog:",
         "tsdown": "catalog:dev",
         "typescript": "catalog:dev",
         "vite": "catalog:dev",
