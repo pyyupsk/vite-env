@@ -31,7 +31,46 @@ jobs:
 
       - run: bun run build
 
+      - name: Verify lockstep versions
+        run: |
+          CORE_VERSION=$(node -p "require('./packages/core/package.json').version")
+          CLI_VERSION=$(node -p "require('./packages/cli/package.json').version")
+          if [ "$CORE_VERSION" != "$CLI_VERSION" ]; then
+            echo "ERROR: version mismatch — core=$CORE_VERSION cli=$CLI_VERSION. core and cli must always release the same version."
+            exit 1
+          fi
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$CORE_VERSION" != "$TAG_VERSION" ]; then
+            echo "ERROR: tag $GITHUB_REF_NAME does not match package version $CORE_VERSION."
+            exit 1
+          fi
+
+      - name: Publish core to npm
+        id: publish_core
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          core_tarball=$(cd packages/core && bun pm pack --quiet | tr -d '\n')
+          npm publish "packages/core/$core_tarball" --access public --provenance
+
+      - name: Publish cli to npm
+        id: publish_cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          CORE_VERSION=$(node -p "require('./packages/core/package.json').version")
+
+          # bun pm pack resolves workspace:* to the last npm-published version, not
+          # the current workspace version — patch it explicitly before packing cli
+          trap 'git checkout packages/cli/package.json' EXIT
+          sed -i "s|\"@vite-env/core\": \"workspace:\*\"|\"@vite-env/core\": \"^${CORE_VERSION}\"|" packages/cli/package.json
+          grep -q "\"@vite-env/core\": \"\\^${CORE_VERSION}\"" packages/cli/package.json \
+            || { echo "ERROR: failed to patch @vite-env/core version in packages/cli/package.json"; exit 1; }
+          cli_tarball=$(cd packages/cli && bun pm pack --quiet | tr -d '\n')
+          npm publish "packages/cli/$cli_tarball" --access public --provenance
+
       - name: Update release notes
+        if: steps.publish_core.outcome == 'success' && steps.publish_cli.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -43,21 +82,12 @@ jobs:
             gh release create "${{ github.ref_name }}" --notes-file /tmp/release-notes.md --title "${{ github.ref_name }}"
           fi
 
-      - name: Publish packages to npm
+      - name: Roll back tag on failure
+        if: failure()
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CORE_VERSION=$(node -p "require('./packages/core/package.json').version")
-
-          # Pack and publish core
-          core_tarball=$(cd packages/core && bun pm pack --quiet | tr -d '\n')
-          npm publish "packages/core/$core_tarball" --access public --provenance
-
-          # bun pm pack resolves workspace:* to the last npm-published version, not
-          # the current workspace version — patch it explicitly before packing cli
-          trap 'git checkout packages/cli/package.json' EXIT
-          sed -i "s|\"@vite-env/core\": \"workspace:\*\"|\"@vite-env/core\": \"^${CORE_VERSION}\"|" packages/cli/package.json
-          grep -q "\"@vite-env/core\": \"\\^${CORE_VERSION}\"" packages/cli/package.json \
-            || { echo "ERROR: failed to patch @vite-env/core version in packages/cli/package.json"; exit 1; }
-          cli_tarball=$(cd packages/cli && bun pm pack --quiet | tr -d '\n')
-          npm publish "packages/cli/$cli_tarball" --access public --provenance
+          git tag -d "${{ github.ref_name }}" || true
+          gh api -X DELETE "repos/${{ github.repository }}/git/refs/tags/${{ github.ref_name }}"
+          echo "::error::Release failed — tag ${{ github.ref_name }} deleted. Fix the issue and re-push the tag to retry."
+          exit 1

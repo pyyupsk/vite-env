@@ -16,7 +16,7 @@ jobs:
       pull-requests: write
     outputs:
       pr: ${{ steps.rp.outputs.pr }}
-      pr_branch: ${{ steps.rp.outputs.pr_branch }}
+      pr_branch: ${{ steps.rp.outputs.pr && fromJson(steps.rp.outputs.pr).headBranchName || '' }}
     steps:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         id: rp
@@ -30,7 +30,7 @@ jobs:
     needs: release-please
     permissions:
       contents: write
-    if: ${{ needs.release-please.outputs.pr }}
+    if: ${{ needs.release-please.outputs.pr_branch != '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
