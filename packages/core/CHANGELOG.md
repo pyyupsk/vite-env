@@ -2,15 +2,14 @@
 
 ## [0.8.0](https://github.com/pyyupsk/vite-env/compare/core-v0.7.0...core-v0.8.0) (2026-09-06)
 
-
 ### ⚠ BREAKING CHANGES
 
-* **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87))
+- **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87))
 
 ### Features
 
-* **core:** add serverRuntime option for virtual:env/server ([#85](https://github.com/pyyupsk/vite-env/issues/85)) ([1b20f1b](https://github.com/pyyupsk/vite-env/commit/1b20f1bfa16ea1fb22e03a4b1837e2f04acb43c8))
-* **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87)) ([06d7ca9](https://github.com/pyyupsk/vite-env/commit/06d7ca9ac527e90c8a52822d8a57ab501b53b6e7))
+- **core:** add serverRuntime option for virtual:env/server ([#85](https://github.com/pyyupsk/vite-env/issues/85)) ([1b20f1b](https://github.com/pyyupsk/vite-env/commit/1b20f1bfa16ea1fb22e03a4b1837e2f04acb43c8))
+- **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87)) ([06d7ca9](https://github.com/pyyupsk/vite-env/commit/06d7ca9ac527e90c8a52822d8a57ab501b53b6e7))
 
 ## [0.7.0](https://github.com/pyyupsk/vite-env/compare/core-v0.6.4...core-v0.7.0) (2026-09-01)
 

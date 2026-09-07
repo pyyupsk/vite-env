@@ -52,11 +52,11 @@ import { defineConfig } from "vite";
 import ViteEnv from "@vite-env/core/plugin";
 
 export default defineConfig({
-  plugins: [ViteEnv()],
+  plugins: [ViteEnv({ configFile: "./env.ts" })],
 });
 ```
 
-The plugin looks for `env.ts` in the project root by default. Override with `configFile` option.
+`configFile` is required — it points to the env definition file, resolved from the project root.
 
 ## Env sources
 

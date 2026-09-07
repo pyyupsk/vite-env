@@ -1,0 +1,221 @@
+---
+title: Migrating to 0.8.0
+description: Breaking changes from 0.7.x to 0.8.0, with codemod usage, before/after examples, and FAQ.
+section: Reference
+order: 9
+---
+
+vite-env 0.8.0 is the last release before v1.0.0 and ships the breaking changes needed to freeze the public API. All changes landed in a single PR: [#87](https://github.com/pyyupsk/vite-env/pull/87), commit `06d7ca9`.
+
+Run the automated codemod first — it handles most of this mechanically:
+
+```bash
+npx jscodeshift -t node_modules/@vite-env/core/scripts/codemod-0.8.mjs src/ vite.config.ts --dry --print
+```
+
+Drop `--dry --print` once the diff looks right to apply it for real.
+
+---
+
+## 1. `onClientAccessOfServerModule` default: `'warn'` → `'error'`
+
+**What changed:** If you don't set `onClientAccessOfServerModule`, importing `virtual:env/server` from a disallowed environment (e.g. client code) now fails the build instead of just warning + exiting with code 1.
+
+**Why:** `'warn'` was a soft landing for 0.x so teams could adopt the guard incrementally. By 0.8, that grace period is over — a leaked server-only import is a real bug and should stop the build, not slip through with a warning that's easy to ignore in CI logs.
+
+**Before/after:**
+
+```ts
+// Before (0.7.x) — implicit default was 'warn'
+ViteEnv({ configFile: "./env.ts" });
+
+// After (0.8.0) — implicit default is now 'error'
+ViteEnv({ configFile: "./env.ts" });
+// same call, different behavior — set explicitly if you need the old behavior:
+ViteEnv({ configFile: "./env.ts", onClientAccessOfServerModule: "warn" });
+```
+
+**Codemod:** Not automated (behavior change, not a rename) — it only inserts `onClientAccessOfServerModule: 'warn'` explicitly if you want to preserve old behavior during migration, so upgrading doesn't silently break your build. Run the codemod to keep `'warn'` while you clean up violations, then remove the option once your codebase is clean.
+
+**Manual steps:** If the new default breaks your build, either fix the leaking import or add `onClientAccessOfServerModule: 'warn'` (or `'stub'` for isomorphic test files) as a stopgap.
+
+---
+
+## 2. `serverEnvironments` → `allowedServerEnvironments`
+
+**What changed:** The option is renamed. The old name still works in 0.8.x — it's aliased with a `console.warn` deprecation notice — but will be removed entirely in 1.0.0.
+
+**Why:** The old name was ambiguous — it read like "the environments that are servers" rather than "the environments allowed to import the server module." The new name states the allow-list intent directly.
+
+**Before/after:**
+
+```ts
+// Before (0.7.x)
+ViteEnv({ configFile: "./env.ts", serverEnvironments: ["ssr", "workerd"] });
+
+// After (0.8.0)
+ViteEnv({ configFile: "./env.ts", allowedServerEnvironments: ["ssr", "workerd"] });
+```
+
+**Codemod:** Fully automated — renames the `serverEnvironments` key to `allowedServerEnvironments` in any `ViteEnv({ ... })` call.
+
+---
+
+## 3. `configFile` default removed — now required
+
+**What changed:** `ViteEnv()` used to default `configFile` to `./env.ts`. It now throws at `configResolved` time if `configFile` is omitted.
+
+**Why:** An implicit file-path default was a common source of confusing "why isn't my config being picked up" issues when the file lived somewhere else. Requiring it explicitly makes the plugin's config lookup traceable from `vite.config.ts` alone.
+
+**Before/after:**
+
+```ts
+// Before (0.7.x) — worked with zero args, resolved './env.ts' implicitly
+ViteEnv();
+
+// After (0.8.0) — throws: "[vite-env] configFile is required..."
+ViteEnv();
+
+// Fix: always pass it explicitly
+ViteEnv({ configFile: "./env.ts" });
+```
+
+**Codemod:** Fully automated — inserts `configFile: './env.ts'` into any `ViteEnv()` call that's missing it (whether called with no args or an object missing the key).
+
+---
+
+## 4. `defineEnv()` no longer forwards arbitrary keys
+
+**What changed:** `defineEnv({ ... })` used to spread any extra keys beyond `server`/`client`/`presets`/`clientPrefix` straight through to the returned definition. It now throws if you pass an unrecognized key.
+
+**Why:** The rest-param forwarding was unintentional API surface — it let typos in schema-shape keys (e.g. `severs: {...}` instead of `server: {...}`) pass through silently instead of erroring, and made the return type impossible to narrow precisely.
+
+**Before/after:**
+
+```ts
+// Before (0.7.x) — extra keys silently forwarded
+export default defineEnv({
+  server: { DATABASE_URL: z.string().url() },
+  extraMetadata: { team: "platform" }, // silently kept on the result
+});
+
+// After (0.8.0) — throws:
+// "[vite-env] Unknown keys in defineEnv(): extraMetadata.
+//  Only "server", "client", "presets", and "clientPrefix" are allowed."
+```
+
+**Codemod:** Cannot auto-fix — the codemod only detects and warns at the location of the offending call:
+
+```
+[codemod] src/env.ts:8: defineEnv custom keys [extraMetadata] that are no longer allowed.
+  Move them to a separate config or use "presets" for shared configuration.
+```
+
+**Manual steps:** Move extra keys out of `defineEnv()` entirely — into a sibling exported object, a separate config module, or (if the value is meant to be shared across multiple `defineEnv()` calls) a custom `EnvPreset`.
+
+---
+
+## 5. `ValidationResult.errors` type change
+
+**What changed:** `ValidationResult['errors']` (and `StandardValidationResult['errors']`) used to be `z.core.$ZodIssue[]` (Zod) or a separate `StandardValidationIssue[]` shape (Standard Schema). Both are now unified under one `ValidationError[]` type:
+
+```ts
+type ValidationError = {
+  message: string;
+  path: readonly (string | number)[];
+  code?: string;
+};
+```
+
+**Why:** Consumers of `validateEnv()`/`validateStandardEnv()` previously had to branch on which schema library produced the result to read `.path` correctly (Zod issues carry raw `PropertyKey`s, Standard Schema issues carry `PathSegment` objects with a `.key`). The unified type normalizes both into a plain `(string | number)[]`, so error-formatting code works identically regardless of which validator ran.
+
+**Before/after:**
+
+```ts
+// Before (0.7.x)
+const result = validateEnv(def, rawEnv);
+if (!result.success) {
+  for (const issue of result.errors) {
+    // issue.path: (string | number | symbol)[] — Zod-specific shape
+    console.log(issue.path.join("."), issue.message);
+  }
+}
+
+// After (0.8.0) — same read pattern, but path is always (string | number)[]
+const result = validateEnv(def, rawEnv);
+if (!result.success) {
+  for (const error of result.errors) {
+    console.log(error.path.join("."), error.message, error.code);
+  }
+}
+```
+
+If you imported `formatStandardSchemaError` directly, it's gone — `formatZodError` now handles both cases since they share the same `ValidationError[]` shape:
+
+```ts
+// Before (0.7.x)
+import { formatStandardSchemaError, formatZodError } from "@vite-env/core/format";
+
+// After (0.8.0) — one function for both
+import { formatZodError } from "@vite-env/core/format";
+```
+
+**Codemod:** Not automated (type-only change, no renames to detect reliably across call sites). Typecheck (`tsc --noEmit`) after upgrading — any code relying on Zod-specific `$ZodIssue` fields (e.g. reading `.input`, `.expected` off an issue) will surface as a type error.
+
+---
+
+## 6. `zod` peer dependency is now optional
+
+**What changed:** `@vite-env/core`'s `zod` peer dependency is now `peerDependenciesMeta: { zod: { optional: true } }`.
+
+**Why:** Projects using only `defineStandardEnv()` (Valibot, ArkType, or any Standard Schema-compliant library) never needed Zod installed — but npm/pnpm would still warn about the unmet peer dependency. `zod` is now lazy-loaded internally and only required if you call `defineEnv()`.
+
+**Before/after:**
+
+```bash
+# Before (0.7.x) — always needed both
+npm install @vite-env/core zod
+
+# After (0.8.0) — Standard Schema users only need their validator
+npm install @vite-env/core valibot
+```
+
+If you use `defineEnv()` (the Zod-specific API), nothing changes — keep `zod` installed.
+
+**Codemod:** N/A — no code change required, this is a `package.json`/install-time concern only.
+
+---
+
+## Rollback notes
+
+If 0.8.0 breaks your build and you need to buy time:
+
+1. Pin back to `0.7.x` in `package.json` (`"@vite-env/core": "^0.7.0"`) and reinstall.
+2. If you've already run the codemod and want to keep the new option names while restoring old behavior, set `onClientAccessOfServerModule: 'warn'` explicitly — this is the only behavioral (not just renamed) change in 0.8.0.
+3. `allowedServerEnvironments`/`serverEnvironments` are interchangeable in 0.8.x (old name just warns), so there's no need to roll that back independently.
+4. There's no rollback path for the `defineEnv()` unknown-key rejection or the `ValidationResult.errors` type change other than pinning the old version — both are hard breaks in the API surface.
+
+---
+
+## FAQ
+
+**"configFile is required" error after upgrading, but I never set it before.**
+You were relying on the removed `./env.ts` default. Add `configFile: './env.ts'` (or wherever your definition file lives) to your `ViteEnv({...})` call.
+
+**My build started failing after upgrading, no code changes on my end.**
+Almost certainly the `onClientAccessOfServerModule` default flip. Something in your client bundle is importing `virtual:env/server`. Either fix the import (most likely fix), or set `onClientAccessOfServerModule: 'warn'` temporarily to unblock the build while you track it down — the build output will point at the offending environment name.
+
+**Deprecation warning: "serverEnvironments is deprecated. Use allowedServerEnvironments instead."**
+Cosmetic only in 0.8.x — both names work identically. Run the codemod, or rename manually; the old name will start throwing in 1.0.0.
+
+**`defineEnv()` throws "Unknown keys in defineEnv()" for a key that used to work fine.**
+You were relying on the removed rest-param forwarding. Move that key out of the `defineEnv()` call — it was never validated or typed correctly to begin with.
+
+**TypeScript errors on `result.errors[i].path` after upgrading — it used to accept `symbol` in the path array.**
+`ValidationError.path` is now strictly `(string | number)[]`. Any code indexing into `.path` expecting Zod's raw `PropertyKey[]` (which could include `symbol`) needs updating — in practice this only affects extremely unusual manually-symbol-keyed schemas.
+
+**Do I need to run the codemod, or can I do this by hand?**
+For 1–2 config files, doing it by hand from the sections above is fine. For a monorepo with many `vite.config.ts`/`env.ts` files, run the codemod — items 2 and 3 above are close to 100% automatable, which covers most real-world diffs.
+
+**Where did `StandardValidationIssue` go?**
+Merged into `ValidationError` — see [Item 5](#5-validationresulterrors-type-change). If you imported `StandardValidationIssue` as a type, replace it with `ValidationError`.
