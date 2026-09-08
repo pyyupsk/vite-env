@@ -77,4 +77,18 @@ describe("writeWarningsLog", () => {
     vi.mocked(fs.writeFile).mockRejectedValueOnce(new Error("EACCES: permission denied"));
     await expect(writeWarningsLog([fail1], "/project")).rejects.toThrow("[vite-env]");
   });
+
+  it("throws when resolved file escapes root", async () => {
+    const spy = vi.spyOn(path, "resolve").mockImplementation((...args: string[]) => {
+      if (args[0] === "/safe") return "/safe";
+      if (args[0] === "/safe/vite-env-warnings.log") return "/escape/vite-env-warnings.log";
+      return args[0];
+    });
+
+    await expect(writeWarningsLog([fail1], "/safe")).rejects.toThrow(
+      "Refusing to write outside project root",
+    );
+
+    spy.mockRestore();
+  });
 });

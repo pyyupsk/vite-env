@@ -27,6 +27,7 @@ export async function writeWarningsLog(fails: GuardFail[], root: string): Promis
   const entries = unique.map((fail) => formatGuardLogEntry(fail, timestamp)).join("\n\n");
   const content = `${LOG_HEADER}\n\n${entries}\n`;
   const filePath = path.join(root, "vite-env-warnings.log");
+  assertPathInsideRoot(root, filePath);
   try {
     await fs.writeFile(filePath, content, "utf-8");
   } catch (e) {
@@ -34,5 +35,13 @@ export async function writeWarningsLog(fails: GuardFail[], root: string): Promis
       `[vite-env] Failed to write vite-env-warnings.log to ${root}. Check file permissions.`,
       { cause: e },
     );
+  }
+}
+
+function assertPathInsideRoot(root: string, filePath: string): void {
+  const resolvedRoot = path.resolve(root);
+  const resolvedFile = path.resolve(filePath);
+  if (!resolvedFile.startsWith(resolvedRoot + path.sep) && resolvedFile !== resolvedRoot) {
+    throw new Error(`[vite-env] Refusing to write outside project root: ${filePath}`);
   }
 }

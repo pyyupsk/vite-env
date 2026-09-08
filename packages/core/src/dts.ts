@@ -93,6 +93,7 @@ ${serverFields}
 `;
 
   const filePath = path.join(root, "vite-env.d.ts");
+  assertPathInsideRoot(root, filePath);
   try {
     await fs.writeFile(filePath, dts, "utf-8");
   } catch (e) {
@@ -131,4 +132,12 @@ function zodToTs(z: typeof ZodNs, schema: unknown): string {
     return (schema.options as string[]).map((o) => `'${o}'`).join(" | ");
   if (schema instanceof z.ZodPipe) return zodToTs(z, schema.def.out);
   return "string";
+}
+
+function assertPathInsideRoot(root: string, filePath: string): void {
+  const resolvedRoot = path.resolve(root);
+  const resolvedFile = path.resolve(filePath);
+  if (!resolvedFile.startsWith(resolvedRoot + path.sep) && resolvedFile !== resolvedRoot) {
+    throw new Error(`[vite-env] Refusing to write outside project root: ${filePath}`);
+  }
 }
