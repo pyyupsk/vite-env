@@ -15,9 +15,7 @@ function tmpFile(name: string, content: string) {
 describe("loadEnvConfig", () => {
   it("should throw when config does not export an object", async () => {
     const p = tmpFile("bad-string.ts", "export default 'not-an-object'");
-    await expect(loadEnvConfig(p)).rejects.toThrow(
-      /must export an object \(got string\)/,
-    );
+    await expect(loadEnvConfig(p)).rejects.toThrow(/must export an object \(got string\)/);
     unlinkSync(p);
   });
 });
