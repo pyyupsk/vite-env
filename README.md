@@ -105,7 +105,7 @@ env.VITE_API_URL; // string (client vars also available server-side)
 | `server` |                No                 |                Yes                |
 
 - **Validation** runs on `buildStart` (fatal) and on `.env` file changes during dev (non-fatal warning)
-- **Leak detection** scans client chunks at `generateBundle` for literal server variable values
+- **Leak detection** scans client chunks at `generateBundle` for literal server variable values. Known blind spots: values shorter than 8 characters are skipped, pure vendor chunks (all modules from `node_modules`) are excluded, and dynamically constructed strings (e.g. `String.fromCharCode`, `atob()`) are not detected. This is a best-effort heuristic, not a complete guarantee — use it as defense-in-depth alongside proper secret management.
 - **`VITE_` prefix** is enforced at `defineEnv()` call time for all `client` keys
 - **`process.env` wins** over `.env` files (CI secrets take precedence)
 
