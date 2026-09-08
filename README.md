@@ -1,6 +1,7 @@
 # vite-env
 
 [![Unit Test](https://github.com/pyyupsk/vite-env/actions/workflows/unit-test.yml/badge.svg)](https://github.com/pyyupsk/vite-env/actions/workflows/unit-test.yml)
+[![codecov](https://codecov.io/gh/pyyupsk/vite-env/graph/badge.svg?token=KWNO78JEPM)](https://codecov.io/gh/pyyupsk/vite-env)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=pyyupsk_vite-env&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=pyyupsk_vite-env)
 [![Vite compatibility](https://registry.vite.dev/api/badges?package=@vite-env/core&tool=vite)](https://registry.vite.dev/)
 [![npm version](https://img.shields.io/npm/v/@vite-env/core)](https://www.npmjs.com/package/@vite-env/core)
