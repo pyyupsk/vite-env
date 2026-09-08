@@ -51,6 +51,13 @@ function expectNoLeaks(leaks: { key: string; chunk: string }[]) {
   expect(leaks).toHaveLength(0);
 }
 
+function expectNoLeaksForCode(code: string, serverValue = "long-secret-value") {
+  const def = { server: { SECRET: {} as any } };
+  const data = { SECRET: serverValue };
+  const bundle = { "main.js": { type: "chunk", code } };
+  expectNoLeaks(detectServerLeak(def, data, bundle));
+}
+
 describe("detectServerLeak", () => {
   it("should detect server values in client chunks", () => {
     const { def, data, bundle, expectedLeaks } = createTestCase({
@@ -269,6 +276,67 @@ describe("detectServerLeak", () => {
       });
 
       expectNoLeaks(detectServerLeak(def, data, bundle));
+    });
+  });
+
+  describe("onSkipped callback", () => {
+    it("should call onSkipped with short secret keys", () => {
+      const skipped: string[] = [];
+      const def = { server: { SHORT: {} as any, LONG: {} as any } };
+      const data = { SHORT: "abc", LONG: "long-value-here" };
+      const bundle = { "main.js": { type: "chunk", code: `const x = "long-value-here"` } };
+
+      detectServerLeak(def, data, bundle, (keys) => skipped.push(...keys));
+      expect(skipped).toContain("SHORT");
+      expect(skipped).not.toContain("LONG");
+    });
+  });
+
+  describe("parse errors", () => {
+    it("should skip chunks with invalid JS syntax", () => {
+      const def = { server: { SECRET: {} as any } };
+      const data = { SECRET: "long-secret-value" };
+      const bundle = { "bad.js": { type: "chunk", code: "const = =$==" } };
+
+      expectNoLeaks(detectServerLeak(def, data, bundle));
+    });
+  });
+
+  describe("evaluateLiteral / evaluateNodeToString edge cases", () => {
+    it("should not flag non-string literals (number)", () => {
+      expectNoLeaksForCode("const x = 12345678");
+    });
+
+    it("should not flag non-string literals (boolean)", () => {
+      expectNoLeaksForCode("const x = true");
+    });
+  });
+
+  describe("evaluateBinaryExpression edge cases", () => {
+    it("should not evaluate non-+ binary expressions", () => {
+      expectNoLeaksForCode('const x = "a" * "b"');
+    });
+  });
+
+  describe("evaluateTemplateLiteral edge cases", () => {
+    it("should not crash on template literal with unresolvable expressions", () => {
+      expectNoLeaksForCode("const x = `${unknownVar}text`");
+    });
+  });
+
+  describe("couldBeEncoded edge cases", () => {
+    it("should return false when server value length is 0", () => {
+      expectNoLeaksForCode('const x = ""', "");
+    });
+  });
+
+  describe("tryBase64Decode / tryHexDecode edge cases", () => {
+    it("should not flag non-base64, non-hex strings", () => {
+      expectNoLeaksForCode('const x = "not-base64-or-hex!!!"');
+    });
+
+    it("should not flag odd-length hex strings", () => {
+      expectNoLeaksForCode('const x = "abc12zz"');
     });
   });
 
