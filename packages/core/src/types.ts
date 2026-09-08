@@ -5,6 +5,12 @@ export type EnvDefinition = {
   server?: z.ZodRawShape;
   client?: z.ZodRawShape;
   /**
+   * Custom prefix for client environment variables.
+   * Defaults to ["VITE_"]. Can be a string or array of strings.
+   * If both this and Vite's envPrefix are set, this takes precedence.
+   */
+  clientPrefix?: string | string[];
+  /**
    * Retained from defineEnv for validation-time platform detection.
    * Gating relies on schema reference identity — cloning or serializing
    * the definition disables it (preset keys become permanently strict).
@@ -15,6 +21,12 @@ export type EnvDefinition = {
 export type StandardEnvDefinition = {
   server?: Record<string, StandardSchemaV1>;
   client?: Record<string, StandardSchemaV1>;
+  /**
+   * Custom prefix for client environment variables.
+   * Defaults to ["VITE_"]. Can be a string or array of strings.
+   * If both this and Vite's envPrefix are set, this takes precedence.
+   */
+  clientPrefix?: string | string[];
   /** @internal */
   readonly _standard: true;
 };
@@ -32,18 +44,19 @@ export type EnvPreset = {
 
 export type AnyEnvDefinition = EnvDefinition | StandardEnvDefinition;
 
+export type ValidationError = {
+  message: string;
+  path: readonly (string | number)[];
+  code?: string;
+};
+
 export type ValidationResult =
   | { success: true; data: Record<string, unknown>; errors: [] }
-  | { success: false; data: null; errors: z.core.$ZodIssue[] };
-
-export type StandardValidationIssue = {
-  message: string;
-  path: readonly (PropertyKey | StandardSchemaV1.PathSegment)[];
-};
+  | { success: false; data: null; errors: ValidationError[] };
 
 export type StandardValidationResult =
   | { success: true; data: Record<string, unknown>; errors: [] }
-  | { success: false; data: null; errors: StandardValidationIssue[] };
+  | { success: false; data: null; errors: ValidationError[] };
 
 type OrEmptyShape<T> = T extends z.ZodRawShape ? T : Record<string, never>;
 

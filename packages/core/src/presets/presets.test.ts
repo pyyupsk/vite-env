@@ -9,7 +9,7 @@ describe("defineEnv presets merge", () => {
   it("presets: [] is identical to no presets key", () => {
     const withEmpty = defineEnv({ presets: [], server: { FOO: z.string() } });
     const withNone = defineEnv({ server: { FOO: z.string() } });
-    expect(Object.keys(withEmpty.server)).toEqual(Object.keys(withNone.server));
+    expect(Object.keys(withEmpty.server!)).toEqual(Object.keys(withNone.server!));
   });
 
   it("presets are retained on the return value for validation-time detection", () => {
@@ -29,7 +29,7 @@ describe("defineEnv presets merge", () => {
       presets: [vercel],
       server: { VERCEL_URL: stricterSchema },
     });
-    expect(result.server.VERCEL_URL).toBe(stricterSchema);
+    expect(result.server!.VERCEL_URL).toBe(stricterSchema);
   });
 
   it("warns when user field overrides a preset field", () => {

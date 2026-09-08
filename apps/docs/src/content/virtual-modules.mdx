@@ -77,13 +77,15 @@ In SSR mode both modules resolve normally on the server. The `virtual:env/client
 ```ts
 // vite.config.ts
 export default defineConfig({
-  plugins: [ViteEnv()],
-  // No extra SSR config needed — 'ssr' is in serverEnvironments by default
+  plugins: [ViteEnv({ configFile: "./env.ts" })],
+  // No extra SSR config needed — 'ssr' is in allowedServerEnvironments by default
 });
 ```
 
-For edge runtimes not named `'ssr'`, add them to `serverEnvironments`:
+For edge runtimes not detected automatically, add them to `allowedServerEnvironments`:
 
 ```ts
-ViteEnv({ serverEnvironments: ["ssr", "workerd"] });
+ViteEnv({ configFile: "./env.ts", allowedServerEnvironments: ["ssr", "workerd"] });
 ```
+
+If you use a custom client prefix via `clientPrefix` in your schema, the `virtual:env/client` module still contains only the keys matching that prefix — the prefix rule is not changed, just the prefix value itself.

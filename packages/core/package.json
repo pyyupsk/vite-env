@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
   "name": "@vite-env/core",
-  "version": "0.6.3",
+  "version": "0.8.1",
   "description": "The env.ts layer for Vite — define once, validate everywhere, import with types",
   "keywords": [
     "dotenv",
@@ -140,11 +140,13 @@
   },
   "dependencies": {
     "@standard-schema/spec": "catalog:",
-    "jiti": "catalog:"
+    "jiti": "catalog:",
+    "oxc-parser": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:dev",
     "@vitest/coverage-v8": "catalog:dev",
+    "jscodeshift": "catalog:dev",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev",
     "vite": "catalog:dev",
@@ -175,7 +177,7 @@
     },
     "rolldown": {
       "type": "incompatible",
-      "reason": "Uses Vite-specific hooks (configResolved, configureServer) and APIs (ResolvedConfig, Environment API) not available in standalone Rolldown."
+      "reason": "Uses Vite-specific hooks (configResolved, configureServer) and APIs (ResolvedConfig, Environment API). Rolldown support is experimental and may not work with all features."
     }
   }
 }

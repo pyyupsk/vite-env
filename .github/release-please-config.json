@@ -7,12 +7,14 @@
   "packages": {
     "packages/core": {
       "package-name": "@vite-env/core",
-      "tag-separator": null,
-      "component": ""
+      "tag-separator": "",
+      "component": "",
+      "release-template": ".github/release-template.md"
     },
     "packages/cli": {
       "package-name": "@vite-env/cli",
-      "skip-github-release": true
+      "skip-github-release": true,
+      "release-template": ".github/release-template.md"
     }
   }
 }

@@ -52,11 +52,11 @@ import { defineConfig } from "vite";
 import ViteEnv from "@vite-env/core/plugin";
 
 export default defineConfig({
-  plugins: [ViteEnv()],
+  plugins: [ViteEnv({ configFile: "./env.ts" })],
 });
 ```
 
-The plugin looks for `env.ts` in the project root by default. Override with `configFile` option.
+`configFile` is required — it points to the env definition file, resolved from the project root.
 
 ## Env sources
 
@@ -69,3 +69,15 @@ Variables are merged in priority order (highest first):
 5. `.env`
 
 No prefix filter is applied — the schema is the filter.
+
+## Exports
+
+`@vite-env/core` exports the following from its main entry point:
+
+| Export                    | Description                                 |
+| ------------------------- | ------------------------------------------- |
+| `defineEnv()`             | Define a Zod-based env schema               |
+| `defineStandardEnv()`     | Define a Standard Schema-based env schema   |
+| `validateEnv()`           | Validate env vars against a Zod schema      |
+| `validateStandardEnv()`   | Validate env vars against a Standard Schema |
+| `ValidationResult` (type) | Return type of the validate functions       |

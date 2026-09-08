@@ -27,7 +27,20 @@ export default defineStandardEnv({
 
 The `_standard: true` marker tells the plugin to use the Standard Schema validation path. Zod is not loaded at all — no Zod in your `node_modules` is fine.
 
-**Client keys must still be prefixed with `VITE_`** — the same rule applies regardless of validation path.
+**Client keys must still be prefixed with `VITE_`** — the same rule applies regardless of validation path. Use `clientPrefix` to override this:
+
+```ts
+export default defineStandardEnv({
+  _standard: true,
+  clientPrefix: "APP_",
+  server: {
+    DATABASE_URL: v.pipe(v.string(), v.url()),
+  },
+  client: {
+    APP_API_URL: v.pipe(v.string(), v.url()),
+  },
+});
+```
 
 ## Supported adapters
 

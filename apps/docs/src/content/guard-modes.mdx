@@ -5,13 +5,15 @@ section: Reference
 order: 4
 ---
 
-Guard modes control what the plugin does when an environment not listed in `serverEnvironments` imports `virtual:env/server`. Configure via `onClientAccessOfServerModule`:
+Guard modes control what the plugin does when an environment not listed in `allowedServerEnvironments` imports `virtual:env/server`. Configure via `onClientAccessOfServerModule`:
 
 ```ts
 ViteEnv({
-  onClientAccessOfServerModule: "warn", // default — changes to 'error' in 1.0
+  onClientAccessOfServerModule: "error", // default since 0.8.0
 });
 ```
+
+Environments with `consumer === 'server'` (detected via Vite 8+'s `environment.config.consumer`) are automatically allowed to import `virtual:env/server` and are not subject to guard mode checks or leak detection.
 
 ## warn
 
@@ -37,7 +39,7 @@ The server module is replaced with a stub that throws at runtime:
 throw new Error(
   '[vite-env] virtual:env/server was imported in the "client" environment. ' +
     "This module is server-only and was replaced with a stub. " +
-    "To allow this environment: add it to serverEnvironments. " +
+    "To allow this environment: add it to allowedServerEnvironments. " +
     'To suppress this stub: ensure this import never executes in the "client" environment.',
 );
 ```

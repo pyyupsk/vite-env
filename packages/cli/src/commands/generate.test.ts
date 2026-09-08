@@ -21,37 +21,37 @@ describe("generateCommand", () => {
 
 describe("zod schema introspection (generate helpers)", () => {
   it("should recognize ZodString", () => {
-    expect(z.string() instanceof z.ZodString).toBe(true);
+    expect(z.string()).toBeInstanceOf(z.ZodString);
   });
 
   it("should recognize ZodNumber", () => {
-    expect(z.number() instanceof z.ZodNumber).toBe(true);
+    expect(z.number()).toBeInstanceOf(z.ZodNumber);
   });
 
   it("should recognize ZodBoolean", () => {
-    expect(z.boolean() instanceof z.ZodBoolean).toBe(true);
+    expect(z.boolean()).toBeInstanceOf(z.ZodBoolean);
   });
 
   it("should recognize ZodEnum with options", () => {
     const schema = z.enum(["a", "b", "c"]);
-    expect(schema instanceof z.ZodEnum).toBe(true);
+    expect(schema).toBeInstanceOf(z.ZodEnum);
     expect(schema.options).toEqual(["a", "b", "c"]);
   });
 
   it("should recognize ZodOptional", () => {
     const schema = z.string().optional();
-    expect(schema instanceof z.ZodOptional).toBe(true);
+    expect(schema).toBeInstanceOf(z.ZodOptional);
   });
 
   it("should recognize ZodDefault", () => {
     const schema = z.string().default("hello");
-    expect(schema instanceof z.ZodDefault).toBe(true);
+    expect(schema).toBeInstanceOf(z.ZodDefault);
   });
 
   it("should unwrap ZodOptional to inner type", () => {
     const schema = z.string().optional();
     const inner = schema.unwrap();
-    expect(inner instanceof z.ZodString).toBe(true);
+    expect(inner).toBeInstanceOf(z.ZodString);
   });
 
   it("should recognize z.stringbool() as boolean hint via ZodPipe", () => {

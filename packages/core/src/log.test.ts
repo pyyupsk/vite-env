@@ -45,7 +45,7 @@ describe("writeWarningsLog", () => {
     expect(content).toContain("1.0.0");
     expect(content).toContain("onClientAccessOfServerModule: 'error'");
     expect(content).toContain("onClientAccessOfServerModule: 'stub'");
-    expect(content).toContain("serverEnvironments: ['ssr', 'workerd']");
+    expect(content).toContain("allowedServerEnvironments: ['ssr', 'workerd']");
   });
 
   it("content includes importer path", async () => {

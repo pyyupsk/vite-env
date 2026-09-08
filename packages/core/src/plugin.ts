@@ -6,44 +6,74 @@ import path from "node:path";
 import process from "node:process";
 import { loadEnvConfig } from "./config";
 import { generateStandardDts } from "./dts";
-import { formatGuardWarning, formatHardError, formatStandardSchemaError } from "./format";
+import { formatGuardWarning, formatHardError } from "./format";
 import { buildServerStubModule, checkServerModuleAccess } from "./guard";
 import { detectServerLeak } from "./leak";
 import { writeWarningsLog } from "./log";
 import { loadEnvSources } from "./sources";
 import { isStandardEnvDefinition, validateStandardEnv } from "./standard";
-import { buildClientModule, buildServerModule } from "./virtual";
+import { buildClientModule, buildServerModule, type ServerRuntimeMode } from "./virtual";
 
 export type ViteEnvOptions = {
   /**
-   * Path to env definition file.
-   * @default './env.ts' (resolved from project root)
+   * Path to env definition file (required).
+   * Example: './env.ts' resolved from project root.
    */
   configFile?: string;
 
   /**
    * Vite 8 environment names that are allowed to import virtual:env/server.
-   * Use this to allow edge runtimes (Cloudflare Workers → 'workerd', Deno Deploy → 'ssr').
-   * @default ['ssr']
+   * Use this to allow edge runtimes (Cloudflare Workers → 'workerd', Deno Deploy → 'deno',
+   * Vercel/Netlify Edge → 'edge'). When left empty, detection relies on
+   * `environment.config.consumer` (Vite 8+ built-in: 'server' for known runtimes).
+   *
+   * Detection fallback chain:
+   *  1. `environment.config.consumer` (Vite 8+ built-in: 'server' for known runtimes)
+   *  2. `ssr.config.experimental.environments` (custom runtime configs)
+   *  3. Default: `['ssr']`
+   *
+   * Name-based matching is preserved when explicitly provided via this option.
+   *
+   * @default automatically detected from Vite environment
+   */
+  allowedServerEnvironments?: string[];
+
+  /**
+   * @deprecated Use `allowedServerEnvironments` instead. Will be removed in 1.0.0.
    */
   serverEnvironments?: string[];
 
   /**
    * Behavior when virtual:env/server is imported from a disallowed environment.
    *
-   * - 'warn'  — Deprecation warning printed to terminal + vite-env-warnings.log written.
-   *             Build succeeds but exits with code 1. Default in 0.x releases.
-   *             The default will change to 'error' in 1.0.0.
+   * - 'error' — Hard build error. No artifacts emitted. Default.
    *
-   * - 'error' — Hard build error. No artifacts emitted.
+   * - 'warn'  — Deprecation warning printed to terminal + vite-env-warnings.log written.
+   *             Build succeeds but exits with code 1.
    *
    * - 'stub'  — Returns a module that throws at runtime if the import executes.
    *             Use for testing environments (Vitest jsdom) or framework isomorphic files
    *             where the import exists but the code path is never reached in a server context.
    *
-   * @default 'warn'
+   * @default 'error'
    */
   onClientAccessOfServerModule?: "error" | "stub" | "warn";
+
+  /**
+   * Controls how virtual:env/server gets its values.
+   *
+   * - 'build-time' (default) — Validates at build time and inlines values as a frozen object.
+   *   The bundle contains actual strings. Use for traditional deployments where env is
+   *   known at build time.
+   *
+   * - 'process-env' — Emits code that reads from process.env at runtime.
+   *   Build-time validation still runs (for type generation and schema checking), but the
+   *   generated module references process.env.KEY so container/runtime env vars take effect.
+   *   No secrets are baked into the image layer.
+   *
+   * @default 'build-time'
+   */
+  serverRuntime?: "build-time" | "process-env";
 };
 
 /**
@@ -55,21 +85,25 @@ async function validateAndFormat(
   def: AnyEnvDefinition,
   rawEnv: Record<string, string>,
 ): Promise<{ data: Record<string, unknown> } | { error: string }> {
+  const { formatZodError } = await import("./format");
   if (isStandardEnvDefinition(def)) {
     const result = await validateStandardEnv(def, rawEnv);
     if (!result.success) {
-      return { error: formatStandardSchemaError(result.errors) };
+      return { error: formatZodError(result.errors) };
     }
     return { data: result.data };
   }
 
   const { validateEnv } = await import("./schema");
-  const { formatZodError } = await import("./format");
   const result = validateEnv(def, rawEnv);
   if (!result.success) {
     return { error: formatZodError(result.errors) };
   }
   return { data: result.data };
+}
+
+function getEnvConsumer(ctx: Rollup.PluginContext): string | undefined {
+  return (ctx.environment as unknown as { config?: { consumer?: string } })?.config?.consumer;
 }
 
 export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
@@ -79,8 +113,16 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
   let serverModuleGuardFails: GuardFail[] = [];
   let didSetExitCode = false;
 
-  const serverEnvs = options.serverEnvironments ?? ["ssr"];
-  const guardMode = options.onClientAccessOfServerModule ?? "warn";
+  const serverEnvs = options.allowedServerEnvironments ??
+    options.serverEnvironments /* nosonar */ ?? ["ssr"];
+  if (options.serverEnvironments) /* nosonar */ {
+    console.warn(
+      "[vite-env] serverEnvironments is deprecated. Use allowedServerEnvironments instead. " +
+        "This option will be removed in 1.0.0.",
+    );
+  }
+  const guardMode = options.onClientAccessOfServerModule ?? "error";
+  const serverRuntime: ServerRuntimeMode = options.serverRuntime ?? "build-time";
 
   return {
     name: "vite-env",
@@ -89,7 +131,13 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     async configResolved(config) {
       resolvedConfig = config;
 
-      const configPath = path.resolve(config.root, options.configFile ?? "env.ts");
+      if (!options.configFile) {
+        throw new Error(
+          "[vite-env] configFile is required. Set configFile: './env.ts' or use Vite's envDir.",
+        );
+      }
+
+      const configPath = path.resolve(config.root, options.configFile);
 
       try {
         envDefinition = await loadEnvConfig(configPath);
@@ -135,8 +183,10 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       if (source === "virtual:env/client") return "\0virtual:env/client";
       if (source === "virtual:env/server") {
         const envName = this.environment?.name ?? "client";
-        const result = checkServerModuleAccess(envName, serverEnvs, guardMode, importer);
-        if (!result.allowed) serverModuleGuardFails.push(result);
+        if (getEnvConsumer(this) !== "server") {
+          const result = checkServerModuleAccess(envName, serverEnvs, guardMode, importer);
+          if (!result.allowed) serverModuleGuardFails.push(result);
+        }
         return "\0virtual:env/server";
       }
     },
@@ -145,16 +195,14 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
       if (id === "\0virtual:env/client") return buildClientModule(envDefinition, lastValidated);
       if (id === "\0virtual:env/server") {
         const envName = this.environment?.name ?? "client";
-        // Filter to fails from this environment only — other envs may have recorded fails for their own loads
         const envFails = serverModuleGuardFails.filter((f) => f.envName === envName);
         if (envFails.length > 0) {
-          // warn once per load cycle using the last recorded fail; unique importers are written to the log file
           const latest = envFails.at(-1)!;
           if (latest.mode === "error") throw new Error(formatHardError(latest));
           if (latest.mode === "stub") return buildServerStubModule(envName);
           resolvedConfig.logger.warn(`\n${formatGuardWarning(latest)}`);
         }
-        return buildServerModule(envDefinition, lastValidated);
+        return buildServerModule(envDefinition, lastValidated, serverRuntime);
       }
     },
 
@@ -168,21 +216,19 @@ export default function ViteEnv(options: ViteEnvOptions = {}): Plugin {
     },
 
     generateBundle(this: Rollup.PluginContext, _options, bundle) {
-      if (resolvedConfig.build.ssr) return;
-
       const envName = this.environment?.name ?? "client";
-      if (serverEnvs.includes(envName)) return;
+      if (
+        resolvedConfig.build.ssr ||
+        serverEnvs.includes(envName) ||
+        getEnvConsumer(this) === "server"
+      )
+        return;
 
-      const leaks = detectServerLeak(
-        envDefinition,
-        lastValidated,
-        bundle as Record<string, { type: string; code?: string }>,
-        (keys) => {
-          resolvedConfig.logger.warn(
-            `  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Leak detection skipped ${keys.length} server variable(s) with values shorter than 8 chars: ${keys.join(", ")}`,
-          );
-        },
-      );
+      const leaks = detectServerLeak(envDefinition, lastValidated, bundle, (keys) => {
+        resolvedConfig.logger.warn(
+          `  \x1B[33m⚠\x1B[0m \x1B[36m[vite-env]\x1B[0m Leak detection skipped ${keys.length} server variable(s) with values shorter than 8 chars: ${keys.join(", ")}`,
+        );
+      });
 
       if (leaks.length > 0) {
         const details = leaks.map((l) => `  ✗ ${l.key} found in ${l.chunk}`).join("\n");

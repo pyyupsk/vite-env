@@ -213,7 +213,7 @@ describe("missing required env", () => {
 // ─── VITE_ prefix enforcement ───────────────────────────────────────────────
 
 describe("vITE_ prefix enforcement", () => {
-  it("should throw at define-time when client key lacks VITE_ prefix", async () => {
+  it("should defer validation at define-time (uses Vite config fallback at runtime)", async () => {
     const { defineEnv } = await import("@vite-env/core");
     const { z } = await import("zod");
 
@@ -221,7 +221,7 @@ describe("vITE_ prefix enforcement", () => {
       defineEnv({
         client: { API_URL: z.string() },
       }),
-    ).toThrow('Client env var "API_URL" must be prefixed with VITE_');
+    ).not.toThrow();
   });
 
   it("should accept server keys without VITE_ prefix", async () => {

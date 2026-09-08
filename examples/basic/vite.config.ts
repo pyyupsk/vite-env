@@ -8,11 +8,11 @@ export default defineConfig({
 
       // Environments allowed to import virtual:env/server.
       // Default is ['ssr']. The client environment is always blocked.
-      serverEnvironments: ["ssr"],
+      allowedServerEnvironments: ["ssr"],
 
       // What happens when client code imports virtual:env/server.
-      // 'error' = hard build failure (recommended for production)
-      // 'warn'  = log warning + exit code 1 (current default, changes to 'error' in 1.0.0)
+      // 'error' = hard build failure (default)
+      // 'warn'  = log warning + exit code 1
       // 'stub'  = returns module that throws at runtime (for isomorphic imports)
       onClientAccessOfServerModule: "warn",
     }),

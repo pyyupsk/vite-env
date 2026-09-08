@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.8.1](https://github.com/pyyupsk/vite-env/compare/corev0.8.0...corev0.8.1) (2026-09-07)
+
+### Fixes
+
+- update stale `serverEnvironments` reference in warnings log to `allowedServerEnvironments` ([#91](https://github.com/pyyupsk/vite-env/pull/91))
+
+### Docs
+
+- add 0.8.0 migration guide, move `migration.mdx`, and fix stale API references ([#89](https://github.com/pyyupsk/vite-env/pull/89))
+
+## [0.8.0](https://github.com/pyyupsk/vite-env/compare/core-v0.7.0...core-v0.8.0) (2026-09-06)
+
+### ⚠ BREAKING CHANGES
+
+- **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87))
+
+### Features
+
+- **core:** add serverRuntime option for virtual:env/server ([#85](https://github.com/pyyupsk/vite-env/issues/85)) ([1b20f1b](https://github.com/pyyupsk/vite-env/commit/1b20f1bfa16ea1fb22e03a4b1837e2f04acb43c8))
+- **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87)) ([06d7ca9](https://github.com/pyyupsk/vite-env/commit/06d7ca9ac527e90c8a52822d8a57ab501b53b6e7))
+
+## [0.7.0](https://github.com/pyyupsk/vite-env/compare/core-v0.6.4...core-v0.7.0) (2026-09-01)
+
+### Features
+
+- add custom envPrefix support (issue [#72](https://github.com/pyyupsk/vite-env/issues/72)) ([#73](https://github.com/pyyupsk/vite-env/issues/73)) ([21e7046](https://github.com/pyyupsk/vite-env/commit/21e7046fe3d49dd812a8fe6b9f08064171c43f95))
+- change default server environments detection to use environment.config.consumer ([#75](https://github.com/pyyupsk/vite-env/issues/75)) ([9053373](https://github.com/pyyupsk/vite-env/commit/9053373a821e9701e4a8a3f2c39423ca47e8dcf2))
+- **core:** add per-process caching for preset detect functions ([#78](https://github.com/pyyupsk/vite-env/issues/78)) ([d5224b7](https://github.com/pyyupsk/vite-env/commit/d5224b7f620fd63f9e330f0b8dc1061b9579ea6d))
+- **core:** export validateEnv, validateStandardEnv, ValidationResult from main entry point ([#77](https://github.com/pyyupsk/vite-env/issues/77)) ([aac9922](https://github.com/pyyupsk/vite-env/commit/aac99225f3c95af60147996f1005359305d1d425))
+- **leak:** rewrite leak detection with oxc-parser AST ([#76](https://github.com/pyyupsk/vite-env/issues/76)) ([9a4d1cb](https://github.com/pyyupsk/vite-env/commit/9a4d1cb751bb3619a3eed46e2f88abb54fe83cfa))
+
+### Bug Fixes
+
+- **core:** skip leak detection and import guard for server-consumer environments ([#69](https://github.com/pyyupsk/vite-env/issues/69)) ([469d0e9](https://github.com/pyyupsk/vite-env/commit/469d0e9f9a9c4eaaa1769cd0b0a145a2417a1624))
+- custom envPrefix handling ([#74](https://github.com/pyyupsk/vite-env/issues/74)) ([72f1838](https://github.com/pyyupsk/vite-env/commit/72f1838e109aaaaf96cf5d8e31fd1b5cab3edc88))
+- **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
+
+## [0.6.4](https://github.com/pyyupsk/vite-env/compare/core-v0.6.3...core-v0.6.4) (2026-06-17)
+
+### Bug Fixes
+
+- **core:** skip leak detection and import guard for server-consumer environments ([#69](https://github.com/pyyupsk/vite-env/issues/69)) ([469d0e9](https://github.com/pyyupsk/vite-env/commit/469d0e9f9a9c4eaaa1769cd0b0a145a2417a1624))
+- **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
+
 ## [0.6.3](https://github.com/pyyupsk/vite-env/compare/core-v0.6.2...core-v0.6.3) (2026-06-14)
 
 ### Bug Fixes

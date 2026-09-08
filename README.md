@@ -145,9 +145,9 @@ npx vite-env types
 
 ```ts
 ViteEnv({
-  configFile: "./env.ts", // path to env definition file
-  serverEnvironments: ["ssr"], // Vite 8 environments allowed to import virtual:env/server
-  onClientAccessOfServerModule: "warn", // 'warn' | 'error' | 'stub' — default changes to 'error' in 1.0.0
+  configFile: "./env.ts", // path to env definition file (required)
+  allowedServerEnvironments: ["ssr"], // Vite 8 environments allowed to import virtual:env/server
+  onClientAccessOfServerModule: "error", // 'warn' | 'error' | 'stub' — default: 'error'
 });
 ```
 
