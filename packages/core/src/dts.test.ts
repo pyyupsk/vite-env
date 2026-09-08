@@ -304,4 +304,21 @@ describe("generateStandardDts", () => {
 
     expect(writeFile.mock.calls[0][0]).toBe(path.join("/my/project", "vite-env.d.ts"));
   });
+
+  it("should throw when resolved file escapes root", async () => {
+    const writeFile = await getWriteFile();
+    writeFile.mockResolvedValue(undefined);
+
+    const spy = vi.spyOn(path, "resolve").mockImplementation((...args: string[]) => {
+      if (args[0] === "/safe") return "/safe";
+      if (args[0] === "/safe/vite-env.d.ts") return "/escape/vite-env.d.ts";
+      return args[0];
+    });
+
+    await expect(
+      generateStandardDts({ _standard: true, client: { VITE_X: mockSchema() } }, "/safe"),
+    ).rejects.toThrow("Refusing to write outside project root");
+
+    spy.mockRestore();
+  });
 });

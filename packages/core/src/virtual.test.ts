@@ -93,7 +93,7 @@ describe("buildServerModule", () => {
   });
 
   describe("serverRuntime: process-env", () => {
-    it("should inline validated values (same as build-time)", () => {
+    it("should emit process.env references instead of inlined values", () => {
       const def = {
         server: { DATABASE_URL: {} as any, JWT_SECRET: {} as any },
         client: { VITE_API_URL: {} as any },
@@ -106,13 +106,27 @@ describe("buildServerModule", () => {
 
       const result = buildServerModule(def, data, "process-env");
 
-      expect(result.code).toContain("postgresql://validated");
-      expect(result.code).toContain("validated-secret");
-      expect(result.code).toContain("https://api.validated.com");
-      expect(result.code).not.toContain("process.env");
+      expect(result.code).toContain('"DATABASE_URL": process.env["DATABASE_URL"]');
+      expect(result.code).toContain('"JWT_SECRET": process.env["JWT_SECRET"]');
+      expect(result.code).toContain('"VITE_API_URL": process.env["VITE_API_URL"]');
     });
 
-    it("should handle non-identifier keys with bracket notation", () => {
+    it("should never contain actual secret values, only the keys", () => {
+      const def = {
+        server: { DATABASE_URL: {} as any, JWT_SECRET: {} as any },
+      };
+      const data = {
+        DATABASE_URL: "postgresql://super-secret-host",
+        JWT_SECRET: "extremely-sensitive-value",
+      };
+
+      const result = buildServerModule(def, data, "process-env");
+
+      expect(result.code).not.toContain("postgresql://super-secret-host");
+      expect(result.code).not.toContain("extremely-sensitive-value");
+    });
+
+    it("should use bracket notation for non-identifier keys", () => {
       const def = {
         server: { "LOG-LEVEL": {} as any, API_KEY: {} as any },
         client: { "VITE_APP-NAME": {} as any },
@@ -125,29 +139,12 @@ describe("buildServerModule", () => {
 
       const result = buildServerModule(def, data, "process-env");
 
-      expect(result.code).toContain('"LOG-LEVEL": "debug"');
-      expect(result.code).toContain('"API_KEY": "secret"');
-      expect(result.code).toContain('"VITE_APP-NAME": "my-app"');
-      expect(result.code).not.toContain("process.env");
-    });
-
-    it("should use validated defaults/transformations from schema", () => {
-      const def = {
-        server: {
-          PORT: { _def: { defaultValue: () => 3000 } } as any,
-          NODE_ENV: { _def: { defaultValue: () => "production" } } as any,
-        },
-      };
-      const data = {
-        PORT: 3000,
-        NODE_ENV: "production",
-      };
-
-      const result = buildServerModule(def, data, "process-env");
-
-      expect(result.code).toContain("3000");
-      expect(result.code).toContain("production");
-      expect(result.code).not.toContain("process.env");
+      expect(result.code).toContain('"LOG-LEVEL": process.env["LOG-LEVEL"]');
+      expect(result.code).toContain('"API_KEY": process.env["API_KEY"]');
+      expect(result.code).toContain('"VITE_APP-NAME": process.env["VITE_APP-NAME"]');
+      expect(result.code).not.toContain("debug");
+      expect(result.code).not.toContain('"secret"');
+      expect(result.code).not.toContain("my-app");
     });
 
     it("should handle empty definition", () => {
@@ -165,8 +162,23 @@ describe("buildServerModule", () => {
 
       const result = buildServerModule(def, { SHARED_KEY: "value" }, "process-env");
 
-      const matches = result.code.match(/"SHARED_KEY": "value"/g);
+      const matches = result.code.match(/"SHARED_KEY": process\.env\["SHARED_KEY"\]/g);
       expect(matches).toHaveLength(1);
+    });
+
+    it("should only reference keys present in the definition, not stray data keys", () => {
+      const def = {
+        server: { KNOWN_KEY: {} as any },
+      };
+      const data = {
+        KNOWN_KEY: "value",
+        UNRELATED_KEY: "other",
+      };
+
+      const result = buildServerModule(def, data, "process-env");
+
+      expect(result.code).toContain('"KNOWN_KEY": process.env["KNOWN_KEY"]');
+      expect(result.code).not.toContain("UNRELATED_KEY");
     });
   });
 });

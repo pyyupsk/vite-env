@@ -533,13 +533,15 @@ describe("serverRuntime option", () => {
     });
   });
 
-  it("should inline validated values when serverRuntime is process-env", async () => {
+  it("should emit process.env references (not inlined values) when serverRuntime is process-env", async () => {
     const { plugin } = await setupPlugin();
     const mod = (plugin as any).load("\0virtual:env/server");
-    expect(mod.code).toContain("postgresql://test");
-    expect(mod.code).toContain("secret");
-    expect(mod.code).toContain("https://api.test");
-    expect(mod.code).not.toContain("process.env");
+    expect(mod.code).toContain('process.env["DATABASE_URL"]');
+    expect(mod.code).toContain('process.env["JWT_SECRET"]');
+    expect(mod.code).toContain('process.env["VITE_API_URL"]');
+    expect(mod.code).not.toContain("postgresql://test");
+    expect(mod.code).not.toContain('"secret"');
+    expect(mod.code).not.toContain("https://api.test");
   });
 
   it("should include both server and client keys in process-env mode", async () => {
@@ -548,7 +550,6 @@ describe("serverRuntime option", () => {
     expect(mod.code).toContain("DATABASE_URL");
     expect(mod.code).toContain("JWT_SECRET");
     expect(mod.code).toContain("VITE_API_URL");
-    expect(mod.code).not.toContain("process.env");
   });
 
   it("should default to build-time inlining when serverRuntime not specified", async () => {

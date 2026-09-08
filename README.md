@@ -1,6 +1,7 @@
 # vite-env
 
 [![Unit Test](https://github.com/pyyupsk/vite-env/actions/workflows/unit-test.yml/badge.svg)](https://github.com/pyyupsk/vite-env/actions/workflows/unit-test.yml)
+[![codecov](https://codecov.io/gh/pyyupsk/vite-env/graph/badge.svg?token=KWNO78JEPM)](https://codecov.io/gh/pyyupsk/vite-env)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=pyyupsk_vite-env&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=pyyupsk_vite-env)
 [![Vite compatibility](https://registry.vite.dev/api/badges?package=@vite-env/core&tool=vite)](https://registry.vite.dev/)
 [![npm version](https://img.shields.io/npm/v/@vite-env/core)](https://www.npmjs.com/package/@vite-env/core)
@@ -104,7 +105,7 @@ env.VITE_API_URL; // string (client vars also available server-side)
 | `server` |                No                 |                Yes                |
 
 - **Validation** runs on `buildStart` (fatal) and on `.env` file changes during dev (non-fatal warning)
-- **Leak detection** scans client chunks at `generateBundle` for literal server variable values
+- **Leak detection** scans client chunks at `generateBundle` for literal server variable values. Known blind spots: values shorter than 8 characters are skipped, pure vendor chunks (all modules from `node_modules`) are excluded, and dynamically constructed strings (e.g. `String.fromCharCode`, `atob()`) are not detected. This is a best-effort heuristic, not a complete guarantee — use it as defense-in-depth alongside proper secret management.
 - **`VITE_` prefix** is enforced at `defineEnv()` call time for all `client` keys
 - **`process.env` wins** over `.env` files (CI secrets take precedence)
 
