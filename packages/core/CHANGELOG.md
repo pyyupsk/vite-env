@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/pyyupsk/vite-env/compare/corev0.8.1...corev0.8.2) (2026-09-09)
+
+### Fixes
+
+- **core:** emit runtime `process.env` references instead of inlined values in `serverRuntime: 'process-env'` mode ([#95](https://github.com/pyyupsk/vite-env/pull/95))
+- **core:** refuse to write `vite-env.d.ts` and warnings log outside project root ([#98](https://github.com/pyyupsk/vite-env/pull/98))
+
 ## [0.8.1](https://github.com/pyyupsk/vite-env/compare/corev0.8.0...corev0.8.1) (2026-09-07)
 
 ### Fixes
