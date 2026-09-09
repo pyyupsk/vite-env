@@ -68,7 +68,7 @@ export type ViteEnvOptions = {
    *
    * - 'process-env' — Emits code that reads from process.env at runtime.
    *   Build-time validation still runs (for type generation and schema checking), but the
-   *   generated module references process.env.KEY so container/runtime env vars take effect.
+   *   generated module references process.env["KEY"] so container/runtime env vars take effect.
    *   No secrets are baked into the image layer.
    *
    * @default 'build-time'

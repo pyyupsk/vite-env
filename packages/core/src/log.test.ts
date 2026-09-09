@@ -78,17 +78,35 @@ describe("writeWarningsLog", () => {
     await expect(writeWarningsLog([fail1], "/project")).rejects.toThrow("[vite-env]");
   });
 
-  it("throws when resolved file escapes root", async () => {
-    const spy = vi.spyOn(path, "resolve").mockImplementation((...args: string[]) => {
-      if (args[0] === "/safe") return "/safe";
-      if (args[0] === "/safe/vite-env-warnings.log") return "/escape/vite-env-warnings.log";
-      return args[0];
-    });
+  it("should throw when joined file escapes root via traversal", async () => {
+    const spy = vi.spyOn(path, "join").mockReturnValue("/safe/../escape/vite-env-warnings.log");
 
     await expect(writeWarningsLog([fail1], "/safe")).rejects.toThrow(
       "Refusing to write outside project root",
     );
+    expect(vi.mocked(fs.writeFile)).not.toHaveBeenCalled();
 
     spy.mockRestore();
+  });
+
+  it("should throw on sibling-prefix collision outside root", async () => {
+    const spy = vi.spyOn(path, "join").mockReturnValue("/safe-evil/vite-env-warnings.log");
+
+    await expect(writeWarningsLog([fail1], "/safe")).rejects.toThrow(
+      "Refusing to write outside project root",
+    );
+    expect(vi.mocked(fs.writeFile)).not.toHaveBeenCalled();
+
+    spy.mockRestore();
+  });
+
+  it("should not reject root with dot segments normalizing inside", async () => {
+    await writeWarningsLog([fail1], "/safe/sub/..");
+
+    expect(vi.mocked(fs.writeFile)).toHaveBeenCalledWith(
+      path.join("/safe", "vite-env-warnings.log"),
+      expect.any(String),
+      "utf-8",
+    );
   });
 });
