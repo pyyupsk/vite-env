@@ -326,12 +326,10 @@ describe("generateStandardDts", () => {
   });
 
   it("should throw when joined file escapes root via traversal", () =>
-    expectOutsideRootThrow("/safe/../escape/vite-env.d.ts"),
-  );
+    expectOutsideRootThrow("/safe/../escape/vite-env.d.ts"));
 
   it("should throw on sibling-prefix collision outside root", () =>
-    expectOutsideRootThrow("/safe-evil/vite-env.d.ts"),
-  );
+    expectOutsideRootThrow("/safe-evil/vite-env.d.ts"));
 
   it("should not reject root with dot segments normalizing inside", async () => {
     const writeFile = await getWriteFile();

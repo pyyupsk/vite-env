@@ -19,3 +19,5 @@ logs
 node_modules
 temp
 .worktrees
+# tsdown emits type declarations next to src during build
+packages/core/src/*.d.ts
