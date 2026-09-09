@@ -3,6 +3,7 @@ import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { generateDts, generateStandardDts } from "./dts";
+import type { StandardEnvDefinition } from "./types";
 
 vi.mock("node:fs/promises", () => ({
   default: {
@@ -216,6 +217,25 @@ function mockSchema(): StandardSchemaV1 {
   } as StandardSchemaV1;
 }
 
+function stdDef(): StandardEnvDefinition {
+  return { _standard: true, client: { VITE_X: mockSchema() } };
+}
+
+async function expectOutsideRootThrow(joined: string): Promise<void> {
+  const writeFile = await getWriteFile();
+  writeFile.mockResolvedValue(undefined);
+
+  const spy = vi.spyOn(path, "join").mockReturnValue(joined);
+  try {
+    await expect(generateStandardDts(stdDef(), "/safe")).rejects.toThrow(
+      "Refusing to write outside project root",
+    );
+  } finally {
+    spy.mockRestore();
+  }
+  expect(writeFile).not.toHaveBeenCalled();
+}
+
 describe("generateStandardDts", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -305,20 +325,22 @@ describe("generateStandardDts", () => {
     expect(writeFile.mock.calls[0][0]).toBe(path.join("/my/project", "vite-env.d.ts"));
   });
 
-  it("should throw when resolved file escapes root", async () => {
+  it("should throw when joined file escapes root via traversal", () =>
+    expectOutsideRootThrow("/safe/../escape/vite-env.d.ts"));
+
+  it("should throw on sibling-prefix collision outside root", () =>
+    expectOutsideRootThrow("/safe-evil/vite-env.d.ts"));
+
+  it("should not reject root with dot segments normalizing inside", async () => {
     const writeFile = await getWriteFile();
     writeFile.mockResolvedValue(undefined);
 
-    const spy = vi.spyOn(path, "resolve").mockImplementation((...args: string[]) => {
-      if (args[0] === "/safe") return "/safe";
-      if (args[0] === "/safe/vite-env.d.ts") return "/escape/vite-env.d.ts";
-      return args[0];
-    });
+    await generateStandardDts(stdDef(), "/safe/sub/..");
 
-    await expect(
-      generateStandardDts({ _standard: true, client: { VITE_X: mockSchema() } }, "/safe"),
-    ).rejects.toThrow("Refusing to write outside project root");
-
-    spy.mockRestore();
+    expect(writeFile).toHaveBeenCalledWith(
+      path.join("/safe", "vite-env.d.ts"),
+      expect.any(String),
+      "utf-8",
+    );
   });
 });
