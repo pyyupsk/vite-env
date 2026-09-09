@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.0](https://github.com/pyyupsk/vite-env/compare/cli-v0.8.2...cli-v1.0.0) (2026-09-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87))
+
+### Features
+
+* add custom envPrefix support (issue [#72](https://github.com/pyyupsk/vite-env/issues/72)) ([#73](https://github.com/pyyupsk/vite-env/issues/73)) ([21e7046](https://github.com/pyyupsk/vite-env/commit/21e7046fe3d49dd812a8fe6b9f08064171c43f95))
+* **core:** v0.8.0 breaking changes ([#87](https://github.com/pyyupsk/vite-env/issues/87)) ([06d7ca9](https://github.com/pyyupsk/vite-env/commit/06d7ca9ac527e90c8a52822d8a57ab501b53b6e7))
+
+
+### Bug Fixes
+
+* **release:** remove invalid --tag flag from gh release create ([#66](https://github.com/pyyupsk/vite-env/issues/66)) ([c96b601](https://github.com/pyyupsk/vite-env/commit/c96b60117911f9d412a2a63042988ed3831e50ee))
+
 ## [0.8.2](https://github.com/pyyupsk/vite-env/compare/cli-v0.8.1...cli-v0.8.2) (2026-09-09)
 
 ### Fixes
