@@ -2,7 +2,7 @@ name: Unit Test
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main]
     paths:
       - "packages/core/**"
       - "packages/cli/**"
@@ -13,7 +13,7 @@ on:
       - .github/workflows/unit-test.yml
       - .github/workflows/release-please.yml
   pull_request:
-    branches: [main, staging]
+    branches: [main]
 
 permissions: {}
 

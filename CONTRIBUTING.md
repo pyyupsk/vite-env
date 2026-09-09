@@ -21,14 +21,12 @@ bun run build
 ```text
 feat/* fix/* chore/*
   ↓ PR (squash)
-staging       ← integration branch; all PRs land here first
-  ↓ PR (squash)
 main          ← stable; docs deploy on push
   ↓ bun run release → v* tag
 npm publish   ← triggered automatically by the v* tag
 ```
 
-Always branch from `staging`, not `main`.
+Always branch from `main`.
 
 ## Development Workflow
 
@@ -82,12 +80,12 @@ examples/valibot → @vite-env/example-valibot   Standard Schema path example ap
 
 ## Submitting a Pull Request
 
-1. Fork the repository and create a branch from `staging`.
+1. Fork the repository and create a branch from `main`.
 2. Make your changes.
 3. Add or update tests as needed — ensure `bun run test` passes.
 4. Run `bun run lint:fix` and `bun run typecheck`.
 5. Commit with a descriptive message.
-6. Open a pull request against `staging`.
+6. Open a pull request against `main`.
 
 CI will run lint, typecheck, and the full test matrix (ubuntu + windows × node 22/24/26). All checks must pass before merge.
 
@@ -95,7 +93,7 @@ CI will run lint, typecheck, and the full test matrix (ubuntu + windows × node 
 
 Releases are automated via Release Please. The flow:
 
-1. Merge `staging` → `main` via PR once `staging` is stable.
+1. Merge the feature PR into `main` once CI is green.
 2. Release Please automatically opens a version bump PR on `main` (updates `package.json` versions based on conventional commits).
 3. Review and merge the Release Please PR — it pushes a `vX.Y.Z` tag automatically.
 4. The tag triggers CI: changelogithub generates release notes and packages are published to npm.
