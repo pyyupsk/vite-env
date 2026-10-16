@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   id-token: write
+  pull-requests: write
 
 jobs:
   release:
@@ -81,6 +82,18 @@ jobs:
           else
             gh release create "${{ github.ref_name }}" --notes-file /tmp/release-notes.md --title "${{ github.ref_name }}"
           fi
+
+      # release-please skips the GitHub release, so mark its merged PR as released here.
+      # Otherwise it will not open the next release PR.
+      - name: Label release pull request
+        # npm already has the packages here, so a label error must not roll back the tag
+        continue-on-error: true
+        if: steps.publish_core.outcome == 'success' && steps.publish_cli.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr list --repo "${{ github.repository }}" --state merged --label "autorelease: pending" --json number -q '.[].number' |
+            xargs -r -I{} gh pr edit {} --repo "${{ github.repository }}" --remove-label "autorelease: pending" --add-label "autorelease: tagged"
 
       - name: Roll back tag on failure
         if: failure()

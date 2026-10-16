@@ -78,12 +78,15 @@ CI runs lint, typecheck, and the tests on Ubuntu and Windows with Node 22, 24, a
 
 ## Releases (maintainers)
 
-Release Please automates releases:
+Release Please opens the release pull request. A maintainer pushes the tag:
 
 1. When CI passes, merge the pull request into `main`.
 2. Release Please opens a pull request that bumps the versions from the commit messages.
-3. Merge that pull request. It pushes a `vX.Y.Z` tag.
-4. The tag starts the release workflow. changelogithub writes the GitHub release notes, and the workflow publishes the packages to npm.
+3. Merge that pull request.
+4. On the merge commit, push a `vX.Y.Z` tag for the new version, for example `git tag v0.9.0 && git push origin v0.9.0`.
+5. The tag starts the release workflow. The workflow publishes the packages to npm, and changelogithub writes the GitHub release notes.
+
+Release Please does not push the tag itself. A tag that the workflow token pushes does not start other workflows, so the release workflow would not run.
 
 ## License
 
