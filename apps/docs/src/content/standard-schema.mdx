@@ -5,7 +5,7 @@ section: Reference
 order: 7
 ---
 
-vite-env supports [Standard Schema v1](https://standardschema.dev) — the interoperability spec for TypeScript schema validators. Use `defineStandardEnv` instead of `defineEnv` and add `_standard: true`.
+vite-env supports [Standard Schema v1](https://standardschema.dev), a shared interface that many TypeScript validators implement. Use `defineStandardEnv` instead of `defineEnv`, and add `_standard: true`.
 
 ## Usage
 
@@ -25,9 +25,9 @@ export default defineStandardEnv({
 });
 ```
 
-The `_standard: true` marker tells the plugin to use the Standard Schema validation path. Zod is not loaded at all — no Zod in your `node_modules` is fine.
+`_standard: true` tells the plugin to validate with Standard Schema. The plugin does not load Zod, so you do not need Zod installed.
 
-**Client keys must still be prefixed with `VITE_`** — the same rule applies regardless of validation path. Use `clientPrefix` to override this:
+Client keys must still start with `VITE_`. To use a different prefix, set `clientPrefix`:
 
 ```ts
 export default defineStandardEnv({
@@ -44,7 +44,7 @@ export default defineStandardEnv({
 
 ## Supported adapters
 
-Any library implementing `StandardSchemaV1` works:
+Any library that implements `StandardSchemaV1` works:
 
 | Library       | Notes                           |
 | ------------- | ------------------------------- |
@@ -55,7 +55,7 @@ Any library implementing `StandardSchemaV1` works:
 
 ## Type generation
 
-The Standard Schema path generates `vite-env.d.ts` with all fields typed as `string` — there is no runtime type introspection available across Standard Schema implementations.
+With Standard Schema, every field in `vite-env.d.ts` is a `string`. Standard Schema gives no common way to read a validator's output type at runtime.
 
 ```ts
 // vite-env.d.ts when using defineStandardEnv
@@ -68,11 +68,11 @@ declare module "virtual:env/server" {
 }
 ```
 
-For richer inferred types (`number`, `boolean`, union literals), use `defineEnv` with Zod instead.
+If you want inferred `number`, `boolean`, or literal union types, use `defineEnv` with Zod.
 
 ## vs Zod path
 
-Both paths produce the same runtime output — a frozen `env` object. The differences:
+Both give the same result at runtime: a frozen `env` object. They differ here:
 
 |                 | Zod path              | Standard Schema path                    |
 | --------------- | --------------------- | --------------------------------------- |

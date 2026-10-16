@@ -1,13 +1,13 @@
 ---
 title: Virtual modules
-description: virtual:env/client and virtual:env/server — what they emit, how types work, and SSR.
+description: What virtual:env/client and virtual:env/server emit, how types work, and SSR.
 section: Reference
 order: 3
 ---
 
 ## virtual:env/client
 
-Contains only the `client` keys from your schema. Safe to import from any browser-bound module.
+Holds only the `client` keys from your schema. Any module that runs in the browser can import it.
 
 ```ts
 import { env } from "virtual:env/client";
@@ -18,7 +18,7 @@ console.log(env.VITE_API_URL);
 
 ## virtual:env/server
 
-Contains all validated variables — both `server` and `client` keys.
+Holds every validated variable, both `server` and `client` keys.
 
 ```ts
 import { env } from "virtual:env/server";
@@ -27,11 +27,11 @@ const db = createClient(env.DATABASE_URL);
 const server = createServer({ port: env.PORT });
 ```
 
-Importing this from a disallowed environment triggers the configured [guard mode](/docs/guard-modes).
+If a disallowed environment imports it, the configured [guard mode](/docs/guard-modes) applies.
 
 ## Emitted module shape
 
-Both modules emit a frozen object — mutation throws in strict mode:
+Both modules export a frozen object. In strict mode, a write to it throws:
 
 ```ts
 // What virtual:env/server resolves to at runtime
@@ -45,7 +45,7 @@ export default env;
 
 ## Type generation
 
-On every `buildStart`, the plugin writes `vite-env.d.ts` to the project root. This file augments both virtual module declarations with types inferred from your Zod schema:
+On every `buildStart`, the plugin writes `vite-env.d.ts` to the project root. This file declares both virtual modules with types inferred from your Zod schema:
 
 ```ts
 // vite-env.d.ts (auto-generated — do not edit)
@@ -68,11 +68,11 @@ declare module "virtual:env/server" {
 }
 ```
 
-Add `vite-env.d.ts` to your `tsconfig.json` include array or reference it with a triple-slash directive to get editor autocomplete.
+For editor autocomplete, add `vite-env.d.ts` to the `include` array in `tsconfig.json`, or reference it with a triple-slash directive.
 
 ## SSR
 
-In SSR mode both modules resolve normally on the server. The `virtual:env/client` module still returns only the client subset — matching what the browser receives.
+In SSR mode, both modules resolve on the server. `virtual:env/client` still holds only the client keys, the same as the browser gets.
 
 ```ts
 // vite.config.ts
@@ -82,10 +82,10 @@ export default defineConfig({
 });
 ```
 
-For edge runtimes not detected automatically, add them to `allowedServerEnvironments`:
+If the plugin does not detect your edge runtime, add it to `allowedServerEnvironments`:
 
 ```ts
 ViteEnv({ configFile: "./env.ts", allowedServerEnvironments: ["ssr", "workerd"] });
 ```
 
-If you use a custom client prefix via `clientPrefix` in your schema, the `virtual:env/client` module still contains only the keys matching that prefix — the prefix rule is not changed, just the prefix value itself.
+If you set `clientPrefix` in your schema, `virtual:env/client` holds only the keys with that prefix. The rule stays the same. Only the prefix changes.

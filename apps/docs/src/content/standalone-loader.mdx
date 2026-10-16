@@ -7,11 +7,11 @@ order: 8
 
 `virtual:env/server` and `virtual:env/client` only resolve inside Vite's module graph. Running a plain script with `bun scripts/seed.ts` or `node scripts/migrate.js` bypasses Vite entirely, so those imports fail.
 
-`@vite-env/core/load` solves this by running the same validation pipeline outside of Vite, returning the same typed result.
+`@vite-env/core/load` runs the same validation outside of Vite and returns the same typed result.
 
 ## Usage
 
-Pass your existing `env.ts` config directly — no duplicate schema:
+Pass your existing `env.ts` config. You do not write the schema twice:
 
 ```ts
 // scripts/seed.ts
@@ -24,7 +24,7 @@ server.DATABASE_URL; // string — fully typed, same schema as virtual:env/serve
 client.VITE_API_URL; // string — only VITE_* vars
 ```
 
-The same `.env` files, same merge priority, same Zod or Standard Schema validation as the Vite plugin.
+It reads the same `.env` files in the same priority order, and validates with Zod or Standard Schema like the Vite plugin.
 
 ## Return value
 
@@ -36,7 +36,7 @@ The same `.env` files, same merge priority, same Zod or Standard Schema validati
 | `client` | Only `VITE_*` vars                   |
 | `all`    | Alias for `server`                   |
 
-This mirrors the virtual module shape: `server` ↔ `virtual:env/server`, `client` ↔ `virtual:env/client`.
+`server` matches `virtual:env/server`, and `client` matches `virtual:env/client`.
 
 ## Options
 
@@ -54,7 +54,7 @@ const env = await loadEnv(config, {
 
 ## Error handling
 
-Validation failure throws with a clear per-field message:
+If validation fails, `loadEnv` throws with one line per field:
 
 ```
 Error: [vite-env] Validation failed:
@@ -62,11 +62,11 @@ Error: [vite-env] Validation failed:
   - JWT_SECRET: String must contain at least 32 character(s)
 ```
 
-Throw at script startup — same fail-loud behaviour as the Vite plugin on `buildStart`.
+Call `loadEnv` at the start of your script, so that a bad env stops the script before it does any work. The Vite plugin does the same on `buildStart`.
 
 ## Standard Schema
 
-Works with `defineStandardEnv()` the same way:
+`defineStandardEnv()` configs work the same way:
 
 ```ts
 import { loadEnv } from "@vite-env/core/load";
@@ -75,17 +75,17 @@ import config from "../env"; // defined with defineStandardEnv()
 const { server } = await loadEnv(config);
 ```
 
-Return type falls back to `Record<string, unknown>` for Standard Schema configs since TypeScript cannot infer output types from Standard Schema validators generically.
+For Standard Schema configs, the return type is `Record<string, unknown>`. TypeScript cannot infer output types from Standard Schema validators in general.
 
 ## Requirements
 
-Requires **Vite ≥ 8.0.0** as a peer dependency. `@vite-env/core/load` uses Vite's `loadEnv` utility internally to read `.env` files — Vite must be installed even when running plain Node/Bun scripts.
+Vite 8.0.0 or later is a peer dependency. `@vite-env/core/load` reads `.env` files with Vite's own `loadEnv`, so you must install Vite even for plain Node or Bun scripts.
 
 ## Merge priority
 
-Same as the Vite plugin (highest → lowest):
+The same as the Vite plugin, highest first:
 
-1. `process.env` — CI secrets always win
+1. `process.env` (secrets from your CI pipeline win)
 2. `.env.[mode].local`
 3. `.env.[mode]`
 4. `.env.local`

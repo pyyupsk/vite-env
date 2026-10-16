@@ -18,17 +18,19 @@ ViteEnv({
 })
 ```
 
-**`configFile`** — path to the env definition file, resolved from the project root. Required as of 0.8.0 — the plugin throws if omitted.
+`configFile` is the path to the env definition file, relative to the project root. It is required since 0.8.0. If you omit it, the plugin throws.
 
-**`allowedServerEnvironments`** — Vite environment names allowed to import `virtual:env/server`. When left empty (the default), detection relies on `environment.config.consumer` — Vite 8+ built-in detection that identifies `'server'` for known runtimes (Node, Deno, Bun, edge runtimes like `'workerd'` and `'deno'`). Name-based matching is preserved when you explicitly provide a list. Add edge runtimes here if you need to override the auto-detection. Renamed from `serverEnvironments` in 0.8.0 — the old name still works but logs a deprecation warning and will be removed in 1.0.0.
+`allowedServerEnvironments` lists the Vite environment names that can import `virtual:env/server`. If you leave it empty (the default), the plugin uses `environment.config.consumer`. Vite 8 and later set this to `'server'` for known runtimes: Node, Deno, Bun, and edge runtimes such as `'workerd'`. If you give a list, the plugin matches environments by name instead. Add an edge runtime here if auto-detection gets it wrong.
 
-Detection fallback chain:
+This option was called `serverEnvironments` before 0.8.0. The old name still works, but it logs a deprecation warning. Version 1.0.0 will remove it.
+
+The plugin detects server environments in this order:
 
 1. `environment.config.consumer` (Vite 8+ built-in: `'server'` for known runtimes)
 2. `ssr.config.experimental.environments` (custom runtime configs)
 3. Default: `['ssr']`
 
-**`onClientAccessOfServerModule`** — behavior when a disallowed environment imports the server module. See [Guard modes](/docs/guard-modes).
+`onClientAccessOfServerModule` sets what happens when a disallowed environment imports the server module. See [Guard modes](/docs/guard-modes).
 
 ## defineEnv()
 
@@ -51,11 +53,11 @@ export default defineEnv({
 });
 ```
 
-**Client keys must be prefixed with `VITE_`** by default — this is enforced at startup and throws synchronously if violated. Use `clientPrefix` to override this requirement.
+By default, client keys must start with `VITE_`. If a client key does not, the plugin throws at startup. To use a different prefix, set `clientPrefix`.
 
 ### clientPrefix
 
-Override the prefix requirement for client keys. Accepts a single prefix or an array of prefixes.
+Sets the prefix that client keys must start with. It takes one prefix or an array of prefixes.
 
 ```ts
 import { defineEnv } from "@vite-env/core";
@@ -73,7 +75,7 @@ export default defineEnv({
 });
 ```
 
-Multiple prefixes are also supported:
+With more than one prefix:
 
 ```ts
 export default defineEnv({
@@ -85,7 +87,7 @@ export default defineEnv({
 });
 ```
 
-If `clientPrefix` is set, it takes precedence over Vite's `envPrefix` config. When `clientPrefix` is not set, the default `VITE_` prefix is validated at runtime (after Vite config resolution), allowing Vite's `envPrefix` option to apply first.
+If you set `clientPrefix`, it wins over Vite's `envPrefix`. If you do not set it, the plugin checks for `VITE_` after Vite resolves its config, so Vite's `envPrefix` applies first.
 
 ## Server / client split
 
@@ -96,7 +98,7 @@ If `clientPrefix` is set, it takes precedence over Vite's `envPrefix` config. Wh
 
 ## Presets
 
-Presets inject platform variables into the schema. Pass them in the `presets` array:
+Presets add platform variables to the schema. Pass them in the `presets` array:
 
 ```ts
 import { defineEnv } from "@vite-env/core";
@@ -111,4 +113,4 @@ export default defineEnv({
 });
 ```
 
-Your own keys win over preset keys if there is a name collision. Duplicate keys across multiple presets log a warning — the last preset wins. The `presets` key is removed from the output; only the merged `server`/`client` shapes remain.
+If one of your keys has the same name as a preset key, your key wins. If two presets define the same key, the plugin logs a warning and the last preset wins. The output does not keep the `presets` key. It holds only the merged `server` and `client` shapes.

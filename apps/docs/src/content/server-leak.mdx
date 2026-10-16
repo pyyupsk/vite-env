@@ -7,7 +7,7 @@ order: 5
 
 ## How it works
 
-During `generateBundle`, vite-env scans every client-bound output chunk for server-only variable values. It parses each chunk as JavaScript using an AST parser (`oxc-parser`), extracts all evaluable string values (literals, template literals, string concatenation), and checks whether any match a server secret. If a match is found, the build throws immediately:
+During `generateBundle`, vite-env scans every output chunk that goes to the client for the values of server-only variables. It parses each chunk with `oxc-parser` and collects every string it can work out: literals, template literals, and concatenated strings. If one of them matches a server value, the build throws:
 
 ```
 [vite-env] Server environment variables detected in client bundle!
@@ -17,32 +17,32 @@ During `generateBundle`, vite-env scans every client-bound output chunk for serv
   These variables are marked as server-only and must never reach the browser.
 ```
 
-This catches leaks that guard mode misses — for example, a value passed through a prop chain or inlined by the bundler's constant folding.
+This finds leaks that guard modes cannot see, for example a value passed down through props, or a value the bundler inlined as a constant.
 
-The detection includes:
+The scan finds:
 
 - Literal strings in quotes (`"my-secret"`, `'my-secret'`, `` `my-secret` ``)
 - String concatenation (`"prefix" + env.SECRET`)
 - Template literals with expressions (`` `key=${SECRET}` ``)
 - Base64 and hex encoded representations of server values
 
-Leak detection runs **only on client builds** — skipped when `build.ssr` is true, the current environment is listed in `allowedServerEnvironments`, or the environment's `consumer` is `'server'` (Vite 8+ environments with `environment.config.consumer === 'server'`).
+Leak detection runs only on client builds. It does not run when `build.ssr` is true, when the environment is in `allowedServerEnvironments`, or when `environment.config.consumer` is `'server'` (Vite 8 and later).
 
 ## False positives
 
-Values shorter than 8 characters are skipped. Short strings appear frequently enough across unrelated code that matching on them would produce too many false alarms. When values are skipped a warning is logged:
+The scan skips values shorter than 8 characters, because short strings occur everywhere and would match by accident. The plugin logs a warning for each skipped value:
 
 ```
 ⚠ [vite-env] Leak detection skipped 2 server variable(s) with values
   shorter than 8 chars: PORT, NODE_ENV
 ```
 
-If you hit a false positive on a longer value, verify whether the value is genuinely reaching the client. If it is intentional, move that variable to the `client` block in your schema.
+If a longer value matches and you think it is a false positive, find out whether the value really reaches the client. If the client needs it, move that variable to the `client` block of your schema.
 
 ## Disabling
 
-No configuration option — leak detection is always enabled on client builds. This is intentional: it is a safety net, not a feature to toggle off.
+You cannot turn leak detection off. It always runs on client builds, by design.
 
 ## Vendor chunks
 
-Pure vendor chunks — where all modules come from `node_modules` — are skipped automatically. Only chunks containing user code are scanned. Mixed chunks (user + vendor modules) are scanned fully.
+The scan skips chunks where every module comes from `node_modules`. It scans every chunk that holds your code, including chunks that mix your code with vendor code.

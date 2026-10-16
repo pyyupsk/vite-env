@@ -5,17 +5,17 @@ section: CLI
 order: 10
 ---
 
-The `@vite-env/cli` package provides three subcommands for use outside the Vite build pipeline.
+`@vite-env/cli` has three subcommands that work outside a Vite build.
 
 ```bash
 npm install -D @vite-env/cli
 ```
 
-All subcommands resolve `env.ts` from the current working directory using `jiti` (TypeScript support at runtime).
+Each subcommand loads `env.ts` from the current directory with `jiti`, which runs TypeScript without a build step.
 
 ## check
 
-Validates the current environment against your schema and exits non-zero on failure. Useful in CI before deploying.
+Validates the current environment against your schema. If validation fails, it exits with a non-zero code. Run it in CI before you deploy.
 
 ```bash
 vite-env check
@@ -43,7 +43,7 @@ Output on failure:
 
 ## generate
 
-Generates a `.env.example` file from your schema. Useful for onboarding — shows every required key with its type hint and default value.
+Writes a `.env.example` file from your schema. It lists every key with its type and default value, so a new developer knows what to fill in.
 
 ```bash
 vite-env generate
@@ -72,11 +72,11 @@ DATABASE_URL=
 PORT=3000
 ```
 
-If you use a custom `clientPrefix`, the output header reflects the configured prefix(es) instead of the default `VITE_`.
+If you set `clientPrefix`, the section header shows your prefixes instead of `VITE_`.
 
 ## types
 
-Regenerates `vite-env.d.ts` from your schema without running a full Vite build. Run this after changing your schema to update editor types immediately.
+Writes `vite-env.d.ts` from your schema without a Vite build. Run it after you change the schema to update the types in your editor.
 
 ```bash
 vite-env types
@@ -87,4 +87,4 @@ vite-env types --config ./env.ts
 | ---------- | -------- | --------------------------- |
 | `--config` | `env.ts` | Path to env definition file |
 
-Writes `vite-env.d.ts` to the current working directory. The plugin also writes this file automatically on every `buildStart`, so manual invocation is only needed outside a Vite workflow.
+The file goes to the current directory. The plugin also writes it on every `buildStart`, so you need this command only when Vite is not running.
