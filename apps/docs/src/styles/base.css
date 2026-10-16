@@ -33,7 +33,6 @@
     text-wrap: pretty;
   }
 
-  /* The highlighter is the one signature mark: selection uses it too. */
   ::selection {
     background: var(--mark);
     color: var(--mark-ink);
@@ -57,7 +56,6 @@
     font-variant-ligatures: none;
   }
 
-  /* Shiki dual-theme output: each token carries both colors as variables. */
   .shiki,
   .shiki span {
     color: var(--shiki-light);
