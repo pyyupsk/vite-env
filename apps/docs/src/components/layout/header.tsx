@@ -17,8 +17,8 @@ type HeaderProps = Readonly<{
 
 export function Header({ wide, menuOpen, onMenu }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur-sm supports-[backdrop-filter]:bg-paper/85">
-      <div className={cn("flex h-14 items-center gap-6", wide ? "px-4 md:px-6" : "container-page")}>
+    <header className="sticky top-0 z-40 h-14 border-b border-rule bg-paper/95 backdrop-blur-sm supports-[backdrop-filter]:bg-paper/85">
+      <div className={cn("flex h-full items-center gap-6", wide ? "px-4 md:px-6" : "container-page")}>
         {onMenu && (
           <button
             type="button"
