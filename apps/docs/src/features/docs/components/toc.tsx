@@ -18,7 +18,6 @@ export function TableOfContents({ items }: Readonly<{ items: TocEntry[] }>) {
       .filter((el): el is HTMLElement => el !== null);
     if (headings.length === 0) return;
 
-    // Active = the last heading that has scrolled past the top band of the viewport.
     const update = () => {
       let current = headings[0];
       for (const h of headings) if (h.getBoundingClientRect().top < 120) current = h;
