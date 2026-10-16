@@ -1,30 +1,34 @@
+<img src="https://raw.githubusercontent.com/pyyupsk/vite-env/main/apps/docs/public/logo.svg" width="48" height="48" alt="">
+
 # @vite-env/core
 
-![Vite compatibility](https://registry.vite.dev/api/badges?package=@vite-env/core&tool=vite)
+[![npm version](https://img.shields.io/npm/v/@vite-env/core?label=)](https://www.npmjs.com/package/@vite-env/core)
+[![Vite compatibility](https://registry.vite.dev/api/badges?package=@vite-env/core&tool=vite)](https://registry.vite.dev/)
 
-The `env.ts` layer for Vite — define once, validate everywhere, import with types.
+Typed, validated environment variables for Vite. You describe your variables once in `env.ts`. When Vite starts or builds, the plugin validates them. Your code then gets typed, read-only access.
 
-- Typed virtual modules (`virtual:env/client`, `virtual:env/server`)
-- Server/client split with build-time leak detection
-- Runtime access protection — warns or errors when `virtual:env/server` is imported from a client environment
-- Standalone runtime loader — `loadEnv(config)` from `@vite-env/core/load` for scripts outside Vite
-- Auto-coercion via Zod v4 (`z.stringbool()`, `z.coerce.number()`)
-- Standard Schema support — use Valibot, ArkType, or any compliant validator
-- Platform presets — pre-built schemas for Vercel, Railway, and Netlify
-- Auto `.d.ts` generation
-- Vite 8 / Rolldown native
+[📖 Documentation](https://pyyupsk.github.io/vite-env/)
+
+- Two virtual modules: `virtual:env/client` and `virtual:env/server`
+- If client code imports the server module, the build fails
+- If a server value appears in a client chunk, the build fails
+- Validators: <img src="https://cdn.simpleicons.org/zod" height="14" alt=""> Zod 4 or any Standard Schema library
+- Presets for <img src="https://cdn.simpleicons.org/vercel/000000/ffffff" height="14" alt=""> Vercel, <img src="https://cdn.simpleicons.org/railway/0B0D0E/ffffff" height="14" alt=""> Railway, and <img src="https://cdn.simpleicons.org/netlify" height="14" alt=""> Netlify
+- `loadEnv()` for scripts that run outside Vite
 
 ## Install
 
 ```bash
-npm install @vite-env/core zod
+npm install -D @vite-env/core
+npm install zod # only if you use defineEnv() with Zod
 ```
 
 ## Usage
 
-**1. Define your schema** — `env.ts`
+Describe your variables in `env.ts`:
 
 ```ts
+// env.ts
 import { defineEnv } from "@vite-env/core";
 import { z } from "zod";
 
@@ -36,30 +40,29 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.url(),
     VITE_DARK_MODE: z.stringbool().default(false),
-    VITE_NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   },
 });
 ```
 
-**2. Add the plugin** — `vite.config.ts`
+Add the plugin. `configFile` is required:
 
 ```ts
+// vite.config.ts
 import ViteEnv from "@vite-env/core/plugin";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [ViteEnv()],
+  plugins: [ViteEnv({ configFile: "./env.ts" })],
 });
 ```
 
-**3. Import typed env**
+Import the typed env:
 
 ```ts
 import { env } from "virtual:env/client";
 
 env.VITE_API_URL; // string
 env.VITE_DARK_MODE; // boolean
-env.VITE_NODE_ENV; // 'development' | 'test' | 'production'
 ```
 
 ### Platform presets
@@ -72,15 +75,12 @@ import { z } from "zod";
 export default defineEnv({
   presets: [vercel],
   server: { DATABASE_URL: z.url() },
-  client: { VITE_API_URL: z.url() },
 });
 ```
 
-Available presets: `vercel`, `railway`, `netlify`.
+The presets are `vercel`, `railway`, and `netlify`.
 
-### Standalone runtime loader
-
-Use the same validated env in Node/Bun scripts outside of Vite:
+### Scripts outside Vite
 
 ```ts
 // scripts/seed.ts
@@ -88,15 +88,10 @@ import { loadEnv } from "@vite-env/core/load";
 import config from "../env";
 
 const { server, client } = await loadEnv(config);
-
-server.DATABASE_URL; // string
-client.VITE_API_URL; // string
 ```
 
-Returns `{ server, client, all }`. Accepts an optional second argument `{ mode?, envDir? }`.
-
-See the [full documentation](https://pyyupsk.github.io/vite-env/) for server/client split details, CLI tools, and more.
+`loadEnv()` returns `{ server, client, all }`. The optional second argument is `{ mode?, envDir? }`.
 
 ## License
 
-[MIT](https://github.com/pyyupsk/vite-env/blob/main/LICENSE)
+[MIT](https://github.com/pyyupsk/vite-env/blob/main/LICENSE) License © 2026 [pyyupsk](https://github.com/pyyupsk)

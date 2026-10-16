@@ -4,7 +4,7 @@
 
 {{#if this.features.length}}
 
-### &nbsp;&nbsp;&nbsp;✨ Features
+### &nbsp;&nbsp;&nbsp;🚀 Features
 
 {{#each this.features}}
 

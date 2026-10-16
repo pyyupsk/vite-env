@@ -1,11 +1,11 @@
 # presets
 
-Platform presets from `@vite-env/core/presets`. Each preset is a typed bundle of the platform's injected server vars — spread into `defineEnv` via `presets: [...]` and merged before your own keys (your keys win on conflict).
+Platform presets from `@vite-env/core/presets`. A preset is a typed set of the server variables that a platform sets. Add it with `presets: [...]` in `defineEnv`. If one of your keys has the same name as a preset key, your key wins.
 
-| Example                | Preset    | Validates                                             |
-| ---------------------- | --------- | ----------------------------------------------------- |
-| [`vercel`](./vercel)   | `vercel`  | `VERCEL_ENV`, `VERCEL_URL`, deployment + git metadata |
-| [`railway`](./railway) | `railway` | service/project/deployment ids, domains, TCP proxy    |
-| [`netlify`](./netlify) | `netlify` | `CONTEXT`, deploy URLs, build + commit metadata       |
+| Example                | Preset    | Validates                                                |
+| ---------------------- | --------- | -------------------------------------------------------- |
+| [`vercel`](./vercel)   | `vercel`  | `VERCEL_ENV`, `VERCEL_URL`, deployment and git data      |
+| [`railway`](./railway) | `railway` | Service, project, and deployment IDs, domains, TCP proxy |
+| [`netlify`](./netlify) | `netlify` | `CONTEXT`, deploy URLs, build and commit data            |
 
-Presets are detection-gated: vars are required on the platform (marker var present — `VERCEL=1`, `RAILWAY_ENVIRONMENT_ID`, `NETLIFY=true`) and optional locally, so plain `vite dev` works without faking platform vars.
+Each preset looks for the platform's marker variable (`VERCEL=1`, `RAILWAY_ENVIRONMENT_ID`, `NETLIFY=true`). On the platform, the preset variables are required. Everywhere else they are optional, so `vite dev` works without fake platform values.

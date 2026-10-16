@@ -1,12 +1,12 @@
-# valibot — Standard Schema path
+# valibot
 
-`defineStandardEnv()` with Valibot. Any library implementing [Standard Schema v1](https://github.com/standard-schema/standard-schema) works the same way — ArkType, Effect Schema, etc.
+`defineStandardEnv()` with Valibot. Any library that implements [Standard Schema v1](https://github.com/standard-schema/standard-schema) works the same way, for example ArkType or Effect Schema.
 
 ```bash
 bun run --filter @vite-env/example-valibot dev
 ```
 
-What to try:
+Things to try:
 
-- Set `VITE_API_URL=not-a-url` in `.env` → dev server fails with a formatted Standard Schema issue list.
-- Swap Valibot for another Standard Schema library in `env.ts` — no plugin config change needed.
+- Set `VITE_API_URL=not-a-url` in `.env`. The dev server stops and lists the Standard Schema issues.
+- Replace Valibot with another Standard Schema library in `env.ts`. You do not need to change the plugin configuration.

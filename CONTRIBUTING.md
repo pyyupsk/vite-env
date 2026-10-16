@@ -1,11 +1,11 @@
-# Contributing to vite-env
+# Contributing
 
-Thanks for your interest in contributing! This guide covers everything you need to get started.
+Thank you for helping with vite-env. This page tells you how to set up the repo, make a change, and open a pull request.
 
-## Prerequisites
+## Requirements
 
-- [Node.js](https://nodejs.org/) >= 20.19.0
-- [Bun](https://bun.sh/) >= 1.3.0
+- [Node.js](https://nodejs.org/) 20.19.0 or later
+- [Bun](https://bun.sh/) 1.3.0 or later
 
 ## Setup
 
@@ -16,88 +16,75 @@ bun install
 bun run build
 ```
 
-## Branch Model
-
-```text
-feat/* fix/* chore/*
-  ↓ PR (squash)
-main          ← stable; docs deploy on push
-  ↓ bun run release → v* tag
-npm publish   ← triggered automatically by the v* tag
-```
-
-Always branch from `main`.
-
-## Development Workflow
+## Commands
 
 ```bash
 bun run dev         # watch mode for all packages
-bun test            # vitest run (non-watch)
-bun run lint        # check for lint errors
-bun run lint:fix    # auto-fix lint errors
+bun run test        # run all tests once
+bun run lint        # oxlint
+bun run lint:fix    # oxlint with fixes
+bun run format      # oxfmt
 bun run typecheck   # type-check all packages
 ```
 
-### Running a Single Test
+Run one test file:
 
 ```bash
-bun test packages/core/src/leak.test.ts
+bun run test packages/core/src/leak.test.ts
 ```
 
-### Building a Single Package
+Build one package:
 
 ```bash
 bun run --filter @vite-env/core build
 ```
 
-### Examples
-
-The `examples/` directory contains working Vite apps configured with the plugin. Use them to manually test changes:
+To try a change in a real app, run one of the [examples](./examples):
 
 ```bash
 bun run --filter @vite-env/example-basic dev
 ```
 
-## Project Structure
+## Project structure
 
 ```text
-packages/core   → @vite-env/core   Vite plugin, validation, virtual modules, leak detection
-packages/cli    → @vite-env/cli    CLI commands (check, generate, types) — thin wrappers over core
-examples/basic   → @vite-env/example-basic     Zod path example app
-examples/valibot → @vite-env/example-valibot   Standard Schema path example app
+packages/core   @vite-env/core   Vite plugin, validation, virtual modules, leak detection
+packages/cli    @vite-env/cli    check, generate, and types commands, thin wrappers over core
+apps/docs       docs site at https://pyyupsk.github.io/vite-env/
+examples/       runnable Vite apps, one per feature
 ```
 
-## Code Conventions
+## Conventions
 
-- **Linting** — uses [@antfu/eslint-config](https://github.com/antfu/eslint-config). A pre-commit hook runs `lint-staged` automatically.
-- **Tests** — colocated with source files (`*.test.ts` next to `*.ts`). Coverage threshold is 85% for lines, functions, branches, and statements.
-- **Test descriptions** — must be lowercase (except `it` block names).
-- **CLI coverage** — the CLI package is excluded from coverage since it's thin wrappers. Test the underlying core logic instead.
-- **Commit messages** — describe concrete changes, not which convention motivated them. Use [Conventional Commits](https://www.conventionalcommits.org/) scoped to the package:
+- Lint and format: [oxlint](https://oxc.rs/docs/guide/usage/linter) and [oxfmt](https://oxc.rs/docs/guide/usage/formatter). The pre-commit hook runs `oxlint --fix` on staged files.
+- Tests: put `*.test.ts` next to the file it tests. Coverage must stay at 85% or more.
+- Test descriptions: lowercase.
+- CLI coverage: the CLI package is not in the coverage report, because it only wraps core. Test the core logic instead.
+- Commit messages: use [Conventional Commits](https://www.conventionalcommits.org/) with the package as the scope, and say what changed:
   - `feat(core): add platform presets for Vercel, Railway, and Netlify`
-  - `fix(cli): handle missing config file gracefully`
-  - `docs: update quick-start guide`
+  - `fix(cli): handle missing config file`
+  - `docs: update the quick start`
 
-## Submitting a Pull Request
+## Pull requests
 
-1. Fork the repository and create a branch from `main`.
-2. Make your changes.
-3. Add or update tests as needed — ensure `bun run test` passes.
-4. Run `bun run lint:fix` and `bun run typecheck`.
-5. Commit with a descriptive message.
+1. Fork the repo and create a branch from `main`.
+2. Make your change.
+3. Add or update tests. Make sure that `bun run test` passes.
+4. Run `bun run lint:fix`, `bun run format`, and `bun run typecheck`.
+5. Commit with a Conventional Commits message.
 6. Open a pull request against `main`.
 
-CI will run lint, typecheck, and the full test matrix (ubuntu + windows × node 22/24/26). All checks must pass before merge.
+CI runs lint, typecheck, and the tests on Ubuntu and Windows with Node 22, 24, and 26. All checks must pass before a merge.
 
-## Release Process (Maintainers)
+## Releases (maintainers)
 
-Releases are automated via Release Please. The flow:
+Release Please automates releases:
 
-1. Merge the feature PR into `main` once CI is green.
-2. Release Please automatically opens a version bump PR on `main` (updates `package.json` versions based on conventional commits).
-3. Review and merge the Release Please PR — it pushes a `vX.Y.Z` tag automatically.
-4. The tag triggers CI: changelogithub generates release notes and packages are published to npm.
+1. When CI passes, merge the pull request into `main`.
+2. Release Please opens a pull request that bumps the versions from the commit messages.
+3. Merge that pull request. It pushes a `vX.Y.Z` tag.
+4. The tag starts the release workflow. changelogithub writes the GitHub release notes, and the workflow publishes the packages to npm.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the [MIT License](./LICENSE).
+When you contribute, you agree that your contribution is licensed under the [MIT License](./LICENSE).
