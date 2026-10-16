@@ -67,26 +67,12 @@
   html[data-theme="dark"] .shiki span {
     color: var(--shiki-dark);
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      transition-duration: 0s !important;
-      animation-duration: 0s !important;
-      scroll-behavior: auto !important;
-    }
-  }
 }
 
 @utility container-page {
   margin-inline: auto;
-  padding-inline: 1.25rem;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
   max-width: var(--container-page);
-
-  @media (width >= 48rem) {
-    padding-inline: 2rem;
-  }
 }
 
 /* A highlighter stroke: slightly ragged ends, sits behind the text. */

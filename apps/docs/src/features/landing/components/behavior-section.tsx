@@ -57,7 +57,7 @@ export function BehaviorSection() {
                   {c.result}{" "}
                   <Link
                     href={c.href}
-                    className="whitespace-nowrap text-link underline decoration-current/35 underline-offset-[3px] hover:decoration-current"
+                    className="whitespace-nowrap text-link underline decoration-current/35 underline-offset-3 hover:decoration-current"
                   >
                     See {c.label}
                   </Link>

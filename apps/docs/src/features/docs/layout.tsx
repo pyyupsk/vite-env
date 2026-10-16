@@ -4,7 +4,7 @@ import * as runtime from "react/jsx-runtime";
 import { docs } from "#velite";
 import { Header, REPO } from "@/components/layout/header";
 import { Sidebar } from "./components/sidebar";
-import { TOC } from "./components/toc";
+import { TableOfContents } from "./components/toc";
 import { mdxComponents } from "./components/mdx-components";
 import { buildNav, getPrevNext, type NavItem } from "./nav";
 
@@ -29,7 +29,7 @@ function PageLink({ item, dir }: Readonly<{ item: NavItem | null; dir: "Previous
       className={`group flex flex-col gap-0.5 ${dir === "Next" ? "items-end text-right" : ""}`}
     >
       <span className="text-[14px] text-ink-3">{dir}</span>
-      <span className="text-[17px] font-semibold text-link group-hover:underline underline-offset-[3px]">
+      <span className="text-[17px] font-semibold text-link group-hover:underline underline-offset-3">
         {item.label}
       </span>
     </Link>
@@ -78,12 +78,12 @@ export function DocsLayout() {
         Skip to content
       </a>
       <Header wide menuOpen={menuOpen} onMenu={toggleMenu} />
-      <div className="mx-auto flex w-full max-w-[96rem]">
+      <div className="mx-auto flex w-full max-w-384">
         <Sidebar sections={nav} currentSlug={page} open={menuOpen} />
         <main id="main" className="min-w-0 flex-1 px-5 pt-10 pb-24 md:px-10 lg:px-14">
           <article className="mx-auto max-w-prose text-[1.0625rem] leading-[1.7]">
             <header className="mb-10 border-b-2 border-rule-strong pb-7">
-              <h1 className="text-[2rem] font-bold leading-[1.15] tracking-[-0.025em] md:text-[2.375rem]">
+              <h1 className="text-[2rem] font-bold leading-[1.15] tracking-tight md:text-[2.375rem]">
                 {doc.title}
               </h1>
               {doc.description && (
@@ -98,7 +98,7 @@ export function DocsLayout() {
             <p className="mt-12 text-[14px]">
               <a
                 href={`${REPO}/edit/main/apps/docs/src/content/${doc.slug}.mdx`}
-                className="text-ink-3 underline underline-offset-[3px] decoration-current/35 hover:text-ink"
+                className="text-ink-3 underline underline-offset-3 decoration-current/35 hover:text-ink"
               >
                 Edit this page on GitHub
               </a>
@@ -113,7 +113,7 @@ export function DocsLayout() {
             </nav>
           </article>
         </main>
-        <TOC items={doc.toc} />
+        <TableOfContents items={doc.toc} />
       </div>
     </div>
   );

@@ -48,11 +48,12 @@ export function InstallSection() {
             Create <code className="text-[0.9em]">env.ts</code> in the project root, like the{" "}
             <a
               href="#top"
-              className="text-link underline decoration-current/35 underline-offset-[3px] hover:decoration-current"
+              className="text-link underline decoration-current/35 underline-offset-3 hover:decoration-current"
             >
               example at the top of this page
             </a>
-            . Put secrets in <code className="text-[0.9em]">server</code> and browser values in{" "}
+            {". Put secrets in "}
+            <code className="text-[0.9em]">server</code> and browser values in{" "}
             <code className="text-[0.9em]">client</code>.
           </p>
         </Step>
@@ -71,7 +72,7 @@ export function InstallSection() {
       <p className="mt-8 text-[16px]">
         <Link
           href="/docs/getting-started"
-          className="font-semibold text-link underline decoration-current/35 underline-offset-[3px] hover:decoration-current"
+          className="font-semibold text-link underline decoration-current/35 underline-offset-3 hover:decoration-current"
         >
           Continue with the introduction
         </Link>

@@ -11,9 +11,9 @@
       (() => {
         const media = matchMedia("(prefers-color-scheme: dark)");
         const apply = () => {
-          const t = localStorage.getItem("theme");
-          document.documentElement.dataset.theme =
-            t === "light" || t === "dark" ? t : media.matches ? "dark" : "light";
+          let theme = localStorage.getItem("theme");
+          if (theme !== "light" && theme !== "dark") theme = media.matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
         };
         apply();
         media.addEventListener("change", apply);

@@ -8,7 +8,7 @@ function flattenToc(items: TocEntry[], depth = 0): { entry: TocEntry; depth: num
   return items.flatMap((item) => [{ entry: item, depth }, ...flattenToc(item.items, depth + 1)]);
 }
 
-export function TOC({ items }: Readonly<{ items: TocEntry[] }>) {
+export function TableOfContents({ items }: Readonly<{ items: TocEntry[] }>) {
   const flat = useMemo(() => flattenToc(items), [items]);
   const [active, setActive] = useState("");
 

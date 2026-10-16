@@ -4,22 +4,26 @@ import { PackageInstall, parseNpmInstall } from "@/components/ui/package-install
 import { Link } from "wouter";
 
 const linkCls =
-  "text-link underline decoration-1 underline-offset-[3px] decoration-current/35 hover:decoration-current hover:text-link-hover";
+  "text-link underline decoration-1 underline-offset-3 decoration-current/35 hover:decoration-current hover:text-link-hover";
 
 export const mdxComponents = {
-  h2: (props: ComponentPropsWithoutRef<"h2">) => (
+  h2: ({ children, ...props }: ComponentPropsWithoutRef<"h2">) => (
     <h2
       className="mt-14 mb-4 border-t border-rule pt-8 [header+&]:mt-0 [header+&]:border-t-0 [header+&]:pt-0 text-[1.5rem] font-bold leading-tight tracking-[-0.015em]"
       {...props}
-    />
+    >
+      {children}
+    </h2>
   ),
-  h3: (props: ComponentPropsWithoutRef<"h3">) => (
-    <h3 className="mt-10 mb-3 text-[1.1875rem] font-semibold leading-snug" {...props} />
+  h3: ({ children, ...props }: ComponentPropsWithoutRef<"h3">) => (
+    <h3 className="mt-10 mb-3 text-[1.1875rem] font-semibold leading-snug" {...props}>
+      {children}
+    </h3>
   ),
   p: (props: ComponentPropsWithoutRef<"p">) => <p className="mb-5" {...props} />,
   code: (props: ComponentPropsWithoutRef<"code">) => (
     <code
-      className="rounded bg-panel px-[0.3em] py-[0.1em] text-[0.85em] text-ink [overflow-wrap:anywhere]"
+      className="rounded bg-panel px-[0.3em] py-[0.1em] text-[0.85em] text-ink wrap-anywhere"
       translate="no"
       {...props}
     />

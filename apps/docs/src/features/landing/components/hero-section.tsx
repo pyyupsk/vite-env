@@ -63,7 +63,7 @@ export function HeroSection() {
           </Link>
           <a
             href={REPO}
-            className="text-[16px] font-semibold text-link underline decoration-current/35 underline-offset-[3px] hover:decoration-current"
+            className="text-[16px] font-semibold text-link underline decoration-current/35 underline-offset-3 hover:decoration-current"
           >
             View on GitHub
           </a>
@@ -75,7 +75,7 @@ export function HeroSection() {
           <CodeBlock code={SCHEMA} lang="typescript" filename="env.ts" className="mt-0 mb-8" />
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[30rem] border-collapse text-[15px] tabular-nums">
+            <table className="w-full min-w-120 border-collapse text-[15px] tabular-nums">
               <caption className="mb-3 text-left text-[15px] font-semibold">
                 What vite-env checks from this schema
               </caption>
