@@ -20,7 +20,7 @@ server.DATABASE_URL; // string, the same schema as virtual:env/server
 client.VITE_APP_NAME; // string, client keys only
 ```
 
-It uses the same schema as the plugin. It also reads `.env` files, but it does not know Vite's `root` or `mode`. It reads the files from the current directory, and it takes the mode from `NODE_ENV`. If you run the script from another directory, pass `envDir`. Otherwise the validation fails, because the script finds no `.env` file.
+It uses the same schema as the plugin. It also reads `.env` files, but it does not know Vite's `root` or `mode`. It reads the files from the current directory, and it takes the mode from `NODE_ENV`. If you run the script from another directory, pass `envDir`. Otherwise the script does not find the `.env` files. If `process.env` does not have the required values either, the validation fails.
 
 ## Run
 
