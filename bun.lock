@@ -144,7 +144,7 @@
     },
     "packages/cli": {
       "name": "@vite-env/cli",
-      "version": "0.8.2",
+      "version": "0.9.0",
       "bin": {
         "vite-env": "./dist/index.mjs",
       },
@@ -166,7 +166,7 @@
     },
     "packages/core": {
       "name": "@vite-env/core",
-      "version": "0.8.2",
+      "version": "0.9.0",
       "dependencies": {
         "@standard-schema/spec": "catalog:",
         "jiti": "catalog:",
