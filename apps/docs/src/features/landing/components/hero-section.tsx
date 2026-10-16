@@ -1,12 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { CodeBlock } from "@/components/ui/code-block";
-import { ArrowRight } from "lucide-react";
-import { GithubIcon } from "@/components/icons/github";
 import { Link } from "wouter";
-import type { CSSProperties } from "react";
+import { CodeBlock } from "@/components/ui/code-block";
+import { REPO } from "@/components/layout/header";
+import { InstallCommand } from "@/components/ui/install-command";
 
-const HERO_CODE = `import { defineEnv } from "@vite-env/core"
-import { z } from "zod"
+export const SCHEMA = `import { defineEnv } from "@vite-env/core";
+import { z } from "zod";
 
 export default defineEnv({
   server: {
@@ -16,71 +14,111 @@ export default defineEnv({
   client: {
     VITE_API_URL: z.string().url(),
   },
-})`;
+});`;
 
-const gradientBgStyle: CSSProperties = {
-  background:
-    "radial-gradient(50% 65% at 50% 0%, color-mix(in oklch, var(--color-violet-500) 22%, transparent) 0%, transparent 80%)",
-};
-
-const gradientTextStyle: CSSProperties = {
-  background:
-    "linear-gradient(118deg, var(--color-white) 10%, var(--color-violet-300) 55%, var(--color-cyan-400))",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  backgroundClip: "text",
-};
+const ROWS = [
+  { key: "DATABASE_URL", type: "URL", where: "Server only", secret: true, missing: "Build fails" },
+  { key: "PORT", type: "number", where: "Server only", secret: true, missing: "Uses 3000" },
+  {
+    key: "VITE_API_URL",
+    type: "URL",
+    where: "Server and client",
+    secret: false,
+    missing: "Build fails",
+  },
+];
 
 export function HeroSection() {
   return (
-    <section className="relative px-10 py-20 overflow-hidden min-h-screen grid place-content-center text-center">
-      <div className="absolute inset-0 pointer-events-none bg-grid opacity-35" />
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-content-xl h-[480px] pointer-events-none"
-        style={gradientBgStyle}
-      />
-
-      <div className="relative max-w-content-xl mx-auto">
-        <div className="flex justify-center items-center gap-3 mb-7">
-          <Badge variant="accent" dot>
-            v{__CORE_VERSION__}
-          </Badge>
-          <span className="font-mono text-xs text-text-faint tracking-wide">
-            {/* nosonar */}
-            // vite plugin for build-time env validation
-          </span>
-        </div>
-
-        <h1 className="text-[clamp(40px,6vw,68px)] font-semibold leading-[1.06] tracking-[-0.03em] text-text-strong mb-5">
-          Typed env, <span style={gradientTextStyle}>zero boilerplate.</span>
+    <section
+      id="top"
+      className="container-page grid gap-x-12 gap-y-12 pt-14 pb-10 md:pt-20 lg:grid-cols-12"
+    >
+      <div className="lg:col-span-5">
+        <h1
+          className="text-[3.25rem] font-extrabold leading-none tracking-[-0.04em] md:text-[4.5rem]"
+          translate="no"
+        >
+          vite-env
         </h1>
-
-        <p className="text-[17px] leading-[1.65] text-text-muted max-w-content-sm mx-auto mb-9">
-          vite-env reads your schema once and hands every module a fully typed env object —
-          validated at build, never at runtime.
+        <p className="mt-5 text-[1.5rem] font-semibold leading-snug tracking-[-0.01em]">
+          Typed, validated environment variables for Vite.
+        </p>
+        <p className="mt-4 max-w-md text-[1.0625rem] leading-relaxed text-ink-2">
+          Describe your variables once in <code className="text-[0.9em]">env.ts</code>. When Vite
+          starts or builds, the plugin checks every value, stops the build if one is wrong, and
+          gives your code typed, read-only access.
         </p>
 
-        <div className="flex justify-center gap-3 mb-[60px] flex-wrap">
+        <div className="mt-8 max-w-md">
+          <InstallCommand command="npm install -D @vite-env/core" />
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
           <Link
             href="/docs"
-            className="inline-flex items-center gap-2 px-5 h-10 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md transition-colors duration-fast no-underline"
+            className="inline-flex h-11 items-center rounded-md bg-ink px-5 text-[16px] font-semibold text-paper hover:bg-ink-2 transition-colors"
           >
-            Get started
-            <ArrowRight size={18} strokeWidth={1.5} />
+            Read the docs
           </Link>
           <a
-            href="https://github.com/pyyupsk/vite-env"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 h-10 text-sm font-medium text-text-body bg-surface-raised hover:bg-surface-3 border border-border-default hover:border-border-strong rounded-md transition-all duration-fast no-underline"
+            href={REPO}
+            className="text-[16px] font-semibold text-link underline decoration-current/35 underline-offset-3 hover:decoration-current"
           >
-            <GithubIcon size={16} />
             View on GitHub
           </a>
         </div>
+      </div>
 
-        <div className="max-w-content-md mx-auto text-left">
-          <CodeBlock filename="env.config.ts" code={HERO_CODE} />
+      <div className="min-w-0 lg:col-span-7">
+        <div className="border-t-2 border-rule-strong pt-3">
+          <CodeBlock code={SCHEMA} lang="typescript" filename="env.ts" className="mt-0 mb-8" />
+
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-120 border-collapse text-[15px] tabular-nums">
+              <caption className="mb-3 text-left text-[15px] font-semibold">
+                What vite-env checks from this schema
+              </caption>
+              <thead className="border-y border-rule-strong">
+                <tr>
+                  <th scope="col" className="py-2 pr-4 text-left text-[14px] font-semibold">
+                    Variable
+                  </th>
+                  <th scope="col" className="py-2 pr-4 text-left text-[14px] font-semibold">
+                    Type
+                  </th>
+                  <th scope="col" className="py-2 pr-4 text-left text-[14px] font-semibold">
+                    Available in
+                  </th>
+                  <th scope="col" className="py-2 text-left text-[14px] font-semibold">
+                    If missing
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {ROWS.map((r) => (
+                  <tr key={r.key} className="border-b border-rule">
+                    <th
+                      scope="row"
+                      className="py-2.5 pr-4 text-left font-mono text-[14px] font-normal"
+                      translate="no"
+                    >
+                      {r.key}
+                    </th>
+                    <td className="py-2.5 pr-4 text-ink-2">{r.type}</td>
+                    <td className="py-2.5 pr-4">
+                      {r.secret ? (
+                        <span className="marked">{r.where}</span>
+                      ) : (
+                        <span className="text-ink-2">{r.where}</span>
+                      )}
+                    </td>
+                    <td className="py-2.5 text-ink-2">{r.missing}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>

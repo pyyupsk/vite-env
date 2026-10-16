@@ -1,12 +1,12 @@
-# node-script example
+# node-script
 
-Demonstrates `@vite-env/core/load` — validated env in a plain Bun/Node script, no Vite required.
+Shows `@vite-env/core/load`: a validated env in a plain Bun or Node script, without Vite.
 
-## Problem
+## Why
 
-`virtual:env/server` only resolves inside Vite's module graph. Running `bun scripts/seed.ts` directly fails with `Cannot find module 'virtual:env/server'`.
+`virtual:env/server` only resolves inside Vite. If you run `bun scripts/seed.ts` directly, it fails with `Cannot find module 'virtual:env/server'`.
 
-## Solution
+## How
 
 Import `loadEnv` from `@vite-env/core/load` and pass your existing `env.ts` config:
 
@@ -16,11 +16,11 @@ import config from "../env";
 
 const { server, client } = await loadEnv(config);
 
-server.DATABASE_URL; // string — typed, same schema as virtual:env/server
-client.VITE_APP_NAME; // string — only client vars
+server.DATABASE_URL; // string, the same schema as virtual:env/server
+client.VITE_APP_NAME; // string, client keys only
 ```
 
-Same `.env` files, same schema, same validation — without Vite.
+It reads the same `.env` files and validates with the same schema as the plugin.
 
 ## Run
 
@@ -36,15 +36,15 @@ bun scripts/seed.ts
 loadEnv(config, options?)
 ```
 
-| Option   | Default                                 | Description                             |
-| -------- | --------------------------------------- | --------------------------------------- |
-| `mode`   | `process.env.NODE_ENV ?? "development"` | Controls which `.env.[mode]` files load |
-| `envDir` | `cwd()`                                 | Directory to search for `.env` files    |
+| Option   | Default                                 | Description                               |
+| -------- | --------------------------------------- | ----------------------------------------- |
+| `mode`   | `process.env.NODE_ENV ?? "development"` | Picks the `.env.[mode]` files to load     |
+| `envDir` | `cwd()`                                 | The directory that holds the `.env` files |
 
-Returns `{ server, client, all }`:
+It returns `{ server, client, all }`:
 
-- `server` — all validated vars (server + client), typed
-- `client` — only `VITE_*` vars, typed
-- `all` — alias for `server`
+- `server`: all validated variables, server and client, typed
+- `client`: only the client variables, typed
+- `all`: the same object as `server`
 
-Throws `[vite-env] Validation failed` with per-field messages on invalid env.
+If the env is not valid, it throws `[vite-env] Validation failed` with one line per field.

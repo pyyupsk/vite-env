@@ -7,14 +7,14 @@ order: 1
 
 ## What is vite-env?
 
-vite-env is a Vite plugin that reads your `env.ts` schema, validates the running environment at build time, and emits two virtual modules with fully inferred TypeScript types. Missing or malformed keys fail the build — not production.
+vite-env is a Vite plugin that reads your `env.ts` schema, validates the running environment at build time, and emits two virtual modules with fully inferred TypeScript types. If a key is missing or has the wrong format, the build fails before the code reaches production.
 
 ## How it works
 
-1. You define a schema in `env.ts` using `defineEnv()` and Zod
-2. The plugin reads and validates all env sources on `buildStart`
-3. Two frozen virtual modules are emitted: `virtual:env/client` and `virtual:env/server`
-4. A `vite-env.d.ts` file is written to the project root with inferred types
+1. You define a schema in `env.ts` with `defineEnv()` and Zod.
+2. On `buildStart`, the plugin reads all env sources and validates them.
+3. The plugin emits two frozen virtual modules: `virtual:env/client` and `virtual:env/server`.
+4. The plugin writes `vite-env.d.ts` to the project root with the inferred types.
 
 ```ts
 // env.ts
@@ -56,19 +56,19 @@ export default defineConfig({
 });
 ```
 
-`configFile` is required — it points to the env definition file, resolved from the project root.
+`configFile` is required. It is the path to the env definition file, relative to the project root.
 
 ## Env sources
 
 Variables are merged in priority order (highest first):
 
-1. `process.env` — CI pipeline secrets win
+1. `process.env` (secrets from your CI pipeline win)
 2. `.env.[mode].local`
 3. `.env.[mode]`
 4. `.env.local`
 5. `.env`
 
-No prefix filter is applied — the schema is the filter.
+The plugin does not filter by prefix. Only the keys in your schema get through.
 
 ## Exports
 

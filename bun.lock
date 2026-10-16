@@ -18,9 +18,8 @@
     "apps/docs": {
       "name": "@vite-env/docs",
       "dependencies": {
-        "@fontsource-variable/geist": "catalog:docs",
         "@fontsource-variable/geist-mono": "catalog:docs",
-        "class-variance-authority": "catalog:docs",
+        "@fontsource-variable/public-sans": "catalog:docs",
         "clsx": "catalog:docs",
         "lucide-react": "catalog:docs",
         "react": "catalog:docs",
@@ -145,7 +144,7 @@
     },
     "packages/cli": {
       "name": "@vite-env/cli",
-      "version": "0.7.0",
+      "version": "0.8.2",
       "bin": {
         "vite-env": "./dist/index.mjs",
       },
@@ -167,16 +166,16 @@
     },
     "packages/core": {
       "name": "@vite-env/core",
-      "version": "0.7.0",
+      "version": "0.8.2",
       "dependencies": {
         "@standard-schema/spec": "catalog:",
         "jiti": "catalog:",
+        "oxc-parser": "catalog:",
       },
       "devDependencies": {
         "@types/node": "catalog:dev",
         "@vitest/coverage-v8": "catalog:dev",
         "jscodeshift": "catalog:dev",
-        "oxc-parser": "catalog:",
         "tsdown": "catalog:dev",
         "typescript": "catalog:dev",
         "vite": "catalog:dev",
@@ -225,13 +224,12 @@
       "zod": "^4.5.4",
     },
     "docs": {
-      "@fontsource-variable/geist": "^5.3.0",
       "@fontsource-variable/geist-mono": "^5.3.0",
+      "@fontsource-variable/public-sans": "^5.3.0",
       "@tailwindcss/vite": "^4.3.3",
       "@types/react": "^19.2.18",
       "@types/react-dom": "^19.2.5",
       "@vitejs/plugin-react": "^6.1.1",
-      "class-variance-authority": "^0.7.1",
       "clsx": "^2.1.1",
       "lucide-react": "^1.39.0",
       "react": "^19.2.8",
@@ -375,9 +373,9 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.28.2", "", { "os": "win32", "cpu": "x64" }, "sha512-5ebpxr3nWMzrL/rnUI755Jkuee0bHL/Gq0WTF9lvcpv73wAp5eu8MfBUgWK9bhWvZjj7yX8etf/8tI8Ney695g=="],
 
-    "@fontsource-variable/geist": ["@fontsource-variable/geist@5.3.0", "", {}, "sha512-j0m+vLQuG5XAYoHtGCVu0spvlGreR3EzpECUVzkFmI1mTVnAO38l/NEPDCFgZ177JxzYJCLSmTQibIiYPilGrA=="],
-
     "@fontsource-variable/geist-mono": ["@fontsource-variable/geist-mono@5.3.0", "", {}, "sha512-vBbuwDEo9AkrqADMXOrlAR3DFcJi4/JxeuU43FoiQERnNwsfXNnvxvReZG02cQKmyk4DZkZdBZX3oTDvy2zBAw=="],
+
+    "@fontsource-variable/public-sans": ["@fontsource-variable/public-sans@5.3.0", "", {}, "sha512-AVfkmAt50BMXWpOO21FAntiJFKGX6xTc2dSL8dxtDteONe9IuRXJWGbs0EbG955vAMCq23ENeuopuW87cGWDSQ=="],
 
     "@img/colour": ["@img/colour@1.1.0", "", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 
@@ -844,8 +842,6 @@
     "character-reference-invalid": ["character-reference-invalid@2.0.1", "", {}, "sha512-iBZ4F4wRbyORVsu0jPV7gXkOsGYjGHPmAyv+HiHG8gi5PtC9KI2j1+v8/tlibRvjoWX027ypmG/n0HtO5t7unw=="],
 
     "citty": ["citty@0.2.2", "", {}, "sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w=="],
-
-    "class-variance-authority": ["class-variance-authority@0.7.1", "", { "dependencies": { "clsx": "^2.1.1" } }, "sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg=="],
 
     "clone-deep": ["clone-deep@4.0.1", "", { "dependencies": { "is-plain-object": "^2.0.4", "kind-of": "^6.0.2", "shallow-clone": "^3.0.0" } }, "sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ=="],
 

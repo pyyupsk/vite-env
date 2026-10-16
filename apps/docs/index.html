@@ -1,9 +1,25 @@
 <!doctype html>
-<html lang="en" style="background: #08080a; color: #c9c9d1">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141618" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Set the theme before first paint. A stored choice wins; otherwise follow the system.
+      (() => {
+        const media = matchMedia("(prefers-color-scheme: dark)");
+        const apply = () => {
+          let theme = localStorage.getItem("theme");
+          if (theme !== "light" && theme !== "dark") theme = media.matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+        };
+        apply();
+        media.addEventListener("change", apply);
+        addEventListener("themechange", apply);
+      })();
+    </script>
     <title>vite-env — Type-safe env validation for Vite</title>
     <meta
       name="description"

@@ -5,11 +5,13 @@ section: Reference
 order: 6
 ---
 
-Presets inject well-known platform variables into your schema. Import from `@vite-env/core/presets` and pass in the `presets` array.
+A preset adds the variables that a hosting platform sets to your schema. Import it from `@vite-env/core/presets` and pass it in the `presets` array.
 
-Each preset carries a `detect` predicate checking the platform's marker variable (`VERCEL=1`, `RAILWAY_ENVIRONMENT_ID`, `NETLIFY=true`). On the platform, preset vars are validated strictly; everywhere else they're treated as optional — local `vite dev` works without faking platform vars. Keys you override in your own `server`/`client` config are always validated strictly. Generated `vite-env.d.ts` types mark preset vars optional for the same reason — narrow them (or assert) in code that only runs on the platform.
+Each preset has a `detect` function that looks for the platform's marker variable (`VERCEL=1`, `RAILWAY_ENVIRONMENT_ID`, `NETLIFY=true`). On the platform, the plugin validates preset variables strictly. Everywhere else, they are optional, so local `vite dev` works without fake platform values. Keys that you redefine in your own `server` or `client` block are always strict.
 
-`detect` results are cached per-process (up to 32 entries per function reference) to avoid redundant evaluation when multiple plugins or build steps call validation repeatedly.
+For the same reason, `vite-env.d.ts` types preset variables as optional. In code that runs only on the platform, narrow them or assert them.
+
+The plugin caches `detect` results for each process, up to 32 entries per function. Repeated validation calls from plugins or build steps do not run `detect` again.
 
 ## Vercel
 
@@ -26,7 +28,7 @@ export default defineEnv({
 });
 ```
 
-Injects (server-only):
+Adds (server-only):
 
 | Variable                        | Type                                         |
 | ------------------------------- | -------------------------------------------- |
@@ -39,7 +41,7 @@ Injects (server-only):
 | `VERCEL_GIT_COMMIT_SHA`         | `string` (optional)                          |
 | `VERCEL_BRANCH_URL`             | `string` (optional)                          |
 
-Plus additional git and skew protection fields.
+The preset also adds more git fields and skew protection fields.
 
 ## Railway
 
@@ -52,9 +54,9 @@ export default defineEnv({
 });
 ```
 
-Injects (server-only): `RAILWAY_ENVIRONMENT_ID`, `RAILWAY_ENVIRONMENT_NAME`, `RAILWAY_SERVICE_ID`, `RAILWAY_SERVICE_NAME`, `RAILWAY_PROJECT_ID`, `RAILWAY_PROJECT_NAME`, `RAILWAY_DEPLOYMENT_ID`, and optional git/domain fields.
+Adds (server-only): `RAILWAY_ENVIRONMENT_ID`, `RAILWAY_ENVIRONMENT_NAME`, `RAILWAY_SERVICE_ID`, `RAILWAY_SERVICE_NAME`, `RAILWAY_PROJECT_ID`, `RAILWAY_PROJECT_NAME`, `RAILWAY_DEPLOYMENT_ID`, and optional git and domain fields.
 
-Note: `PORT` is intentionally excluded — it is a generic name set by many tools independently. Define it yourself if needed.
+The preset leaves out `PORT`, because many tools set a variable with that name. If you need it, define it yourself.
 
 ## Netlify
 
@@ -67,7 +69,7 @@ export default defineEnv({
 });
 ```
 
-Injects (server-only):
+Adds (server-only):
 
 | Variable     | Type                                                           |
 | ------------ | -------------------------------------------------------------- |
@@ -82,4 +84,4 @@ Injects (server-only):
 
 ---
 
-Presets are plain `{ server, client }` objects — spread them manually if you need finer control. Your own keys always win over preset keys on collision.
+Presets are plain `{ server, client }` objects. For more control, spread them into your own blocks. If a key name collides, your key wins.

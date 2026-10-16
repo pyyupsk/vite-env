@@ -1,66 +1,51 @@
-import { Code2, Layers, Package, Shield, Terminal, Zap, type LucideIcon } from "lucide-react";
+import { Link } from "wouter";
+import { Section } from "./section";
 
-const FEATURES: { icon: LucideIcon; title: string; desc: string }[] = [
+const FEATURES: { text: string; href: string }[] = [
   {
-    icon: Shield,
-    title: "Type-safe env",
-    desc: "Inferred TypeScript types flow into every module. No manual interface declarations needed.",
+    text: "Types come from your schema and are written to vite-env.d.ts",
+    href: "/docs/virtual-modules",
+  },
+  { text: "Every value is checked when Vite starts or builds", href: "/docs/getting-started" },
+  {
+    text: "Server and client keys are split into two virtual modules",
+    href: "/docs/virtual-modules",
+  },
+  { text: "The build fails if client code imports the server module", href: "/docs/guard-modes" },
+  {
+    text: "The build fails if a server value appears in a client chunk",
+    href: "/docs/server-leak",
   },
   {
-    icon: Zap,
-    title: "Build-time validation",
-    desc: "Missing or malformed keys fail the build before they ever reach production.",
+    text: "Works with Zod, Valibot, ArkType, or any Standard Schema validator",
+    href: "/docs/standard-schema",
   },
+  { text: "Presets for Vercel, Railway, and Netlify variables", href: "/docs/presets" },
+  { text: "A CLI to check env in CI and generate .env.example", href: "/docs/cli" },
   {
-    icon: Layers,
-    title: "Server / client split",
-    desc: "Secrets stay server-side automatically. VITE_ prefixed keys go to the client bundle.",
-  },
-  {
-    icon: Code2,
-    title: "Virtual modules",
-    desc: 'import { env } from "virtual:env" — tree-shakeable, zero coupling to process.env.',
-  },
-  {
-    icon: Package,
-    title: "Zero runtime cost",
-    desc: "No validation logic ships to the browser. The plugin runs only at build time.",
-  },
-  {
-    icon: Terminal,
-    title: "Vite native",
-    desc: "Built on Vite's resolveId/transform hooks. Works with any Vite-based framework.",
+    text: "loadEnv() for Node and Bun scripts that run outside Vite",
+    href: "/docs/standalone-loader",
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section className="container-section pb-20">
-      <div className="border-t border-hairline pt-16 mb-10 flex flex-col items-center">
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-text-subtle">
-          // what you get
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {FEATURES.map((f) => {
-          const FeatureIcon = f.icon;
-          return (
-            <div
-              key={f.title}
-              className="group rounded-lg p-6 bg-surface-1 border border-border-subtle shadow-inset-top hover:border-border-strong hover:shadow-md hover:-translate-y-0.5 transition-[border-color,box-shadow,transform] duration-base"
+    <Section id="features" title="Features">
+      <ul className="grid gap-x-10 sm:grid-cols-2">
+        {FEATURES.map((f) => (
+          <li key={f.text} className="border-b border-rule">
+            <Link
+              href={f.href}
+              className="flex h-full items-baseline gap-3 py-3.5 text-[16px] leading-snug hover:text-link"
             >
-              <div className="w-[34px] h-[34px] rounded-md bg-accent-soft text-accent-text flex items-center justify-center mb-3.5">
-                <FeatureIcon size={17} strokeWidth={1.5} />
-              </div>
-              <div className="font-semibold text-text-strong text-sm mb-2 tracking-[-0.01em]">
-                {f.title}
-              </div>
-              <div className="text-xs leading-[1.65] text-text-subtle">{f.desc}</div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+              <span aria-hidden className="text-ink-3">
+                &ndash;
+              </span>
+              {f.text}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </Section>
   );
 }

@@ -9,9 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource-variable/geist": "catalog:docs",
     "@fontsource-variable/geist-mono": "catalog:docs",
-    "class-variance-authority": "catalog:docs",
+    "@fontsource-variable/public-sans": "catalog:docs",
     "clsx": "catalog:docs",
     "lucide-react": "catalog:docs",
     "react": "catalog:docs",

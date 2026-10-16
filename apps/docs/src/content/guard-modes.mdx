@@ -5,7 +5,7 @@ section: Reference
 order: 4
 ---
 
-Guard modes control what the plugin does when an environment not listed in `allowedServerEnvironments` imports `virtual:env/server`. Configure via `onClientAccessOfServerModule`:
+A guard mode sets what the plugin does when an environment that is not in `allowedServerEnvironments` imports `virtual:env/server`. Set it with `onClientAccessOfServerModule`:
 
 ```ts
 ViteEnv({
@@ -13,26 +13,24 @@ ViteEnv({
 });
 ```
 
-Environments with `consumer === 'server'` (detected via Vite 8+'s `environment.config.consumer`) are automatically allowed to import `virtual:env/server` and are not subject to guard mode checks or leak detection.
+An environment with `environment.config.consumer === 'server'` (Vite 8 and later) can always import `virtual:env/server`. Guard modes and leak detection skip it.
 
 ## warn
 
-Default in 0.x. The server module is still served but a warning is printed and `vite-env-warnings.log` is written to the project root. The build succeeds but **exits with code 1** — useful for catching violations in CI without breaking an existing codebase.
+The plugin still serves the server module, but it prints a warning and writes `vite-env-warnings.log` to the project root. The build finishes but exits with code 1. Use this mode to find violations in CI while you clean up an existing codebase. It was the default before 0.8.0.
 
 ```
 ⚠ [vite-env] virtual:env/server imported from 'client' environment
   importer: src/components/UserCard.tsx
 ```
 
-The default will change to `'error'` in 1.0.
-
 ## error
 
-The build fails immediately with a hard error when the server module is imported from a disallowed environment. No output artifacts are emitted. Recommended for all production builds once your codebase is clean.
+The default since 0.8.0. If a disallowed environment imports the server module, the build fails at once and writes no output files.
 
 ## stub
 
-The server module is replaced with a stub that throws at runtime:
+The plugin replaces the server module with a stub that throws at runtime:
 
 ```ts
 // What the 'client' environment receives when mode is 'stub'
@@ -44,4 +42,4 @@ throw new Error(
 );
 ```
 
-Use `stub` for testing environments (Vitest jsdom) or isomorphic files where the import exists but the server code path is never actually reached.
+Use `stub` for test environments (Vitest with jsdom) or for shared files that import the server module but never run that code in the browser.

@@ -1,6 +1,6 @@
-# react — React SPA
+# react
 
-React + Vite with the Zod path. `virtual:env/client` imported straight into components with full type inference (`env.VITE_DEBUG` is `boolean` in JSX).
+A React app with Zod. Components import `virtual:env/client` directly, with full types. For example, `env.VITE_DEBUG` is a `boolean` in JSX.
 
 ```bash
 bun run --filter @vite-env/example-react dev

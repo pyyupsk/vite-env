@@ -1,13 +1,13 @@
-# basic — Zod path
+# basic
 
-`defineEnv()` with Zod v4: server/client split, coercion (`z.coerce.number()`, `z.stringbool()`), defaults, optionals, and generated `vite-env.d.ts` type inference.
+`defineEnv()` with Zod 4. It shows the server and client split, coercion (`z.coerce.number()`, `z.stringbool()`), defaults, optional keys, and the generated `vite-env.d.ts`.
 
 ```bash
 bun run --filter @vite-env/example-basic dev
 ```
 
-What to try:
+Things to try:
 
-- Delete a required var from `.env` → dev server fails with a formatted validation error.
-- Uncomment the `virtual:env/server` import in `src/server-guard.ts` and run `vite build` → the guard fires (`warn` mode by default; switch to `error` or `stub` in `vite.config.ts`).
-- Check the generated `vite-env.d.ts` — `env.VITE_DEBUG` is `boolean`, `env.VITE_LOG_LEVEL` is the enum union.
+- Delete a required variable from `.env`. The dev server stops and prints the validation error.
+- Uncomment the `virtual:env/server` import in `src/server-guard.ts`, then run `vite build`. The guard reports the import. This example sets `onClientAccessOfServerModule: "warn"` in `vite.config.ts`. Change it to `"error"` or `"stub"` to see the other modes.
+- Open the generated `vite-env.d.ts`. `env.VITE_DEBUG` is a `boolean`, and `env.VITE_LOG_LEVEL` is a union of the enum values.
