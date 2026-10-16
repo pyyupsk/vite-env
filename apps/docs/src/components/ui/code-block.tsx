@@ -10,6 +10,20 @@ type CodeBlockProps = Readonly<{
   className?: string;
 }>;
 
+const LANG_LABEL: Record<string, string> = {
+  ts: "TypeScript",
+  typescript: "TypeScript",
+  tsx: "TSX",
+  js: "JavaScript",
+  javascript: "JavaScript",
+  jsx: "JSX",
+  bash: "Terminal",
+  sh: "Terminal",
+  json: "JSON",
+  css: "CSS",
+  text: "Output",
+};
+
 // A leading "// path/to/file.ts" comment becomes the block's file label.
 const FILE_COMMENT = /^(?:\/\/|#) ([\w./-]+\.[a-z]+)\n/;
 
@@ -58,7 +72,7 @@ export function CodeBlock({ code, lang = "text", filename, className }: CodeBloc
     <figure className={cn("my-6 rounded-md bg-panel text-[14px]", className)}>
       <div className="flex h-10 items-center justify-between pl-4 pr-1.5">
         <figcaption className="font-mono text-[13px] text-ink-3" translate="no">
-          {filename}
+          {filename ?? LANG_LABEL[lang] ?? lang}
         </figcaption>
         <CopyButton text={code} />
       </div>
