@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { CodeBlock } from "@/components/ui/code-block";
 import { REPO } from "@/components/layout/header";
-import { InstallCommand } from "./install-command";
+import { InstallCommand } from "@/components/ui/install-command";
 
 export const SCHEMA = `import { defineEnv } from "@vite-env/core";
 import { z } from "zod";

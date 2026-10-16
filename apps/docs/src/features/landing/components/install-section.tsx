@@ -1,17 +1,7 @@
-import { useState } from "react";
 import { Link } from "wouter";
 import { CodeBlock } from "@/components/ui/code-block";
-import { cn } from "@/lib/cn";
-import { InstallCommand } from "./install-command";
+import { PackageInstall } from "@/components/ui/package-install";
 import { Section } from "./section";
-
-const CMDS = {
-  npm: "npm install -D @vite-env/core",
-  pnpm: "pnpm add -D @vite-env/core",
-  yarn: "yarn add -D @vite-env/core",
-  bun: "bun add -D @vite-env/core",
-} as const;
-type PM = keyof typeof CMDS;
 
 const CONFIG = `import { defineConfig } from "vite";
 import ViteEnv from "@vite-env/core/plugin";
@@ -43,8 +33,6 @@ function Step({
 }
 
 export function InstallSection() {
-  const [pm, setPm] = useState<PM>("npm");
-
   return (
     <Section
       id="setup"
@@ -53,23 +41,7 @@ export function InstallSection() {
     >
       <ol>
         <Step n={1} title="Install the package">
-          <div className="mt-3 mb-3 flex gap-1">
-            {(Object.keys(CMDS) as PM[]).map((key) => (
-              <button
-                key={key}
-                type="button"
-                aria-pressed={pm === key}
-                onClick={() => setPm(key)}
-                className={cn(
-                  "rounded px-3 py-1 font-mono text-[14px] cursor-pointer transition-colors",
-                  pm === key ? "bg-ink text-paper" : "text-ink-2 hover:bg-panel hover:text-ink",
-                )}
-              >
-                {key}
-              </button>
-            ))}
-          </div>
-          <InstallCommand command={CMDS[pm]} />
+          <PackageInstall packages="@vite-env/core" className="mt-3 mb-0" />
         </Step>
         <Step n={2} title="Describe your variables">
           <p className="mt-2 text-ink-2">

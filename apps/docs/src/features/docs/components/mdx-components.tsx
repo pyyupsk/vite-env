@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactElement } from "react";
 import { CodeBlock, splitFilename } from "@/components/ui/code-block";
+import { PackageInstall, parseNpmInstall } from "@/components/ui/package-install";
 import { Link } from "wouter";
 
 const linkCls =
@@ -27,6 +28,8 @@ export const mdxComponents = {
     const el = children as ReactElement<{ className?: string; children?: string }>;
     const raw = String(el?.props?.children ?? "").trimEnd();
     const lang = (el?.props?.className ?? "").replace("language-", "") || "text";
+    const install = lang === "bash" ? parseNpmInstall(raw) : null;
+    if (install) return <PackageInstall packages={install.packages} dev={install.dev} />;
     const { filename, body } = splitFilename(raw);
     return <CodeBlock code={body} lang={lang} filename={filename} />;
   },
