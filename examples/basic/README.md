@@ -8,6 +8,9 @@ bun run --filter @vite-env/example-basic dev
 
 Things to try:
 
-- Delete a required variable from `.env`. The dev server stops and prints the validation error.
-- Uncomment the `virtual:env/server` import in `src/server-guard.ts`, then run `vite build`. The guard reports the import. This example sets `onClientAccessOfServerModule: "warn"` in `vite.config.ts`. Change it to `"error"` or `"stub"` to see the other modes.
+- Start the dev server without a required variable, for example `JWT_SECRET`. The server does not start, and it prints the validation error. If you change `.env` while the server runs, Vite restarts it, and the same check runs again.
+- In `src/server-guard.ts`, uncomment `import "virtual:env/server"`, then run `bun run build`. The build stops with `virtual:env/server is not available in the "client" environment`.
+- Set `onClientAccessOfServerModule: "warn"` in `vite.config.ts` and build again. The guard prints a warning instead of an error. The build still stops, because the leak scan finds `DATABASE_URL` and `JWT_SECRET` in the client chunk.
 - Open the generated `vite-env.d.ts`. `env.VITE_DEBUG` is a `boolean`, and `env.VITE_LOG_LEVEL` is a union of the enum values.
+
+The import in `src/server-guard.ts` has no bindings on purpose. If you write `import { env } from "virtual:env/server"` and do not use `env`, TypeScript removes the import, and the guard never sees it.

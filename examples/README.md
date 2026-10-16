@@ -6,7 +6,7 @@ Vite apps that you can run, one per feature of `@vite-env/core`. Each example ha
 | -------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
 | [`basic`](./basic)                     | Zod (`defineEnv`)             | Server and client split, coercion, defaults, the guard, `.d.ts` output |
 | [`react`](./react)                     | Zod                           | Typed env in React components                                          |
-| [`ssr`](./ssr)                         | Zod                           | `virtual:env/server` in an SSR entry, `allowedServerEnvironments`      |
+| [`ssr`](./ssr)                         | Zod                           | `virtual:env/server` in an SSR entry, separate client and SSR builds   |
 | [`valibot`](./valibot)                 | Valibot (`defineStandardEnv`) | A Standard Schema validator instead of Zod                             |
 | [`node-script`](./node-script)         | Zod (`loadEnv`)               | Validated env in a plain Bun script, without Vite                      |
 | [`presets/vercel`](./presets/vercel)   | Zod and the `vercel` preset   | Vercel platform variables                                              |

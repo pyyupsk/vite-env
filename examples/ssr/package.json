@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && vite build --ssr src/entry-server.ts",
+    "build": "vite build --outDir dist/client && vite build --ssr src/entry-server.ts --outDir dist/server",
     "dev": "node server.mjs",
     "typecheck": "tsc --noEmit"
   },
