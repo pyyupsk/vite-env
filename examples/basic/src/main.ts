@@ -63,12 +63,8 @@ guardSection.appendChild(guardHeading);
 const guardNote = document.createElement("div");
 guardNote.className = "warning";
 guardNote.textContent =
-  "// Importing virtual:env/server from client code triggers the guard.\n" +
-  "// With onClientAccessOfServerModule: 'error' → build fails.\n" +
-  "// With 'warn' → build succeeds with exit code 1.\n" +
-  "// With 'stub' → module throws at runtime.\n" +
-  "//\n" +
-  "// Uncomment the import in src/server-guard.ts and rebuild to see it in action.";
+  "Client code that imports virtual:env/server stops the build.\n" +
+  "Uncomment the import in src/server-guard.ts and run the build to see it.";
 guardSection.appendChild(guardNote);
 app.appendChild(guardSection);
 
