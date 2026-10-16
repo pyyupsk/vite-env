@@ -1,49 +1,63 @@
 import type { Highlighter, ThemeRegistration } from "shiki";
 
-const theme: ThemeRegistration = {
-  name: "vite-env-dark",
-  type: "dark",
-  colors: {
-    "editor.background": "#0b0b0e",
-    "editor.foreground": "#c9c9d1",
-  },
-  tokenColors: [
-    {
-      scope: ["comment", "punctuation.definition.comment"],
-      settings: { foreground: "#71717a", fontStyle: "italic" },
-    },
-    { scope: ["keyword", "storage.type", "storage.modifier"], settings: { foreground: "#a48cff" } },
-    { scope: ["string", "string.quoted"], settings: { foreground: "#4ade80" } },
-    { scope: ["constant.numeric", "constant.language"], settings: { foreground: "#f7b955" } },
-    { scope: ["entity.name.function", "support.function"], settings: { foreground: "#41d8ff" } },
-    {
-      scope: ["entity.name.type", "support.type", "support.class"],
-      settings: { foreground: "#ffb86c" },
-    },
-    { scope: ["variable", "variable.other"], settings: { foreground: "#c9c9d1" } },
-    { scope: ["punctuation", "meta.brace"], settings: { foreground: "#8b8b94" } },
-    { scope: ["entity.name.tag"], settings: { foreground: "#a48cff" } },
-    {
-      scope: ["attribute.name", "entity.other.attribute-name"],
-      settings: { foreground: "#41d8ff" },
-    },
-  ],
-};
+// Printed-manual palette: ink for code, blue keywords, brown literals, grey comments.
+function manualTheme(
+  name: string,
+  type: "light" | "dark",
+  c: { fg: string; keyword: string; literal: string; comment: string; punct: string },
+): ThemeRegistration {
+  return {
+    name,
+    type,
+    colors: { "editor.background": "transparent", "editor.foreground": c.fg },
+    tokenColors: [
+      { scope: ["comment", "punctuation.definition.comment"], settings: { foreground: c.comment } },
+      {
+        scope: ["keyword", "storage.type", "storage.modifier", "entity.name.tag"],
+        settings: { foreground: c.keyword },
+      },
+      {
+        scope: ["string", "string.quoted", "constant.numeric", "constant.language"],
+        settings: { foreground: c.literal },
+      },
+      { scope: ["punctuation", "meta.brace"], settings: { foreground: c.punct } },
+    ],
+  };
+}
 
-let instance: Highlighter | null = null;
+const light = manualTheme("manual-light", "light", {
+  fg: "#15171a",
+  keyword: "#1745c4",
+  literal: "#8a4a00",
+  comment: "#676d75",
+  punct: "#4b5159",
+});
 
-export async function getHighlighter(): Promise<Highlighter> {
-  if (!instance) {
-    const { createHighlighter } = await import("shiki");
-    instance = await createHighlighter({
-      themes: [theme],
+const dark = manualTheme("manual-dark", "dark", {
+  fg: "#eceef0",
+  keyword: "#93b4ff",
+  literal: "#f0c27a",
+  comment: "#8e959d",
+  punct: "#b4bac1",
+});
+
+let instance: Promise<Highlighter> | null = null;
+
+function getHighlighter(): Promise<Highlighter> {
+  instance ??= import("shiki").then(({ createHighlighter }) =>
+    createHighlighter({
+      themes: [light, dark],
       langs: ["typescript", "tsx", "javascript", "jsx", "bash", "json", "css"],
-    });
-  }
+    }),
+  );
   return instance;
 }
 
 export async function highlight(code: string, lang = "typescript"): Promise<string> {
   const hl = await getHighlighter();
-  return hl.codeToHtml(code, { lang, theme: "vite-env-dark" });
+  return hl.codeToHtml(code, {
+    lang: hl.getLoadedLanguages().includes(lang) ? lang : "text",
+    themes: { light: "manual-light", dark: "manual-dark" },
+    defaultColor: false,
+  });
 }

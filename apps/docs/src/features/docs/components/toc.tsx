@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import type { Doc } from "#velite";
-import { Link } from "wouter";
+import { cn } from "@/lib/cn";
 
 type TocEntry = Doc["toc"][number];
 
@@ -8,64 +8,49 @@ function flattenToc(items: TocEntry[], depth = 0): { entry: TocEntry; depth: num
   return items.flatMap((item) => [{ entry: item, depth }, ...flattenToc(item.items, depth + 1)]);
 }
 
-type TOCProps = Readonly<{
-  items: TocEntry[];
-}>;
-
-export function TOC({ items }: TOCProps) {
+export function TOC({ items }: Readonly<{ items: TocEntry[] }>) {
   const flat = useMemo(() => flattenToc(items), [items]);
-  const [activeUrl, setActiveUrl] = useState<string>("");
+  const [active, setActive] = useState("");
 
   useEffect(() => {
-    if (flat.length === 0) return;
-
-    const ids = flat.map(({ entry }) => entry.url.replace("#", ""));
-    const headings = ids
-      .map((id) => document.getElementById(id))
+    const headings = flat
+      .map(({ entry }) => document.getElementById(entry.url.slice(1)))
       .filter((el): el is HTMLElement => el !== null);
+    if (headings.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveUrl(`#${entry.target.id}`);
-            break;
-          }
-        }
-      },
-      { rootMargin: "0px 0px -80% 0px", threshold: 0 },
-    );
-
-    headings.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    // Active = the last heading that has scrolled past the top band of the viewport.
+    const update = () => {
+      let current = headings[0];
+      for (const h of headings) if (h.getBoundingClientRect().top < 120) current = h;
+      setActive(`#${current.id}`);
+    };
+    update();
+    globalThis.addEventListener("scroll", update, { passive: true });
+    return () => globalThis.removeEventListener("scroll", update);
   }, [flat]);
 
+  if (flat.length === 0) return null;
+
   return (
-    <aside className="w-[220px] shrink-0 h-full overflow-y-auto px-5 py-5">
-      <div className="font-mono text-[10.5px] uppercase tracking-[.12em] text-text-faint mb-3">
-        On this page
-      </div>
-      <nav className="flex flex-col gap-0.5">
-        {flat.map(({ entry, depth }) => {
-          const isActive =
-            activeUrl === entry.url || (!activeUrl && flat[0]?.entry.url === entry.url);
-          const pl = (["pl-1", "pl-4", "pl-7", "pl-10"] as const)[depth] ?? "pl-10";
-          return (
-            <Link
-              key={entry.url}
-              href={entry.url}
-              className={[
-                "text-[13px] transition-colors duration-fast no-underline py-1 leading-snug border-l-2",
-                isActive ? "pl-3" : pl,
-                isActive
-                  ? "text-accent-text border-accent"
-                  : "text-text-subtle hover:text-text-body border-transparent",
-              ].join(" ")}
-            >
-              {entry.title}
-            </Link>
-          );
-        })}
+    <aside className="hidden xl:block xl:sticky xl:top-14 xl:h-[calc(100dvh-3.5rem)] xl:w-60 xl:shrink-0">
+      <nav aria-label="On this page" className="h-full overflow-y-auto px-6 py-10">
+        <h2 className="mb-3 text-[13px] font-semibold text-ink-3">On this page</h2>
+        <ul className="space-y-1.5 text-[14px]">
+          {flat.map(({ entry, depth }) => (
+            <li key={entry.url} className={(["", "pl-3.5", "pl-7"] as const)[depth] ?? "pl-7"}>
+              <a
+                href={entry.url}
+                aria-current={active === entry.url ? "location" : undefined}
+                className={cn(
+                  "block leading-snug transition-colors",
+                  active === entry.url ? "font-medium text-ink" : "text-ink-3 hover:text-ink",
+                )}
+              >
+                {entry.title}
+              </a>
+            </li>
+          ))}
+        </ul>
       </nav>
     </aside>
   );

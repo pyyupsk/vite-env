@@ -1,13 +1,12 @@
-import { useMemo, useEffect, useRef, type ComponentType } from "react";
-import { useParams, Redirect, Link, useLocation } from "wouter";
+import { useCallback, useMemo, useEffect, useState, type ComponentType } from "react";
+import { useParams, Redirect, Link } from "wouter";
 import * as runtime from "react/jsx-runtime";
 import { docs } from "#velite";
-import { Header } from "@/components/layout/header";
+import { Header, REPO } from "@/components/layout/header";
 import { Sidebar } from "./components/sidebar";
 import { TOC } from "./components/toc";
 import { mdxComponents } from "./components/mdx-components";
-import { buildNav, getPrevNext } from "./nav";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { buildNav, getPrevNext, type NavItem } from "./nav";
 
 const DEFAULT_SLUG = "getting-started";
 
@@ -21,80 +20,100 @@ function MDXContent({ code }: Readonly<{ code: string }>) {
   return <Component components={mdxComponents} />;
 }
 
+function PageLink({ item, dir }: Readonly<{ item: NavItem | null; dir: "Previous" | "Next" }>) {
+  if (!item) return <div />;
+  return (
+    <Link
+      to={`/docs/${item.slug}`}
+      rel={dir === "Next" ? "next" : "prev"}
+      className={`group flex flex-col gap-0.5 ${dir === "Next" ? "items-end text-right" : ""}`}
+    >
+      <span className="text-[14px] text-ink-3">{dir}</span>
+      <span className="text-[17px] font-semibold text-link group-hover:underline underline-offset-[3px]">
+        {item.label}
+      </span>
+    </Link>
+  );
+}
+
 export function DocsLayout() {
   const { page = DEFAULT_SLUG } = useParams<{ page?: string }>();
-  const [location] = useLocation();
-
-  const mainRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    mainRef.current?.scrollTo({ top: 0, behavior: "instant" });
-  }, [page]);
+  // The menu belongs to the page it was opened on, so navigating closes it.
+  const [menuFor, setMenuFor] = useState<string | null>(null);
+  const menuOpen = menuFor === page;
+  const toggleMenu = useCallback(() => setMenuFor((f) => (f === page ? null : page)), [page]);
 
   const doc = docs.find((d) => d.slug === page);
   const nav = useMemo(() => buildNav(docs), []);
   const { prev, next } = useMemo(() => getPrevNext(docs, page), [page]);
 
+  useEffect(() => {
+    // The browser tries the hash before the page renders, so scroll to it again here.
+    const target =
+      location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) target.scrollIntoView();
+    else globalThis.scrollTo({ top: 0 });
+    if (doc) document.title = `${doc.title} | vite-env`;
+  }, [page, doc]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuFor(null);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   if (!doc) return <Redirect to={`/docs/${DEFAULT_SLUG}`} />;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-bg-base">
-      <Header location={location} />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar sections={nav} currentSlug={page} />
-        <main ref={mainRef} className="flex-1 overflow-y-auto min-w-0">
-          <div className="max-w-[720px] px-12 py-8 pb-20 mx-auto">
-            <div className="flex items-center gap-1.5 mb-4 text-[12.5px] text-text-faint font-sans">
-              <span>Docs</span>
-              <span className="text-neutral-700">›</span>
-              <span>{doc.section}</span>
-            </div>
-
-            <h1 className="font-sans font-semibold text-[30px] text-text-strong tracking-[-0.03em] mb-5 leading-tight">
-              {doc.title}
-            </h1>
-
-            {doc.description && (
-              <p className="text-[16px] text-text-muted leading-relaxed mb-8 -mt-2">
-                {doc.description}
-              </p>
-            )}
+    <div className="min-h-dvh">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:bg-paper focus:px-3 focus:py-2"
+      >
+        Skip to content
+      </a>
+      <Header wide menuOpen={menuOpen} onMenu={toggleMenu} />
+      <div className="mx-auto flex w-full max-w-[96rem]">
+        <Sidebar sections={nav} currentSlug={page} open={menuOpen} />
+        <main id="main" className="min-w-0 flex-1 px-5 pt-10 pb-24 md:px-10 lg:px-14">
+          <article className="mx-auto max-w-prose text-[1.0625rem] leading-[1.7]">
+            <header className="mb-10 border-b-2 border-rule-strong pb-7">
+              <h1 className="text-[2rem] font-bold leading-[1.15] tracking-[-0.025em] md:text-[2.375rem]">
+                {doc.title}
+              </h1>
+              {doc.description && (
+                <p className="mt-3 text-[1.1875rem] leading-relaxed text-ink-2">
+                  {doc.description}
+                </p>
+              )}
+            </header>
 
             <MDXContent code={doc.body} />
 
-            <div className="flex justify-between mt-12 pt-6 border-t border-hairline gap-4">
-              {prev ? (
-                <Link
-                  to={`/docs/${prev.slug}`}
-                  className="flex flex-col gap-1 bg-surface-1 border border-border-subtle rounded-md px-4 py-3 min-w-[160px] hover:border-border-default transition-colors duration-fast no-underline"
-                >
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-text-faint flex items-center gap-1">
-                    <ChevronLeft size={10} strokeWidth={1.5} />
-                    prev
-                  </span>
-                  <span className="text-[13.5px] text-text-body">{prev.label}</span>
-                </Link>
-              ) : (
-                <div />
-              )}
-              {next ? (
-                <Link
-                  to={`/docs/${next.slug}`}
-                  className="flex flex-col items-end gap-1 bg-surface-1 border border-border-subtle rounded-md px-4 py-3 min-w-[160px] hover:border-border-default transition-colors duration-fast no-underline"
-                >
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-text-faint flex items-center gap-1">
-                    next
-                    <ChevronRight size={10} strokeWidth={1.5} />
-                  </span>
-                  <span className="text-[13.5px] text-text-body">{next.label}</span>
-                </Link>
-              ) : (
-                <div />
-              )}
-            </div>
-          </div>
+            <p className="mt-12 text-[14px]">
+              <a
+                href={`${REPO}/edit/main/apps/docs/src/content/${doc.slug}.mdx`}
+                className="text-ink-3 underline underline-offset-[3px] decoration-current/35 hover:text-ink"
+              >
+                Edit this page on GitHub
+              </a>
+            </p>
+
+            <nav
+              aria-label="Previous and next page"
+              className="mt-6 grid grid-cols-2 gap-6 border-t border-rule pt-6"
+            >
+              <PageLink item={prev} dir="Previous" />
+              <PageLink item={next} dir="Next" />
+            </nav>
+          </article>
         </main>
-        <TOC items={doc.toc} /> {/* nosonar */}
+        <TOC items={doc.toc} />
       </div>
     </div>
   );

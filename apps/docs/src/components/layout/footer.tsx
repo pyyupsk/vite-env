@@ -1,45 +1,23 @@
-import { Link } from "wouter";
+import { REPO } from "./header";
 
 const LINKS = [
-  { label: "Docs", href: "/docs" },
-  { label: "GitHub", href: "https://github.com/pyyupsk/vite-env", external: true },
-  { label: "npm", href: "https://www.npmjs.com/package/@vite-env/core", external: true },
-  { label: "Changelog", href: "https://github.com/pyyupsk/vite-env/releases", external: true },
+  { label: "GitHub", href: REPO },
+  { label: "npm", href: "https://www.npmjs.com/package/@vite-env/core" },
+  { label: "Releases", href: `${REPO}/releases` },
+  { label: "Report an issue", href: `${REPO}/issues` },
 ];
 
 export function Footer() {
   return (
-    <footer className="border-t border-hairline">
-      <div className="container-section flex items-center gap-4 py-6">
-        <Link href="/" className="flex items-center gap-1.5 no-underline">
-          <img src={`${import.meta.env.BASE_URL}logo.svg`} width={18} height={18} alt="" />
-          <span className="font-mono text-xs text-text-faint">vite-env</span>
-        </Link>
-        <span className="font-mono text-xs text-neutral-700 ml-auto">
-          MIT license · open source
-        </span>
-        <nav className="flex gap-5">
-          {LINKS.map(({ label, href, external }) =>
-            external ? (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
-              >
-                {label}
-              </a>
-            ) : (
-              <Link
-                key={label}
-                href={href}
-                className="text-xs text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
-              >
-                {label}
-              </Link>
-            ),
-          )}
+    <footer className="border-t border-rule">
+      <div className="container-page flex flex-col gap-3 py-8 text-[14px] text-ink-3 sm:flex-row sm:items-center">
+        <p>vite-env is open source under the MIT license.</p>
+        <nav aria-label="Project links" className="flex flex-wrap gap-x-5 gap-y-2 sm:ml-auto">
+          {LINKS.map((l) => (
+            <a key={l.label} href={l.href} className="hover:text-ink transition-colors">
+              {l.label}
+            </a>
+          ))}
         </nav>
       </div>
     </footer>

@@ -1,97 +1,66 @@
-import { buttonVariants } from "@/components/ui/button/variants";
-import { ArrowRight } from "lucide-react";
-import { GithubIcon } from "@/components/icons/github";
-import { cn } from "@/lib/cn";
 import { Link } from "wouter";
-import { useMemo, useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { GithubIcon } from "@/components/icons/github";
+import { Logo } from "@/components/icons/logo";
+import { ThemeToggle } from "./theme-toggle";
+import { cn } from "@/lib/cn";
 
-const NAV_LINKS = [
-  { label: "Docs", href: "/docs", external: false },
-  {
-    label: "Examples",
-    href: "https://github.com/pyyupsk/vite-env/tree/main/examples",
-    external: true,
-  },
-  { label: "Changelog", href: "https://github.com/pyyupsk/vite-env/releases", external: true },
-];
+export const REPO = "https://github.com/pyyupsk/vite-env";
 
-export function Header({ location }: Readonly<{ location?: string }>) {
-  const [scrolled, setScrolled] = useState(false);
+const navLink = "text-[15px] text-ink-2 hover:text-ink transition-colors";
 
-  const isDocs = useMemo(() => location?.startsWith("/docs"), [location]);
-  const isHome = !location || location === "/";
+type HeaderProps = Readonly<{
+  wide?: boolean;
+  menuOpen?: boolean;
+  onMenu?: () => void;
+}>;
 
-  useEffect(() => {
-    if (!isHome) return;
-    const onScroll = () => setScrolled(window.scrollY > 0);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [isHome]);
-
-  const transparent = isHome && !scrolled;
-
+export function Header({ wide, menuOpen, onMenu }: HeaderProps) {
   return (
-    <header
-      className={cn(
-        "top-0 z-100 h-14 border-b transition-colors duration-200",
-        isHome ? "fixed w-full" : "sticky",
-        transparent
-          ? "border-transparent backdrop-blur-none bg-transparent"
-          : "border-hairline backdrop-blur-md bg-neutral-950/85",
-      )}
-    >
-      <div className={cn("flex items-center h-full", isDocs ? "px-4" : "container-section")}>
-        <Link href="/" className="flex items-center gap-2 mr-10 shrink-0 no-underline">
-          <img src={`${import.meta.env.BASE_URL}logo.svg`} width={26} height={26} alt="" />
-          <span className="font-mono font-semibold text-sm">
-            <span className="text-text-strong">vite</span>
-            <span className="text-text-faint">-</span>
-            <span className="text-accent-text">env</span>
-          </span>
+    <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur-sm supports-[backdrop-filter]:bg-paper/85">
+      <div className={cn("flex h-14 items-center gap-6", wide ? "px-4 md:px-6" : "container-page")}>
+        {onMenu && (
+          <button
+            type="button"
+            onClick={onMenu}
+            aria-expanded={menuOpen}
+            aria-controls="docs-nav"
+            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            className="-ml-2 inline-flex size-9 items-center justify-center rounded text-ink hover:bg-panel lg:hidden cursor-pointer"
+          >
+            {menuOpen ? <X size={20} aria-hidden /> : <Menu size={20} aria-hidden />}
+          </button>
+        )}
+
+        <Link href="/" className="flex items-center gap-2 text-ink" translate="no">
+          <Logo size={24} />
+          <span className="font-semibold text-[17px] tracking-[-0.01em]">vite-env</span>
         </Link>
 
-        <nav className="flex gap-6 flex-1">
-          {NAV_LINKS.map(({ label, href, external }) =>
-            external ? (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
-              >
-                {label}
-              </a>
-            ) : (
-              <Link
-                key={label}
-                href={href}
-                className="text-sm text-text-subtle hover:text-text-body transition-colors duration-fast no-underline"
-              >
-                {label}
-              </Link>
-            ),
-          )}
+        <nav aria-label="Main" className="flex items-center gap-6">
+          <Link href="/docs" className={cn(navLink, onMenu && "hidden sm:inline")}>
+            Docs
+          </Link>
+          <a href={`${REPO}/tree/main/examples`} className={cn(navLink, "hidden sm:inline")}>
+            Examples
+          </a>
+          <a href={`${REPO}/releases`} className={cn(navLink, "hidden sm:inline")}>
+            Releases
+          </a>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1">
+          <span className="hidden font-mono text-[13px] text-ink-3 md:inline mr-2" translate="no">
+            v{__CORE_VERSION__}
+          </span>
           <a
-            href="https://github.com/pyyupsk/vite-env"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "no-underline")}
+            href={REPO}
+            aria-label="vite-env on GitHub"
+            className="inline-flex size-9 items-center justify-center rounded text-ink-2 hover:text-ink hover:bg-panel transition-colors"
           >
-            <GithubIcon size={15} />
-            GitHub
+            <GithubIcon size={18} />
           </a>
-          <Link
-            href="/docs"
-            className={cn(buttonVariants({ variant: "primary", size: "sm" }), "no-underline")}
-          >
-            Get started
-            <ArrowRight size={13} strokeWidth={1.5} />
-          </Link>
+          <ThemeToggle />
         </div>
       </div>
     </header>
