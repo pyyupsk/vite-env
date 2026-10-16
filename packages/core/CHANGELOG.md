@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/pyyupsk/vite-env/compare/v0.8.2...v0.9.0) (2026-10-16)
+
+
+### Features
+
+* **docs:** redesign docs site and rewrite READMEs ([#104](https://github.com/pyyupsk/vite-env/issues/104)) ([63044c9](https://github.com/pyyupsk/vite-env/commit/63044c98a58973964b3a35219d87634c7483422e))
+
 ## [0.8.2](https://github.com/pyyupsk/vite-env/compare/corev0.8.1...corev0.8.2) (2026-09-09)
 
 ### Fixes
