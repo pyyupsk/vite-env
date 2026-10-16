@@ -11,7 +11,7 @@
     "catalog": {
       "@standard-schema/spec": "^1.1.0",
       "jiti": "^2.7.0",
-      "oxc-parser": "^0.148.0"
+      "oxc-parser": "^0.154.0"
     },
     "catalogs": {
       "cli": {
@@ -20,37 +20,37 @@
       },
       "dev": {
         "@pyyupsk/nit": "^0.3.0",
-        "@types/bun": "^1.4.0",
-        "@types/node": "^26.4.1",
-        "@vitest/coverage-v8": "^4.1.11",
-        "jscodeshift": "^17.1.2",
-        "oxfmt": "^0.66.0",
-        "oxlint": "^1.81.0",
-        "tsdown": "^0.22.14",
+        "@types/bun": "^1.4.3",
+        "@types/node": "^26.6.5",
+        "@vitest/coverage-v8": "^5.0.5",
+        "jscodeshift": "^17.4.0",
+        "oxfmt": "^0.73.0",
+        "oxlint": "^1.88.0",
+        "tsdown": "^0.23.1",
         "typescript": "^7.0.2",
-        "vite": "^8.2.2",
-        "vitest": "^4.1.11",
-        "zod": "^4.5.4"
+        "vite": "^8.3.4",
+        "vitest": "^5.0.5",
+        "zod": "^4.6.7"
       },
       "docs": {
         "@fontsource-variable/geist-mono": "^5.3.0",
         "@fontsource-variable/public-sans": "^5.3.0",
         "@tailwindcss/vite": "^4.3.3",
-        "@types/react": "^19.2.18",
-        "@types/react-dom": "^19.2.5",
-        "@vitejs/plugin-react": "^6.1.1",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0",
+        "@vitejs/plugin-react": "^6.1.2",
         "clsx": "^2.1.1",
-        "lucide-react": "^1.39.0",
-        "react": "^19.2.8",
-        "react-dom": "^19.2.8",
+        "lucide-react": "^1.58.0",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
         "rehype-slug": "^6.0.0",
-        "shiki": "^4.4.3",
-        "tailwind-merge": "^3.6.0",
+        "shiki": "^4.5.0",
+        "tailwind-merge": "^3.7.0",
         "velite": "^0.4.0",
-        "wouter": "^3.10.0"
+        "wouter": "^3.13.0"
       },
       "examples": {
-        "valibot": "^1.4.2"
+        "valibot": "^1.5.0"
       }
     }
   },
